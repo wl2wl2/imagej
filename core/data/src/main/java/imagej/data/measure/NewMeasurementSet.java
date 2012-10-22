@@ -13,7 +13,15 @@ import net.imglib2.type.numeric.RealType;
 
 
 // TODO
+
 // - build set of DAGs and then populate levels with measures
+
+// - later: support ctors with params that are not just empty or Measurements.
+//   Think how contrahamonicMean wants to have an "order" param. And a weighted
+//   average wants to have weights
+
+// - later: instead of getValue() returning doubles it could set the value of a
+//   passed in T derived from ComplexType
 
 public class NewMeasurementSet {
 	
@@ -58,19 +66,19 @@ public class NewMeasurementSet {
 		T tmp = func.createOutput();
 		PointSetIterator iter = region.createIterator();
 		for (List<SamplingMeasurement> level : samplingLevels) {
-			for (SamplingMeasurement measuring : level) {
-				measuring.preprocess(region.getOrigin());
+			for (SamplingMeasurement measurement : level) {
+				measurement.preprocess(region.getOrigin());
 			}
 			iter.reset();
 			while (iter.hasNext()) {
 				long[] pos = iter.next();
 				func.compute(pos, tmp);
-				for (SamplingMeasurement measuring : level) {
-					measuring.dataValue(pos, tmp.getRealDouble());
+				for (SamplingMeasurement measurement : level) {
+					measurement.dataValue(pos, tmp.getRealDouble());
 				}
 			}
-			for (SamplingMeasurement measuring : level) {
-				measuring.postprocess();
+			for (SamplingMeasurement measurement : level) {
+				measurement.postprocess();
 			}
 		}
 	}

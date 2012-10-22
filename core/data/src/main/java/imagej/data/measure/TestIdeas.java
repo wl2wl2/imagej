@@ -25,5 +25,9 @@ public class TestIdeas {
 		System.out.println("count = " + measures.getValue("count"));
 		System.out.println("mean  = " + measures.getValue("mean"));
 		System.out.println("stdev = " + measures.getValue("stdev"));
+		
+		// TODO - current test defines them in an order that should easily work.
+		// When dependency checking code done enter them in random orders and they
+		// should automatically work. Make such an example here.
 	}
 }
