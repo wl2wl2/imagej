@@ -12,6 +12,9 @@ import net.imglib2.ops.pointset.PointSetIterator;
 import net.imglib2.type.numeric.RealType;
 
 
+// TODO
+// - build set of DAGs and then populate levels with measures
+
 public class NewMeasurementSet {
 	
 	// -- instance variables --
@@ -26,7 +29,7 @@ public class NewMeasurementSet {
 		this.measurements = new ArrayList<Measurement>();
 		this.namedMeasurements = new HashMap<String,Measurement>();
 		this.samplingLevels = new ArrayList<List<SamplingMeasurement>>();
-		samplingLevels.add(new ArrayList<SamplingMeasurement>());
+		this.samplingLevels.add(new ArrayList<SamplingMeasurement>());
 	}
 
 	// -- public api --
@@ -36,7 +39,7 @@ public class NewMeasurementSet {
 	//   not retrievable
 	
 	public void addMeasure(String name,
-		Class<? extends Measurement> measuringClass, Object... params)
+		Class<? extends Measurement> measuringClass) // TODO - add Object... params?
 	{
 		// allocate Measurement passing correct values to ctor
 		// update dependency graph
@@ -92,21 +95,28 @@ public class NewMeasurementSet {
 		Measurement m = lookupMeasurement(clazz);
 		if (m != null) return m;
 		
+		@SuppressWarnings("unchecked")
 		Constructor<? extends Measurement>[] constructors =
 				(Constructor<? extends Measurement>[]) clazz.getConstructors();
+		
 		try {
 			if (constructors.length == 0) return clazz.newInstance();
 		} catch (Exception e) {
 			throw new IllegalStateException(e.getMessage());
 		}
+		
 		Constructor<? extends Measurement> constructor = constructors[0]; 
+		
+		@SuppressWarnings("unchecked")
 		Class<? extends Measurement>[] paramTypes =
 				(Class<? extends Measurement>[]) constructor.getParameterTypes();
+		
 		Object[] measures = new Object[paramTypes.length];
 		int i = 0;
 		for (Class<? extends Measurement> c : paramTypes) {
 			measures[i++] = obtain(c);
 		}
+		
 		try {
 			Measurement measure = constructor.newInstance(measures);
 			measurements.add(measure);
