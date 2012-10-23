@@ -1,6 +1,7 @@
 package imagej.data.measure;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,11 +15,12 @@ import net.imglib2.type.numeric.RealType;
 
 // TODO
 
-// - build set of DAGs and then populate levels with measures
-
 // - later: support ctors with params that are not just empty or Measurements.
 //   Think how contrahamonicMean wants to have an "order" param. And a weighted
-//   average wants to have weights
+//   average wants to have weights. Maybe when you set up a NewMeasureSet you
+//   associate a class (like WeightedAverage.class) with a value (like a double[]).
+//   Then constructor finding code takes the one ctor and tries to fill in any
+//   unknown params from the NewMeasureSet.
 
 // - later: instead of getValue() returning doubles it could set the value of a
 //   passed in T derived from ComplexType
@@ -37,7 +39,6 @@ public class NewMeasurementSet {
 		this.measurements = new ArrayList<Measurement>();
 		this.namedMeasurements = new HashMap<String,Measurement>();
 		this.samplingLevels = new ArrayList<List<SamplingMeasurement>>();
-		this.samplingLevels.add(new ArrayList<SamplingMeasurement>());
 	}
 
 	// -- public api --
@@ -103,37 +104,64 @@ public class NewMeasurementSet {
 		Measurement m = lookupMeasurement(clazz);
 		if (m != null) return m;
 		
-		@SuppressWarnings("unchecked")
-		Constructor<? extends Measurement>[] constructors =
-				(Constructor<? extends Measurement>[]) clazz.getConstructors();
-		
 		try {
-			if (constructors.length == 0) return clazz.newInstance();
-		} catch (Exception e) {
-			throw new IllegalStateException(e.getMessage());
-		}
+			Constructor<? extends Measurement> constructor = getConstructor(clazz); 
+			if (constructor == null) return clazz.newInstance();
 		
-		Constructor<? extends Measurement> constructor = constructors[0]; 
-		
-		@SuppressWarnings("unchecked")
-		Class<? extends Measurement>[] paramTypes =
+			@SuppressWarnings("unchecked")
+			Class<? extends Measurement>[] paramTypes =
 				(Class<? extends Measurement>[]) constructor.getParameterTypes();
 		
-		Object[] measures = new Object[paramTypes.length];
-		int i = 0;
-		for (Class<? extends Measurement> c : paramTypes) {
-			measures[i++] = obtain(c);
-		}
+			Object[] measures = new Object[paramTypes.length];
+			for (int i = 0; i < paramTypes.length; i++) {
+				measures[i] = obtain(paramTypes[i]);
+			}
 		
-		try {
 			Measurement measure = constructor.newInstance(measures);
 			measurements.add(measure);
 			if (measure instanceof SamplingMeasurement)
-				samplingLevels.get(0).add((SamplingMeasurement)measure);
+				prioritize((SamplingMeasurement) measure);
 			return measure;
 		}
 		catch (Exception e) {
 			throw new IllegalStateException(e.getMessage());
+		}
+	}
+	
+	private Constructor<? extends Measurement>
+		getConstructor(Class<? extends Measurement> clazz)
+	{
+		@SuppressWarnings("unchecked")
+		Constructor<? extends Measurement>[] constructors =
+				(Constructor<? extends Measurement>[]) clazz.getConstructors();
+		
+		if (constructors.length == 0) return null;
+		return constructors[0]; 
+	}
+	
+	private void prioritize(SamplingMeasurement measure) {
+		int level = determineLevel(measure);
+		while (level >= samplingLevels.size()) {
+			samplingLevels.add(new ArrayList<SamplingMeasurement>());
+		}
+		samplingLevels.get(level).add(measure);
+	}
+	
+	private int determineLevel(Measurement measure) {
+		try {
+			int max = 0;
+			Field[] fields = measure.getClass().getDeclaredFields();
+			for (Field field : fields) {
+				field.setAccessible(true);
+				Object value = field.get(measure);
+				if (value instanceof Measurement) {
+					int level = determineLevel((Measurement)value);
+					max = Math.max(max, level+1);
+				}
+			}
+			return max;
+		} catch (Exception e) {
+			return 0;
 		}
 	}
 }
