@@ -39,30 +39,32 @@ package imagej.data.measure;
 import net.imglib2.img.Img;
 import net.imglib2.ops.function.Function;
 import net.imglib2.ops.function.real.RealAlphaTrimmedMeanFunction;
-import net.imglib2.ops.function.real.RealArithmeticMeanFunction;
 import net.imglib2.ops.function.real.RealContraharmonicMeanFunction;
-import net.imglib2.ops.function.real.RealGeometricMeanFunction;
-import net.imglib2.ops.function.real.RealHarmonicMeanFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
-import net.imglib2.ops.function.real.RealPopulationKurtosisExcessFunction;
-import net.imglib2.ops.function.real.RealPopulationKurtosisFunction;
-import net.imglib2.ops.function.real.RealSampleKurtosisExcessFunction;
-import net.imglib2.ops.function.real.RealSampleKurtosisFunction;
-import net.imglib2.ops.function.real.RealMaxFunction;
 import net.imglib2.ops.function.real.RealMedianFunction;
-import net.imglib2.ops.function.real.RealMidpointFunction;
-import net.imglib2.ops.function.real.RealMinFunction;
-import net.imglib2.ops.function.real.RealProductFunction;
-import net.imglib2.ops.function.real.RealPopulationSkewFunction;
-import net.imglib2.ops.function.real.RealSampleSkewFunction;
-import net.imglib2.ops.function.real.RealPopulationStdDevFunction;
-import net.imglib2.ops.function.real.RealSampleStdDevFunction;
-import net.imglib2.ops.function.real.RealSumFunction;
 import net.imglib2.ops.function.real.RealSumOfSquaredDeviationsFunction;
-import net.imglib2.ops.function.real.RealPopulationVarianceFunction;
-import net.imglib2.ops.function.real.RealSampleVarianceFunction;
 import net.imglib2.ops.function.real.RealWeightedAverageFunction;
 import net.imglib2.ops.function.real.RealWeightedSumFunction;
+import net.imglib2.ops.measure.Measurement;
+import net.imglib2.ops.measure.NewMeasurementSet;
+import net.imglib2.ops.measure.measurements.GeometricMean;
+import net.imglib2.ops.measure.measurements.HarmonicMean;
+import net.imglib2.ops.measure.measurements.Maximum;
+import net.imglib2.ops.measure.measurements.Mean;
+import net.imglib2.ops.measure.measurements.Midpoint;
+import net.imglib2.ops.measure.measurements.Minimum;
+import net.imglib2.ops.measure.measurements.PopulationKurtosis;
+import net.imglib2.ops.measure.measurements.PopulationKurtosisExcess;
+import net.imglib2.ops.measure.measurements.PopulationSkew;
+import net.imglib2.ops.measure.measurements.PopulationStdDev;
+import net.imglib2.ops.measure.measurements.PopulationVariance;
+import net.imglib2.ops.measure.measurements.Product;
+import net.imglib2.ops.measure.measurements.SampleKurtosis;
+import net.imglib2.ops.measure.measurements.SampleKurtosisExcess;
+import net.imglib2.ops.measure.measurements.SampleSkew;
+import net.imglib2.ops.measure.measurements.SampleStdDev;
+import net.imglib2.ops.measure.measurements.SampleVariance;
+import net.imglib2.ops.measure.measurements.Sum;
 import net.imglib2.ops.pointset.HyperVolumePointSet;
 import net.imglib2.ops.pointset.PointSet;
 import net.imglib2.type.numeric.RealType;
@@ -154,10 +156,7 @@ public class StatisticsService extends AbstractService {
 	 * The measured value
 	 */
 	public double arithmeticMean(Dataset ds, PointSet region) {
-		Function<long[],DoubleType> imgFunc = imgFunc(ds);
-		Function<PointSet,DoubleType> func =
-				new RealArithmeticMeanFunction<DoubleType>(imgFunc);
-		return measure(func, region);
+		return measure(imgFunc(ds), region, Mean.class);
 	}
 	
 	/**
@@ -220,10 +219,7 @@ public class StatisticsService extends AbstractService {
 	 * The measured value
 	 */
 	public double geometricMean(Dataset ds, PointSet region) {
-		Function<long[],DoubleType> imgFunc = imgFunc(ds);
-		Function<PointSet,DoubleType> func =
-				new RealGeometricMeanFunction<DoubleType>(imgFunc);
-		return measure(func, region);
+		return measure(imgFunc(ds), region, GeometricMean.class);
 	}
 	
 	/**
@@ -251,10 +247,7 @@ public class StatisticsService extends AbstractService {
 	 * The measured value
 	 */
 	public double harmonicMean(Dataset ds, PointSet region) {
-		Function<long[],DoubleType> imgFunc = imgFunc(ds);
-		Function<PointSet,DoubleType> func =
-				new RealHarmonicMeanFunction<DoubleType>(imgFunc);
-		return measure(func, region);
+		return measure(imgFunc(ds), region, HarmonicMean.class);
 	}
 
 	/**
@@ -282,10 +275,7 @@ public class StatisticsService extends AbstractService {
 	 * The measured value
 	 */
 	public double maximum(Dataset ds, PointSet region) {
-		Function<long[],DoubleType> imgFunc = imgFunc(ds);
-		Function<PointSet,DoubleType> func =
-				new RealMaxFunction<DoubleType>(imgFunc);
-		return measure(func, region);
+		return measure(imgFunc(ds), region, Maximum.class);
 	}
 	
 	/**
@@ -345,10 +335,7 @@ public class StatisticsService extends AbstractService {
 	 * The measured value
 	 */
 	public double midpoint(Dataset ds, PointSet region) {
-		Function<long[],DoubleType> imgFunc = imgFunc(ds);
-		Function<PointSet,DoubleType> func =
-				new RealMidpointFunction<DoubleType>(imgFunc);
-		return measure(func, region);
+		return measure(imgFunc(ds), region, Midpoint.class);
 	}
 	
 	/**
@@ -376,10 +363,7 @@ public class StatisticsService extends AbstractService {
 	 * The measured value
 	 */
 	public double minimum(Dataset ds, PointSet region) {
-		Function<long[],DoubleType> imgFunc = imgFunc(ds);
-		Function<PointSet,DoubleType> func =
-				new RealMinFunction<DoubleType>(imgFunc);
-		return measure(func, region);
+		return measure(imgFunc(ds), region, Minimum.class);
 	}
 	
 	/**
@@ -408,10 +392,7 @@ public class StatisticsService extends AbstractService {
 	 * The measured value
 	 */
 	public double populationKurtosis(Dataset ds, PointSet region) {
-		Function<long[],DoubleType> imgFunc = imgFunc(ds);
-		Function<PointSet,DoubleType> func =
-				new RealPopulationKurtosisFunction<DoubleType>(imgFunc);
-		return measure(func, region);
+		return measure(imgFunc(ds), region, PopulationKurtosis.class);
 	}
 
 	/**
@@ -438,10 +419,7 @@ public class StatisticsService extends AbstractService {
 	 * The measured value
 	 */
 	public double populationKurtosisExcess(Dataset ds, PointSet region) {
-		Function<long[],DoubleType> imgFunc = imgFunc(ds);
-		Function<PointSet,DoubleType> func =
-				new RealPopulationKurtosisExcessFunction<DoubleType>(imgFunc);
-		return measure(func, region);
+		return measure(imgFunc(ds), region, PopulationKurtosisExcess.class);
 	}
 
 	/**
@@ -469,10 +447,7 @@ public class StatisticsService extends AbstractService {
 	 * The measured value
 	 */
 	public double populationSkew(Dataset ds, PointSet region) {
-		Function<long[],DoubleType> imgFunc = imgFunc(ds);
-		Function<PointSet,DoubleType> func =
-				new RealPopulationSkewFunction<DoubleType>(imgFunc);
-		return measure(func, region);
+		return measure(imgFunc(ds), region, PopulationSkew.class);
 	}
 
 	/**
@@ -500,10 +475,7 @@ public class StatisticsService extends AbstractService {
 	 * The measured value
 	 */
 	public double populationStdDev(Dataset ds, PointSet region) {
-		Function<long[],DoubleType> imgFunc = imgFunc(ds);
-		Function<PointSet,DoubleType> func =
-				new RealPopulationStdDevFunction<DoubleType>(imgFunc);
-		return measure(func, region);
+		return measure(imgFunc(ds), region, PopulationStdDev.class);
 	}
 	
 	/**
@@ -533,10 +505,7 @@ public class StatisticsService extends AbstractService {
 	 * The measured value
 	 */
 	public double populationVariance(Dataset ds, PointSet region) {
-		Function<long[],DoubleType> imgFunc = imgFunc(ds);
-		Function<PointSet,DoubleType> func =
-				new RealPopulationVarianceFunction<DoubleType>(imgFunc);
-		return measure(func, region);
+		return measure(imgFunc(ds), region, PopulationVariance.class);
 	}
 	
 	/**
@@ -565,10 +534,7 @@ public class StatisticsService extends AbstractService {
 	 * The measured value
 	 */
 	public double product(Dataset ds, PointSet region) {
-		Function<long[],DoubleType> imgFunc = imgFunc(ds);
-		Function<PointSet,DoubleType> func =
-				new RealProductFunction<DoubleType>(imgFunc);
-		return measure(func, region);
+		return measure(imgFunc(ds), region, Product.class);
 	}
 	
 	/**
@@ -595,10 +561,7 @@ public class StatisticsService extends AbstractService {
 	 * The measured value
 	 */
 	public double sampleKurtosis(Dataset ds, PointSet region) {
-		Function<long[],DoubleType> imgFunc = imgFunc(ds);
-		Function<PointSet,DoubleType> func =
-				new RealSampleKurtosisFunction<DoubleType>(imgFunc);
-		return measure(func, region);
+		return measure(imgFunc(ds), region, SampleKurtosis.class);
 	}
 
 	/**
@@ -625,10 +588,7 @@ public class StatisticsService extends AbstractService {
 	 * The measured value
 	 */
 	public double sampleKurtosisExcess(Dataset ds, PointSet region) {
-		Function<long[],DoubleType> imgFunc = imgFunc(ds);
-		Function<PointSet,DoubleType> func =
-				new RealSampleKurtosisExcessFunction<DoubleType>(imgFunc);
-		return measure(func, region);
+		return measure(imgFunc(ds), region, SampleKurtosisExcess.class);
 	}
 
 	/**
@@ -656,10 +616,7 @@ public class StatisticsService extends AbstractService {
 	 * The measured value
 	 */
 	public double sampleSkew(Dataset ds, PointSet region) {
-		Function<long[],DoubleType> imgFunc = imgFunc(ds);
-		Function<PointSet,DoubleType> func =
-				new RealSampleSkewFunction<DoubleType>(imgFunc);
-		return measure(func, region);
+		return measure(imgFunc(ds), region, SampleSkew.class);
 	}
 
 	/**
@@ -687,10 +644,7 @@ public class StatisticsService extends AbstractService {
 	 * The measured value
 	 */
 	public double sampleStdDev(Dataset ds, PointSet region) {
-		Function<long[],DoubleType> imgFunc = imgFunc(ds);
-		Function<PointSet,DoubleType> func =
-				new RealSampleStdDevFunction<DoubleType>(imgFunc);
-		return measure(func, region);
+		return measure(imgFunc(ds), region, SampleStdDev.class);
 	}
 
 	/**
@@ -720,10 +674,7 @@ public class StatisticsService extends AbstractService {
 	 * The measured value
 	 */
 	public double sampleVariance(Dataset ds, PointSet region) {
-		Function<long[],DoubleType> imgFunc = imgFunc(ds);
-		Function<PointSet,DoubleType> func =
-				new RealSampleVarianceFunction<DoubleType>(imgFunc);
-		return measure(func, region);
+		return measure(imgFunc(ds), region, SampleVariance.class);
 	}
 
 	/**
@@ -752,10 +703,7 @@ public class StatisticsService extends AbstractService {
 	 * The measured value
 	 */
 	public double sum(Dataset ds, PointSet region) {
-		Function<long[],DoubleType> imgFunc = imgFunc(ds);
-		Function<PointSet,DoubleType> func =
-				new RealSumFunction<DoubleType>(imgFunc);
-		return measure(func, region);
+		return measure(imgFunc(ds), region, Sum.class);
 	}
 	
 	/**
@@ -868,5 +816,14 @@ public class StatisticsService extends AbstractService {
 		DoubleType output = new DoubleType();
 		func.compute(region, output);
 		return output.getRealDouble();
+	}
+	
+	private double measure(Function<long[],DoubleType> func, PointSet region,
+		Class<? extends Measurement> measureClass)
+	{
+		NewMeasurementSet set = new NewMeasurementSet();
+		set.addMeasure("tmp", measureClass);
+		set.doMeasurements(func, region);
+		return set.getValue("tmp");
 	}
 }
