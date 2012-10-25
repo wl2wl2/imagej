@@ -34,6 +34,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
 package imagej.script;
 
+import imagej.ImageJ;
+
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.Reader;
 
 import javax.script.Bindings;
@@ -44,19 +48,40 @@ import javax.script.ScriptException;
 
 /**
  * This class implements dummy versions for ScriptEngine's methods that are not
- * needed by ImageJ's scripting interface
+ * needed by ImageJ's scripting interface.
  * 
  * @author Johannes Schindelin
  */
 public abstract class AbstractScriptEngine implements ScriptEngine {
+
+	public ImageJ getIJContext() {
+		return (ImageJ) get(ScriptService.CONTEXT);
+	}
 
 	// Abstract methods
 
 	@Override
 	public abstract Object eval(String script) throws ScriptException;
 
+	// Default implementations
+
 	@Override
-	public abstract Object eval(Reader reader) throws ScriptException;
+	public Object eval(Reader reader) throws ScriptException {
+		StringBuilder sb = new StringBuilder();
+		final BufferedReader in = new BufferedReader(reader);
+		try {
+			while (true) {
+				String line = in.readLine();
+				if (line == null) break;
+				sb.append(line + "\n");
+			}
+			in.close();
+		}
+		catch (IOException exc) {
+			throw new ScriptException(exc);
+		}
+		return eval(sb.toString());
+	}
 
 	// Fields
 

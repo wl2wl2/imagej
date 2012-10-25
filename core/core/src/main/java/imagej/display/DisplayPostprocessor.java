@@ -68,6 +68,7 @@ public class DisplayPostprocessor extends AbstractPostprocessorPlugin {
 		for (final ModuleItem<?> outputItem : module.getInfo().outputs()) {
 			final Object value = outputItem.getValue(module);
 			final String name = defaultName(outputItem);
+			System.out.println("Display PP: " + name + " = " + value);//TEMP
 			handleOutput(displayService, name, value);
 		}
 	}
@@ -152,7 +153,8 @@ public class DisplayPostprocessor extends AbstractPostprocessorPlugin {
 		if (log != null) {
 			final String valueClass =
 				output == null ? "null" : output.getClass().getName();
-			log.warn("Ignoring unsupported output: " + valueClass);
+			log.warn("Ignoring unsupported output: " + defaultName + " [" +
+				valueClass + "]");
 		}
 	}
 

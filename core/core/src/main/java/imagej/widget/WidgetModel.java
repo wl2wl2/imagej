@@ -270,6 +270,7 @@ public class WidgetModel {
 		if (label != null && !label.isEmpty()) return label;
 
 		final String name = item.getName();
+		if (name == null) return "(Unnamed)";
 		return name.substring(0, 1).toUpperCase() + name.substring(1);
 	}
 

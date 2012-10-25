@@ -43,8 +43,10 @@ import imagej.plugin.PluginInfo;
 import imagej.plugin.PluginService;
 import imagej.service.AbstractService;
 import imagej.service.Service;
+import imagej.util.ClassUtils;
 import imagej.util.FileUtils;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -53,6 +55,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
@@ -67,7 +70,12 @@ import javax.script.ScriptException;
  * @author Johannes Schindelin
  */
 @Plugin(type = Service.class)
-public class DefaultScriptService extends AbstractService implements ScriptService {
+public class DefaultScriptService extends AbstractService implements
+	ScriptService
+{
+
+	/** Maximum number of characters in a script's parameter definition block. */
+	private static final int PARAMETER_LIMIT = 65536;
 
 	@Parameter
 	private PluginService pluginService;
@@ -139,7 +147,8 @@ public class DefaultScriptService extends AbstractService implements ScriptServi
 
 	@Override
 	public Object eval(final String filename, final Reader reader)
-			throws IOException, ScriptException {
+		throws IOException, ScriptException
+	{
 		final String fileExtension = FileUtils.getExtension(filename);
 		final ScriptEngineFactory language = getByFileExtension(fileExtension);
 		if (language == null) {
@@ -162,18 +171,20 @@ public class DefaultScriptService extends AbstractService implements ScriptServi
 	}
 
 	@Override
-	public boolean isCompiledLanguage(ScriptEngineFactory language) {
+	public boolean isCompiledLanguage(final ScriptEngineFactory language) {
 		return false;
 	}
 
 	public void reloadScriptLanguages() {
 		scriptLanguageIndex.clear();
-		for (final PluginInfo<? extends ScriptLanguage> item : pluginService.getPluginsOfType(ScriptLanguage.class))
+		for (final PluginInfo<ScriptLanguage> item : pluginService
+			.getPluginsOfType(ScriptLanguage.class))
 		{
 			try {
 				final ScriptEngineFactory language = item.createInstance();
 				scriptLanguageIndex.add(language, false);
-			} catch (InstantiableException e) {
+			}
+			catch (final InstantiableException e) {
 				log.error("Invalid script language: " + item, e);
 			}
 		}
@@ -198,6 +209,65 @@ public class DefaultScriptService extends AbstractService implements ScriptServi
 		final ScriptContext context = engine.getContext();
 		if (writer != null) context.setWriter(writer);
 		if (writer != null) context.setErrorWriter(errorWriter);
+	}
+
+	@Override
+	public void parseParameters(final BufferedReader in,
+		final List<String> inputs, final Map<String, Class<?>> inputTypes,
+		final List<String> outputs, final Map<String, Class<?>> outputTypes)
+		throws IOException
+	{
+		in.mark(PARAMETER_LIMIT);
+		boolean paramSection = false;
+		while (true) {
+			final String line = in.readLine();
+			if (line == null) break; // eof
+
+			if (line.indexOf("@Parameter(") >= 0) {
+				// found the beginning of the parameters section
+				paramSection = true;
+			}
+			else if (paramSection) {
+				// found the end (parameters are assumed to be sequential)
+				break;
+			}
+			else {
+				// have not reached the parameters section yet
+				continue;
+			}
+
+			// parse parameter attributes
+			// TODO: use a regex instead!
+			final int leftParen = line.indexOf("(");
+			final int rightParen = line.lastIndexOf(")");
+			final String args = line.substring(leftParen + 1, rightParen);
+			String name = null;
+			Class<?> type = null;
+			boolean output = false;
+			for (final String pair : args.split(",")) {
+				final String[] s = pair.split("=");
+				final String key = s[0].trim();
+				final String value = s[1].trim();
+				if (key.equals("name")) {
+					name = value;
+				}
+				else if (key.equals("type")) {
+					type = ClassUtils.loadClass(value);
+				}
+				if (key.equals("output")) {
+					output = value.equals("true");
+				}
+			}
+			if (output) {
+				outputs.add(name);
+				outputTypes.put(name, type);
+			}
+			else {
+				inputs.add(name);
+				inputTypes.put(name, type);
+			}
+		}
+		in.reset();
 	}
 
 }
