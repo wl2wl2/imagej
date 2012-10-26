@@ -250,17 +250,123 @@ public final class ClassUtils {
 		return loadClass(className, null);
 	}
 
-	/** Loads the class with the given name, or null if it cannot be loaded. */
+	/**
+	 * Loads the class with the given name, or null if it cannot be loaded.
+	 * <p>
+	 * This method is capable of parsing certain simplified class name syntaxes.
+	 * In particular, array classes (including primitives) represented using
+	 * square brackets are translated to their more formal Java equivalent.
+	 * Examples:
+	 * </p>
+	 * <ul>
+	 * <li>{@code double[]} is loaded as {@code [D} (i.e., {@code double[].class})
+	 * </li>
+	 * <li>{@code string[]} is loaded as {@code [Ljava.lang.String;} (i.e.,
+	 * {@code java.lang.String.class})</li>
+	 * </ul>
+	 */
 	public static Class<?> loadClass(final String className,
 		final ClassLoader classLoader)
 	{
+		// handle primitive types directly
+		if (className.equals("boolean")) return boolean.class;
+		if (className.equals("byte")) return byte.class;
+		if (className.equals("char")) return char.class;
+		if (className.equals("double")) return double.class;
+		if (className.equals("float")) return float.class;
+		if (className.equals("int")) return int.class;
+		if (className.equals("long")) return long.class;
+		if (className.equals("short")) return short.class;
+		if (className.equals("string")) return String.class;
+
+		// decode any simplified class name syntax
+		final String formalName = decodeClassName(className);
+
+		// load the class!
 		try {
-			if (classLoader == null) return Class.forName(className);
+			if (classLoader == null) return Class.forName(formalName);
 			return classLoader.loadClass(className);
 		}
 		catch (final ClassNotFoundException e) {
 			return null;
 		}
+	}
+
+	/**
+	 * Translates certain simple class names to their more formal equivalents.
+	 * <p>
+	 * In particular, array classes (including primitives) represented using
+	 * square brackets are translated to their more formal Java equivalent.
+	 * Examples:
+	 * </p>
+	 * <ul>
+	 * <li>{@code double[]} becomes {@code [D}</li>
+	 * <li>{@code string[]} becomes {@code [Ljava.lang.String;}</li>
+	 * </ul>
+	 * 
+	 * @param className The class name to decode
+	 * @return The formal, decoded class name, guaranteed to be loadable by
+	 *         {@link #loadClass(String)}.
+	 */
+	private static String decodeClassName(final String className) {
+		String decodedName = className;
+
+		// count and remove array brackets
+		int array = 0;
+		while (decodedName.endsWith("[]")) {
+			decodedName = decodedName.substring(0, decodedName.length() - 2);
+			array++;
+		}
+
+		// replace class shortcuts
+		boolean primitive = false;
+
+		if (decodedName.equals("string")) decodedName = "java.lang.String";
+
+		// primitive types
+		else if (decodedName.equals("boolean")) {
+			decodedName = "Z";
+			primitive = true;
+		}
+		else if (decodedName.equals("byte")) {
+			decodedName = "B";
+			primitive = true;
+		}
+		else if (decodedName.equals("char")) {
+			decodedName = "C";
+			primitive = true;
+		}
+		else if (decodedName.equals("double")) {
+			decodedName = "D";
+			primitive = true;
+		}
+		else if (decodedName.equals("float")) {
+			decodedName = "F";
+			primitive = true;
+		}
+		else if (decodedName.equals("int")) {
+			decodedName = "I";
+			primitive = true;
+		}
+		else if (decodedName.equals("long")) {
+			decodedName = "J";
+			primitive = true;
+		}
+		else if (decodedName.equals("short")) {
+			decodedName = "S";
+			primitive = true;
+		}
+
+		// fix array class syntax
+		if (array > 0 && !primitive) decodedName = "L" + decodedName;
+		String brackets = "";
+		for (int a = 0; a < array; a++) {
+			brackets += "[";
+		}
+		decodedName = brackets + decodedName;
+		if (array > 0 && !primitive) decodedName = decodedName + ";";
+
+		return decodedName;
 	}
 
 	/** Checks whether a class with the given name exists. */
