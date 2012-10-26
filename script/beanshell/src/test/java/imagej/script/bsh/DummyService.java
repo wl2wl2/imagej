@@ -1,4 +1,4 @@
-package imagej.script;
+package imagej.script.bsh;
 
 import imagej.ImageJ;
 import imagej.service.AbstractService;

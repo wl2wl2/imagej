@@ -32,9 +32,11 @@ ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 */
 
-package imagej.script;
+package imagej.script.bsh;
 
 import imagej.plugin.Plugin;
+import imagej.script.AbstractScriptEngineFactory;
+import imagej.script.ScriptLanguage;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,7 +1,10 @@
-package imagej.script;
+package imagej.script.bsh;
 
 import static org.junit.Assert.assertEquals;
 import imagej.ImageJ;
+import imagej.script.DefaultScriptService;
+import imagej.script.DummyService;
+import imagej.script.ScriptService;
 import imagej.service.ServiceHelper;
 
 import java.io.StringReader;
