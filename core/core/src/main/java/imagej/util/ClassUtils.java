@@ -296,7 +296,8 @@ public final class ClassUtils {
 	 * </p>
 	 * 
 	 * @param className The name of the class whose location is desired.
-	 * @see FileUtils#urlToFile(URL) to convert the result to a {@link File}.
+	 * @see FileUtils#urlToFile(URL) to convert the result to a
+	 *      {@link java.io.File}.
 	 */
 	public static URL getLocation(final String className) {
 		return getLocation(className, null);
@@ -317,7 +318,8 @@ public final class ClassUtils {
 	 * 
 	 * @param className The name of the class whose location is desired.
 	 * @param classLoader The class loader to use when loading the class.
-	 * @see FileUtils#urlToFile(URL) to convert the result to a {@link File}.
+	 * @see FileUtils#urlToFile(URL) to convert the result to a
+	 *      {@link java.io.File}.
 	 */
 	public static URL getLocation(final String className,
 		final ClassLoader classLoader)
@@ -340,7 +342,8 @@ public final class ClassUtils {
 	 * </p>
 	 * 
 	 * @param c The class whose location is desired.
-	 * @see FileUtils#urlToFile(URL) to convert the result to a {@link File}.
+	 * @see FileUtils#urlToFile(URL) to convert the result to a
+	 *      {@link java.io.File}.
 	 */
 	public static URL getLocation(final Class<?> c) {
 		if (c == null) return null; // could not load the class
