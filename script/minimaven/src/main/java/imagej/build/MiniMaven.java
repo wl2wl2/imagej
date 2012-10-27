@@ -1,4 +1,3 @@
-package imagej.build;
 /*
  * #%L
  * ImageJ software for multidimensional image processing and analysis.
@@ -34,6 +33,8 @@ package imagej.build;
  * #L%
  */
 
+package imagej.build;
+
 import imagej.build.minimaven.BuildEnvironment;
 import imagej.build.minimaven.MavenProject;
 
@@ -46,7 +47,11 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.TreeSet;
 
-
+/**
+ * TODO
+ * 
+ * @author Johannes Schindelin
+ */
 public class MiniMaven {
 	public static void ensureIJDirIsSet() {
 		String ijDir = System.getProperty("ij.dir");
