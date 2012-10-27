@@ -49,7 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * {@link ModuleItem} implementation describing an input or output of a command.
+ * {@link ModuleItem} implementation describing one of the command's items.
  * 
  * @author Curtis Rueden
  */

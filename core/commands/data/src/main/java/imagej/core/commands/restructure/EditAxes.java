@@ -90,13 +90,13 @@ public class EditAxes extends DynamicCommand {
 	}
 
 	public AxisType getAxisMapping(int axisNum) {
-		String axisName = (String) getInput(name(axisNum));
+		String axisName = (String) get(name(axisNum));
 		return Axes.get(axisName);
 	}
 	
 	public void setAxisMapping(int axisNum, AxisType axis) {
 		String axisName = name(axisNum);
-		setInput(axisName, axis.getLabel());
+		put(axisName, axis.getLabel());
 	}
 	
 	// -- Runnable methods --
@@ -127,11 +127,12 @@ public class EditAxes extends DynamicCommand {
 		}
 		for (int i = 0; i < dataset.numDimensions(); i++) {
 			final DefaultModuleItem<String> axisItem =
-				new DefaultModuleItem<String>(this, name(i), String.class);
+				new DefaultModuleItem<String>(this, name(i), String.class,
+					ItemIO.INPUT);
 			axisItem.setChoices(choices);
 			axisItem.setPersisted(false);
 			axisItem.setValue(this, dataset.axis(i).getLabel());
-			addInput(axisItem);
+			addItem(axisItem);
 		}
 	}
 

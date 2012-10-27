@@ -66,18 +66,18 @@ public class DefaultModuleItem<T> extends AbstractModuleItem<T> {
 	private String description;
 
 	public DefaultModuleItem(final Module module, final String name,
-		final Class<T> type)
+		final Class<T> type, final ItemIO ioType)
 	{
-		this(module.getInfo(), name, type);
+		this(module.getInfo(), name, type, ioType);
 	}
 
 	public DefaultModuleItem(final ModuleInfo info, final String name,
-		final Class<T> type)
+		final Class<T> type, final ItemIO ioType)
 	{
 		super(info);
 		this.name = name;
 		this.type = type;
-		ioType = super.getIOType();
+		this.ioType = ioType;
 		visibility = super.getVisibility();
 		required = super.isRequired();
 		persisted = super.isPersisted();

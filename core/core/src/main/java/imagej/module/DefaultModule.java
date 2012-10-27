@@ -61,14 +61,9 @@ public class DefaultModule extends AbstractModule {
 		final Class<T> type)
 	{
 		final DefaultModuleItem<T> item =
-			new DefaultModuleItem<T>(this, name, type);
-		addInput(item);
+			new DefaultModuleItem<T>(this, name, type, ItemIO.INPUT);
+		addItem(item);
 		return item;
-	}
-
-	/** Adds an input to the list. */
-	public void addInput(final ModuleItem<?> input) {
-		getInfo().addInput(input);
 	}
 
 	/** Adds an output to the list. */
@@ -76,24 +71,19 @@ public class DefaultModule extends AbstractModule {
 		final Class<T> type)
 	{
 		final DefaultModuleItem<T> item =
-			new DefaultModuleItem<T>(this, name, type);
-		addOutput(item);
+			new DefaultModuleItem<T>(this, name, type, ItemIO.OUTPUT);
+		addItem(item);
 		return item;
 	}
 
-	/** Adds an output to the list. */
-	public void addOutput(final ModuleItem<?> output) {
-		getInfo().addOutput(output);
+	/** Adds an item to the list. */
+	public void addItem(final ModuleItem<?> item) {
+		getInfo().addItem(item);
 	}
 
 	/** Removes an input from the list. */
-	public void removeInput(final ModuleItem<?> input) {
-		getInfo().removeInput(input);
-	}
-
-	/** Removes an output from the list. */
-	public void removeOutput(final ModuleItem<?> output) {
-		getInfo().removeOutput(output);
+	public void removeItem(final ModuleItem<?> input) {
+		getInfo().removeItem(input);
 	}
 
 	// -- Module methods --

@@ -317,7 +317,7 @@ public class DeleteAxis extends DynamicCommand implements Cancelable {
 	private void initAxisName() {
 		@SuppressWarnings("unchecked")
 		final DefaultModuleItem<String> axisNameItem =
-			(DefaultModuleItem<String>) getInfo().getInput(AXIS_NAME);
+			(DefaultModuleItem<String>) getInfo().getItem(AXIS_NAME);
 		final AxisType[] axes = getDataset().getAxes();
 		final ArrayList<String> choices = new ArrayList<String>();
 		for (final AxisType a : axes) {
@@ -339,7 +339,7 @@ public class DeleteAxis extends DynamicCommand implements Cancelable {
 	private void initPositionRange(final long min, final long max) {
 		@SuppressWarnings("unchecked")
 		final DefaultModuleItem<Long> positionItem =
-			(DefaultModuleItem<Long>) getInfo().getInput(POSITION);
+			(DefaultModuleItem<Long>) getInfo().getItem(POSITION);
 		positionItem.setMinimumValue(min); // works the first time
 		// TODO - temporarily disabled since parameter mins and maxes cannot be
 		// changed on the fly. Should be enabled when ticket #886 addressed.

@@ -57,7 +57,7 @@ import java.lang.reflect.Field;
  * this class adapts that object, delegating to it for the {@link UIDetails}
  * methods. The plain {@link PluginInfo} cannot be used as-is, however, because
  * we need to override the {@link ModuleInfo} methods as well as provide new
- * functionality such as {@link DefaultModuleInfo#addInput(ModuleItem)}.
+ * functionality such as {@link DefaultModuleInfo#addItem(ModuleItem)}.
  * </p>
  * 
  * @author Curtis Rueden
@@ -78,21 +78,11 @@ public class DynamicCommandInfo extends DefaultModuleInfo {
 
 	/**
 	 * Gets the {@link Field} corresponding to the given @{@link Parameter}
-	 * annotated module input, or null if the input does not exist or was not
+	 * annotated module item, or null if the item does not exist or was not
 	 * declared using the @{@link Parameter} mechanism.
 	 */
-	protected Field getInputField(final String name) {
-		final CommandModuleItem<?> item = info.getInput(name);
-		return item == null ? null : item.getField();
-	}
-
-	/**
-	 * Gets the {@link Field} corresponding to the given @{@link Parameter}
-	 * annotated module output, or null if the output does not exist or was not
-	 * declared using the @{@link Parameter} mechanism.
-	 */
-	protected Field getOutputField(final String name) {
-		final CommandModuleItem<?> item = info.getOutput(name);
+	protected Field getItemField(final String name) {
+		final CommandModuleItem<?> item = info.getItem(name);
 		return item == null ? null : item.getField();
 	}
 
@@ -240,11 +230,8 @@ public class DynamicCommandInfo extends DefaultModuleInfo {
 	 * with inputs dynamically generated at runtime.
 	 */
 	private void populateItems() {
-		for (final ModuleItem<?> item : info.inputs()) {
-			addInput(copy(item));
-		}
-		for (final ModuleItem<?> item : info.outputs()) {
-			addOutput(copy(item));
+		for (final ModuleItem<?> item : info.items()) {
+			addItem(copy(item));
 		}
 	}
 

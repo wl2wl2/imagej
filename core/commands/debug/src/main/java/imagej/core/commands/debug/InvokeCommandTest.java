@@ -101,7 +101,7 @@ public class InvokeCommandTest implements Command {
 				"bitDepth", "8-bit", "signed", false, "floating", false, "fillType",
 				"Ramp", "width", 512, "height", 512);
 		final Module module = moduleService.waitFor(future);
-		return (Dataset) module.getOutput("dataset");
+		return (Dataset) module.get("dataset");
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class InvokeCommandTest implements Command {
 		final Future<Module> future =
 			commandService.run("imagej.io.plugins.NewImage", inputMap);
 		final Module module = moduleService.waitFor(future);
-		return (Dataset) module.getOutput("dataset");
+		return (Dataset) module.get("dataset");
 	}
 
 	/**

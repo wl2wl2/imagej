@@ -124,28 +124,20 @@ public class CommandModule<C extends Command> extends AbstractModule implements
 		return command;
 	}
 
+	// -- Map methods --
+
 	@Override
-	public Object getInput(final String name) {
-		final CommandModuleItem<?> item = info.getInput(name);
+	public Object get(final Object name) {
+		final CommandModuleItem<?> item = info.getItem(name.toString());
 		return ClassUtils.getValue(item.getField(), command);
 	}
 
 	@Override
-	public Object getOutput(final String name) {
-		final CommandModuleItem<?> item = info.getOutput(name);
-		return ClassUtils.getValue(item.getField(), command);
-	}
-
-	@Override
-	public void setInput(final String name, final Object value) {
-		final CommandModuleItem<?> item = info.getInput(name);
+	public Object put(final String name, final Object value) {
+		final CommandModuleItem<?> item = info.getItem(name);
+		final Object previous = get(name);
 		ClassUtils.setValue(item.getField(), command, value);
-	}
-
-	@Override
-	public void setOutput(final String name, final Object value) {
-		final CommandModuleItem<?> item = info.getOutput(name);
-		ClassUtils.setValue(item.getField(), command, value);
+		return previous;
 	}
 
 	// -- Object methods --
@@ -196,7 +188,7 @@ public class CommandModule<C extends Command> extends AbstractModule implements
 		final Map<String, Object> presets = info.getPresets();
 		for (final String name : presets.keySet()) {
 			final Object value = presets.get(name);
-			setInput(name, value);
+			put(name, value);
 			setResolved(name, true);
 		}
 	}

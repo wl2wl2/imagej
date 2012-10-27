@@ -35,22 +35,23 @@
 
 package imagej.module;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Abstract superclass of {@link Module} implementations.
  * <p>
- * By default, input and output values are stored in {@link HashMap}s.
+ * By default, input and output values are stored in a {@link HashMap}.
  * </p>
  * 
  * @author Curtis Rueden
  */
 public abstract class AbstractModule implements Module {
 
-	private final HashMap<String, Object> inputs;
-	private final HashMap<String, Object> outputs;
+	private final HashMap<String, Object> values;
 
 	/** Table indicating resolved inputs. */
 	private final HashSet<String> resolvedInputs;
@@ -58,8 +59,7 @@ public abstract class AbstractModule implements Module {
 	private MethodRef initializerRef;
 
 	public AbstractModule() {
-		inputs = new HashMap<String, Object>();
-		outputs = new HashMap<String, Object>();
+		values = new HashMap<String, Object>();
 		resolvedInputs = new HashSet<String>();
 	}
 
@@ -91,47 +91,13 @@ public abstract class AbstractModule implements Module {
 	}
 
 	@Override
-	public Object getInput(final String name) {
-		return inputs.get(name);
-	}
-
-	@Override
-	public Object getOutput(final String name) {
-		return outputs.get(name);
-	}
-
-	@Override
 	public Map<String, Object> getInputs() {
-		return createMap(getInfo().inputs(), false);
+		return createMap(getInfo().inputs());
 	}
 
 	@Override
 	public Map<String, Object> getOutputs() {
-		return createMap(getInfo().outputs(), true);
-	}
-
-	@Override
-	public void setInput(final String name, final Object value) {
-		inputs.put(name, value);
-	}
-
-	@Override
-	public void setOutput(final String name, final Object value) {
-		outputs.put(name, value);
-	}
-
-	@Override
-	public void setInputs(final Map<String, Object> inputs) {
-		for (final String name : inputs.keySet()) {
-			setInput(name, inputs.get(name));
-		}
-	}
-
-	@Override
-	public void setOutputs(final Map<String, Object> outputs) {
-		for (final String name : outputs.keySet()) {
-			setOutput(name, outputs.get(name));
-		}
+		return createMap(getInfo().outputs());
 	}
 
 	@Override
@@ -145,15 +111,100 @@ public abstract class AbstractModule implements Module {
 		else resolvedInputs.remove(name);
 	}
 
+	// -- Map methods --
+
+	/** Gets the number of items in this module. */
+	@Override
+	public int size() {
+		int size = 0;
+		for (@SuppressWarnings("unused")
+		final ModuleItem<?> item : getInfo().items())
+		{
+			size++;
+		}
+		return size;
+	}
+
+	/** Checks whether this module has no items. */
+	@Override
+	public boolean isEmpty() {
+		return !getInfo().items().iterator().hasNext();
+	}
+
+	/** Checks whether this module has an item with the given name. */
+	@Override
+	public boolean containsKey(final Object name) {
+		for (final ModuleItem<?> item : getInfo().items()) {
+			if (item.getName().equals(name)) return true;
+		}
+		return false;
+	}
+
+	/** Checks whether given value is assigned to any module item. */
+	@Override
+	public boolean containsValue(final Object value) {
+		return values.containsValue(value);
+	}
+
+	/** Gets the value of the module item with the given name. */
+	@Override
+	public Object get(final Object name) {
+		return values.get(name);
+	}
+
+	/** Sets the value of the module item with the given name. */
+	@Override
+	public Object put(final String name, final Object value) {
+		return values.put(name, value);
+	}
+
+	/** Clears the value for the module item with the given name. */
+	@Override
+	public Object remove(final Object name) {
+		return values.remove(name);
+	}
+
+	/** Sets the values of the module items in the given table. */
+	@Override
+	public void putAll(final Map<? extends String, ? extends Object> m) {
+		values.putAll(m);
+	}
+
+	/** Clears the values of all of this module's items. */
+	@Override
+	public void clear() {
+		values.clear();
+	}
+
+	/** Gets the set of item names for this module. */
+	@Override
+	public Set<String> keySet() {
+		final HashSet<String> set = new HashSet<String>();
+		for (final ModuleItem<?> item : getInfo().items()) {
+			set.add(item.getName());
+		}
+		return set;
+	}
+
+	/** Gets a collection of the values contained in the module. */
+	@Override
+	public Collection<Object> values() {
+		return values.values();
+	}
+
+	/** Gets the set of (name, value) pairs for module items with values. */
+	@Override
+	public Set<Map.Entry<String, Object>> entrySet() {
+		return values.entrySet();
+	}
+
 	// -- Helper methods --
 
-	private Map<String, Object> createMap(final Iterable<ModuleItem<?>> items,
-		final boolean outputMap)
-	{
+	private Map<String, Object> createMap(final Iterable<ModuleItem<?>> items) {
 		final Map<String, Object> map = new HashMap<String, Object>();
 		for (final ModuleItem<?> item : items) {
 			final String name = item.getName();
-			final Object value = outputMap ? getOutput(name) : getInput(name);
+			final Object value = get(name);
 			map.put(name, value);
 		}
 		return map;

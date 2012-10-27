@@ -106,7 +106,7 @@ public class ReorderData extends DynamicCommand {
 	 */
 	public void setNewAxisIndex(int index, int fromPosition) {
 		AxisType axis = dataset.axis(fromPosition);
-		setInput(name(index), axis.getLabel());
+		put(name(index), axis.getLabel());
 	}
 
 	/**
@@ -114,7 +114,7 @@ public class ReorderData extends DynamicCommand {
 	 * @param index The index within the new axis order
 	 */
 	public int getNewAxisIndex(int index) {
-		String axisName = (String) getInput(name(index));
+		String axisName = (String) get(name(index));
 		for (int i = 0; i < dataset.numDimensions(); i++) {
 			if (axisName.equals(dataset.axis(i).getLabel())) return i;
 		}
@@ -154,11 +154,12 @@ public class ReorderData extends DynamicCommand {
 		}
 		for (int i = 0; i < axes.length; i++) {
 			final DefaultModuleItem<String> axisItem =
-				new DefaultModuleItem<String>(this, name(i), String.class);
+				new DefaultModuleItem<String>(this, name(i), String.class,
+					ItemIO.INPUT);
 			axisItem.setChoices(choices);
 			axisItem.setPersisted(false);
 			axisItem.setValue(this, axes[i].getLabel());
-			addInput(axisItem);
+			addItem(axisItem);
 		}
 	}
 

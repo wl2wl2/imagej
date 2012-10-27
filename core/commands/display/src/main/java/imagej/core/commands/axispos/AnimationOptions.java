@@ -176,7 +176,7 @@ public class AnimationOptions extends DynamicCommand {
 	protected void initAxisName() {
 		@SuppressWarnings("unchecked")
 		final DefaultModuleItem<String> axisNameItem =
-			(DefaultModuleItem<String>) getInfo().getInput("axisName");
+			(DefaultModuleItem<String>) getInfo().getItem("axisName");
 		final AxisType[] axes = getDisplay().getAxes();
 		final ArrayList<String> choices = new ArrayList<String>();
 		for (final AxisType axis : axes) {

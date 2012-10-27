@@ -70,20 +70,18 @@ import java.util.Map;
 public class DefaultModuleInfo extends AbstractUIDetails implements ModuleInfo
 {
 
-	/** Table of inputs, keyed on name. */
-	private final Map<String, ModuleItem<?>> inputMap =
+	/** Table of items, keyed on name. */
+	private final Map<String, ModuleItem<?>> itemMap =
 		new HashMap<String, ModuleItem<?>>();
 
-	/** Table of outputs, keyed on name. */
-	private final Map<String, ModuleItem<?>> outputMap =
-		new HashMap<String, ModuleItem<?>>();
+	/** Ordered list of items. */
+	private final List<ModuleItem<?>> items = new ArrayList<ModuleItem<?>>();
 
-	/** Ordered list of input items. */
-	private final List<ModuleItem<?>> inputList = new ArrayList<ModuleItem<?>>();
+	/** Ordered list of inputs. This list is a subset of {@link #items}. */
+	private final List<ModuleItem<?>> inputs = new ArrayList<ModuleItem<?>>();
 
-	/** Ordered list of output items. */
-	private final List<ModuleItem<?>> outputList =
-		new ArrayList<ModuleItem<?>>();
+	/** Ordered list of outputs. This list is a subset of {@link #items}. */
+	private final List<ModuleItem<?>> outputs = new ArrayList<ModuleItem<?>>();
 
 	private Class<? extends Module> moduleClass;
 
@@ -99,50 +97,42 @@ public class DefaultModuleInfo extends AbstractUIDetails implements ModuleInfo
 		return moduleClass;
 	}
 
-	/** Adds an input to the list. */
-	public void addInput(final ModuleItem<?> input) {
-		inputMap.put(input.getName(), input);
-		inputList.add(input);
+	/** Adds an item to the list. */
+	public void addItem(final ModuleItem<?> item) {
+		itemMap.put(item.getName(), item);
+		items.add(item);
+		if (item.isInput()) inputs.add(item);
+		if (item.isOutput()) outputs.add(item);
 	}
 
-	/** Adds an output to the list. */
-	public void addOutput(final ModuleItem<?> output) {
-		outputMap.put(output.getName(), output);
-		outputList.add(output);
-	}
-
-	/** Removes an input from the list. */
-	public void removeInput(final ModuleItem<?> input) {
-		inputMap.remove(input.getName());
-		inputList.remove(input);
-	}
-
-	/** Removes an output from the list. */
-	public void removeOutput(final ModuleItem<?> output) {
-		outputMap.remove(output.getName());
-		outputList.remove(output);
+	/** Removes an item from the list. */
+	public void removeItem(final ModuleItem<?> item) {
+		itemMap.remove(item.getName());
+		items.remove(item);
+		inputs.remove(item);
+		outputs.remove(item);
 	}
 
 	// -- ModuleInfo methods --
 
 	@Override
-	public ModuleItem<?> getInput(final String name) {
-		return inputMap.get(name);
+	public ModuleItem<?> getItem(final String name) {
+		return itemMap.get(name);
 	}
 
 	@Override
-	public ModuleItem<?> getOutput(final String name) {
-		return outputMap.get(name);
+	public Iterable<ModuleItem<?>> items() {
+		return Collections.unmodifiableList(items);
 	}
 
 	@Override
 	public Iterable<ModuleItem<?>> inputs() {
-		return Collections.unmodifiableList(inputList);
+		return Collections.unmodifiableList(inputs);
 	}
 
 	@Override
 	public Iterable<ModuleItem<?>> outputs() {
-		return Collections.unmodifiableList(outputList);
+		return Collections.unmodifiableList(outputs);
 	}
 
 	@Override

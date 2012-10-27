@@ -95,20 +95,18 @@ public class CommandInfo<C extends Command> extends PluginInfo<C> implements
 	private final List<ValidityProblem> problems =
 		new ArrayList<ValidityProblem>();
 
-	/** Table of inputs, keyed on name. */
-	private final Map<String, ModuleItem<?>> inputMap =
+	/** Table of items, keyed on name. */
+	private final Map<String, ModuleItem<?>> itemMap =
 		new HashMap<String, ModuleItem<?>>();
 
-	/** Table of outputs, keyed on name. */
-	private final Map<String, ModuleItem<?>> outputMap =
-		new HashMap<String, ModuleItem<?>>();
+	/** Ordered list of items. */
+	private final List<ModuleItem<?>> items = new ArrayList<ModuleItem<?>>();
 
-	/** Ordered list of input items. */
-	private final List<ModuleItem<?>> inputList = new ArrayList<ModuleItem<?>>();
+	/** Ordered list of inputs. This list is a subset of {@link #items}. */
+	private final List<ModuleItem<?>> inputs = new ArrayList<ModuleItem<?>>();
 
-	/** Ordered list of output items. */
-	private final List<ModuleItem<?>> outputList =
-		new ArrayList<ModuleItem<?>>();
+	/** Ordered list of outputs. This list is a subset of {@link #items}. */
+	private final List<ModuleItem<?>> outputs = new ArrayList<ModuleItem<?>>();
 
 	// -- Constructors --
 
@@ -181,27 +179,27 @@ public class CommandInfo<C extends Command> extends PluginInfo<C> implements
 	// -- ModuleInfo methods --
 
 	@Override
-	public CommandModuleItem<?> getInput(final String name) {
+	public CommandModuleItem<?> getItem(String name) {
 		parseParams();
-		return (CommandModuleItem<?>) inputMap.get(name);
+		return (CommandModuleItem<?>) itemMap.get(name);
 	}
 
 	@Override
-	public CommandModuleItem<?> getOutput(final String name) {
+	public Iterable<ModuleItem<?>> items() {
 		parseParams();
-		return (CommandModuleItem<?>) outputMap.get(name);
+		return Collections.unmodifiableList(items);
 	}
 
 	@Override
 	public Iterable<ModuleItem<?>> inputs() {
 		parseParams();
-		return Collections.unmodifiableList(inputList);
+		return Collections.unmodifiableList(inputs);
 	}
 
 	@Override
 	public Iterable<ModuleItem<?>> outputs() {
 		parseParams();
-		return Collections.unmodifiableList(outputList);
+		return Collections.unmodifiableList(outputs);
 	}
 
 	@Override
@@ -303,7 +301,7 @@ public class CommandInfo<C extends Command> extends PluginInfo<C> implements
 			}
 
 			final String name = f.getName();
-			if (inputMap.containsKey(name) || outputMap.containsKey(name)) {
+			if (itemMap.containsKey(name)) {
 				// NB: Shadowed parameters are bad because they are ambiguous.
 				final String error = "Invalid duplicate parameter: " + f;
 				problems.add(new ValidityProblem(error));
@@ -317,16 +315,14 @@ public class CommandInfo<C extends Command> extends PluginInfo<C> implements
 
 			final boolean isPreset = presets.containsKey(name);
 
-			// add item to the relevant list (inputs or outputs)
+			// add item to the items list
 			final CommandModuleItem<Object> item =
 				new CommandModuleItem<Object>(this, f);
-			if (item.isInput()) {
-				inputMap.put(name, item);
-				if (!isPreset) inputList.add(item);
-			}
-			if (item.isOutput()) {
-				outputMap.put(name, item);
-				if (!isPreset) outputList.add(item);
+			itemMap.put(name, item);
+			if (!isPreset) {
+				items.add(item);
+				if (item.isInput()) inputs.add(item);
+				if (item.isOutput()) outputs.add(item);
 			}
 		}
 	}

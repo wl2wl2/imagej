@@ -70,7 +70,7 @@ public class SetAxisPosition extends DynamicCommand {
 	protected void initPosition() {
 		@SuppressWarnings("unchecked")
 		final DefaultModuleItem<Long> positionItem =
-			(DefaultModuleItem<Long>) getInfo().getInput("oneBasedPosition");
+			(DefaultModuleItem<Long>) getInfo().getItem("oneBasedPosition");
 		positionItem.setLabel("Position");
 		positionItem.setMinimumValue(1L);
 		final AxisType axis = display.getActiveAxis();

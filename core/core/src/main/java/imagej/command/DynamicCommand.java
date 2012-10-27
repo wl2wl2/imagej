@@ -65,32 +65,22 @@ public abstract class DynamicCommand extends DefaultModule implements Command,
 		return info;
 	}
 
+	// -- Map methods --
+
 	@Override
-	public Object getInput(final String name) {
-		final Field field = info.getInputField(name);
-		if (field == null) return super.getInput(name);
+	public Object get(final Object name) {
+		final Field field = info.getItemField(name.toString());
+		if (field == null) return super.get(name);
 		return ClassUtils.getValue(field, this);
 	}
 
 	@Override
-	public Object getOutput(final String name) {
-		final Field field = info.getOutputField(name);
-		if (field == null) return super.getInput(name);
-		return ClassUtils.getValue(field, this);
-	}
-
-	@Override
-	public void setInput(final String name, final Object value) {
-		final Field field = info.getInputField(name);
-		if (field == null) super.setInput(name, value);
-		else ClassUtils.setValue(field, this, value);
-	}
-
-	@Override
-	public void setOutput(final String name, final Object value) {
-		final Field field = info.getOutputField(name);
-		if (field == null) super.setOutput(name, value);
-		else ClassUtils.setValue(field, this, value);
+	public Object put(final String name, final Object value) {
+		final Field field = info.getItemField(name);
+		if (field == null) return super.put(name, value);
+		final Object previous = ClassUtils.getValue(field, this);
+		ClassUtils.setValue(field, this, value);
+		return previous;
 	}
 
 	// -- Contextual methods --

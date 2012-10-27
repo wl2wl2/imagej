@@ -301,7 +301,7 @@ public class DeleteData extends DynamicCommand implements Cancelable {
 	private void initAxisName() {
 		@SuppressWarnings("unchecked")
 		final DefaultModuleItem<String> axisNameItem =
-			(DefaultModuleItem<String>) getInfo().getInput(AXIS_NAME);
+			(DefaultModuleItem<String>) getInfo().getItem(AXIS_NAME);
 		final AxisType[] axes = getDataset().getAxes();
 		final ArrayList<String> choices = new ArrayList<String>();
 		for (final AxisType a : axes) {
@@ -358,7 +358,7 @@ public class DeleteData extends DynamicCommand implements Cancelable {
 	{
 		@SuppressWarnings("unchecked")
 		final DefaultModuleItem<Long> item =
-			(DefaultModuleItem<Long>) getInfo().getInput(fieldName);
+			(DefaultModuleItem<Long>) getInfo().getItem(fieldName);
 		item.setMinimumValue(min);
 		// TODO - disable until we fix ticket #886
 		// item.setMaximumValue(max);

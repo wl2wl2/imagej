@@ -118,7 +118,7 @@ public class WidgetModel {
 	public void setValue(final Object value) {
 		final String name = item.getName();
 		if (objectsEqual(getValue(), value)) return; // no change
-		module.setInput(name, value);
+		module.put(name, value);
 		if (initialized) {
 			item.callback(module);
 			inputPanel.refresh();

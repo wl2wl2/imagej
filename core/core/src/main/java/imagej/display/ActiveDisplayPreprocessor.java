@@ -78,7 +78,7 @@ public class ActiveDisplayPreprocessor extends AbstractPreprocessorPlugin {
 			moduleService.getSingleInput(module, Display.class);
 		if (displayInput != null && displayInput.isAutoFill()) {
 			final String name = displayInput.getName();
-			module.setInput(name, activeDisplay);
+			module.put(name, activeDisplay);
 			module.setResolved(name, true);
 		}
 	}

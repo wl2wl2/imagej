@@ -251,7 +251,7 @@ public class AddAxis extends DynamicCommand implements Cancelable {
 	private void initAxisName() {
 		@SuppressWarnings("unchecked")
 		final DefaultModuleItem<String> axisNameItem =
-			(DefaultModuleItem<String>) getInfo().getInput(AXIS_NAME);
+			(DefaultModuleItem<String>) getInfo().getItem(AXIS_NAME);
 		final ArrayList<String> choices = new ArrayList<String>();
 		for (final AxisType axis : Axes.values()) {
 			if (Axes.isXY(axis)) continue;
@@ -263,7 +263,7 @@ public class AddAxis extends DynamicCommand implements Cancelable {
 	private void initAxisSize() {
 		@SuppressWarnings("unchecked")
 		final DefaultModuleItem<Long> axisSizeModuleItem =
-			(DefaultModuleItem<Long>) getInfo().getInput(AXIS_SIZE);
+			(DefaultModuleItem<Long>) getInfo().getItem(AXIS_SIZE);
 		axisSizeModuleItem.setMinimumValue(2L);
 	}
 

@@ -79,7 +79,7 @@ public class ActiveImagePreprocessor extends AbstractPreprocessorPlugin {
 		// assign active display to single ImageDisplay input
 		final String displayInput = getSingleInput(module, ImageDisplay.class);
 		if (displayInput != null) {
-			module.setInput(displayInput, activeDisplay);
+			module.put(displayInput, activeDisplay);
 			module.setResolved(displayInput, true);
 		}
 
@@ -88,7 +88,7 @@ public class ActiveImagePreprocessor extends AbstractPreprocessorPlugin {
 		final DatasetView activeDatasetView =
 			displayService.getActiveDatasetView();
 		if (datasetViewInput != null && activeDatasetView != null) {
-			module.setInput(datasetViewInput, activeDatasetView);
+			module.put(datasetViewInput, activeDatasetView);
 			module.setResolved(datasetViewInput, true);
 		}
 
@@ -96,7 +96,7 @@ public class ActiveImagePreprocessor extends AbstractPreprocessorPlugin {
 		final String dataViewInput = getSingleInput(module, DataView.class);
 		final DataView activeDataView = activeDisplay.getActiveView();
 		if (dataViewInput != null && activeDataView != null) {
-			module.setInput(dataViewInput, activeDataView);
+			module.put(dataViewInput, activeDataView);
 			module.setResolved(dataViewInput, true);
 		}
 
@@ -104,7 +104,7 @@ public class ActiveImagePreprocessor extends AbstractPreprocessorPlugin {
 		final String datasetInput = getSingleInput(module, Dataset.class);
 		final Dataset activeDataset = displayService.getActiveDataset();
 		if (datasetInput != null && activeDataset != null) {
-			module.setInput(datasetInput, activeDataset);
+			module.put(datasetInput, activeDataset);
 			module.setResolved(datasetInput, true);
 		}
 	}

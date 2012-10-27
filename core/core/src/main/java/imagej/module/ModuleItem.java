@@ -40,7 +40,7 @@ import imagej.BasicDetails;
 import java.util.List;
 
 /**
- * A ModuleItem represents metadata about one input or output of a module.
+ * A module item represents metadata about one input or output of a module.
  * 
  * @author Aivar Grislis
  * @author Curtis Rueden

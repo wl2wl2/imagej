@@ -50,11 +50,11 @@ import imagej.module.event.ModulesUpdatedEvent;
  */
 public interface ModuleInfo extends UIDetails, Validated {
 
-	/** Gets the input item with the given name. */
-	ModuleItem<?> getInput(String name);
+	/** Gets the module item with the given name. */
+	ModuleItem<?> getItem(String name);
 
-	/** Gets the output item with the given name. */
-	ModuleItem<?> getOutput(String name);
+	/** Gets the list of module items. */
+	Iterable<ModuleItem<?>> items();
 
 	/** Gets the list of input items. */
 	Iterable<ModuleItem<?>> inputs();

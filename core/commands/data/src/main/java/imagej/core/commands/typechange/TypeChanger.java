@@ -88,18 +88,19 @@ public abstract class TypeChanger extends DynamicCommand {
 		int axisIndex = data.getAxisIndex(Axes.CHANNEL);
 		if (axisIndex < 0) return;
 		DefaultModuleItem<Boolean> booleanItem =
-				new DefaultModuleItem<Boolean>(this, FIELDNAME, Boolean.class);
+			new DefaultModuleItem<Boolean>(this, FIELDNAME, Boolean.class,
+				ItemIO.INPUT);
 		booleanItem.setLabel("Combine channels");
 		booleanItem.setDescription(
 				"Combine all channels into one channel by averaging");
 		booleanItem.setPersisted(false);
 		Boolean val = Prefs.getBoolean(FIELDNAME, Boolean.FALSE);
 		booleanItem.setValue(this, val);
-		addInput(booleanItem);
+		addItem(booleanItem);
 	}
 	
 	protected <T extends RealType<T>> void changeType(final T newType) {
-		Boolean b = (Boolean) getInput(FIELDNAME);
+		Boolean b = (Boolean) get(FIELDNAME);
 		if (b != null) Prefs.put(FIELDNAME,b);
 		boolean compositeMode = (b == null) ? false : b;
 		changeType(data, newType, compositeMode);

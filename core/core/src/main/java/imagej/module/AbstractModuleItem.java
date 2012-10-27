@@ -228,10 +228,7 @@ public abstract class AbstractModuleItem<T> implements ModuleItem<T> {
 
 	@Override
 	public T getValue(final Module module) {
-		final Object result;
-		if (isInput()) result = module.getInput(getName());
-		else if (isOutput()) result = module.getOutput(getName());
-		else result = null;
+		final Object result = module.get(getName());
 		@SuppressWarnings("unchecked")
 		final T value = (T) result;
 		return value;
@@ -239,8 +236,7 @@ public abstract class AbstractModuleItem<T> implements ModuleItem<T> {
 
 	@Override
 	public void setValue(final Module module, final T value) {
-		if (isInput()) module.setInput(getName(), value);
-		if (isOutput()) module.setOutput(getName(), value);
+		module.put(getName(), value);
 	}
 
 	// -- BasicDetails methods --

@@ -167,9 +167,9 @@ public class DefaultOptionsService extends AbstractService implements
 		if (optionsPlugin == null) return; // cannot set option
 
 		// assign value with correct type
-		final Class<?> type = info.getInput(name).getType();
+		final Class<?> type = info.getItem(name).getType();
 		final Object typedValue = ClassUtils.convert(value, type);
-		optionsPlugin.setInput(name, typedValue);
+		optionsPlugin.put(name, typedValue);
 
 		// persist the option value, and publish an OptionsEvent
 		optionsPlugin.run();
@@ -236,7 +236,7 @@ public class DefaultOptionsService extends AbstractService implements
 		if (info == null) return null;
 		final O optionsPlugin = createInstance(info);
 		if (optionsPlugin == null) return null;
-		return optionsPlugin.getInput(name);
+		return optionsPlugin.get(name);
 	}
 
 	private <O extends OptionsPlugin> Map<String, Object> getInputs(

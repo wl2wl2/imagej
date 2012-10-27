@@ -157,7 +157,7 @@ public class OptionsLookAndFeel extends OptionsPlugin {
 
 		@SuppressWarnings("unchecked")
 		final DefaultModuleItem<String> lookAndFeelItem =
-			(DefaultModuleItem<String>) getInfo().getInput(LOOK_AND_FEEL);
+			(DefaultModuleItem<String>) getInfo().getItem(LOOK_AND_FEEL);
 		lookAndFeelItem.setChoices(lookAndFeelChoices);
 	}
 

@@ -267,7 +267,7 @@ public class DefaultModuleService extends AbstractService implements
 		if (inputMap == null) return; // no inputs to assign
 
 		for (final String name : inputMap.keySet()) {
-			final ModuleItem<?> input = module.getInfo().getInput(name);
+			final ModuleItem<?> input = module.getInfo().getItem(name);
 			if (input == null) {
 				log.error("No such input: " + name);
 				continue;
@@ -280,7 +280,7 @@ public class DefaultModuleService extends AbstractService implements
 					value.getClass().getName() + " for type " + type.getName());
 				continue;
 			}
-			module.setInput(name, converted);
+			module.put(name, converted);
 			module.setResolved(name, true);
 		}
 	}

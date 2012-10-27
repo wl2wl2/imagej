@@ -53,7 +53,7 @@ import java.util.Map;
  * @author Aivar Grislis
  * @author Curtis Rueden
  */
-public interface Module extends Runnable {
+public interface Module extends Runnable, Map<String, Object> {
 
 	/**
 	 * Computes a preview of the module's execution results, if available. A
@@ -99,29 +99,11 @@ public interface Module extends Runnable {
 	 */
 	Object getDelegateObject();
 
-	/** Gets the value of the input with the given name. */
-	Object getInput(String name);
-
-	/** Gets the value of the output with the given name. */
-	Object getOutput(String name);
-
 	/** Gets a table of input values. */
 	Map<String, Object> getInputs();
 
 	/** Gets a table of output values. */
 	Map<String, Object> getOutputs();
-
-	/** Sets the value of the input with the given name. */
-	void setInput(String name, Object value);
-
-	/** Sets the value of the output with the given name. */
-	void setOutput(String name, Object value);
-
-	/** Sets input values according to the given table. */
-	void setInputs(Map<String, Object> inputs);
-
-	/** Sets output values according to the given table. */
-	void setOutputs(Map<String, Object> outputs);
 
 	/**
 	 * Gets the resolution status of the input with the given name. A "resolved"

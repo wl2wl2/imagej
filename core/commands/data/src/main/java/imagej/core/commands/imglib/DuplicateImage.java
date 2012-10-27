@@ -204,10 +204,11 @@ public class DuplicateImage extends DynamicCommand implements Cancelable {
 		theAxes = inputDisplay.getAxes();
 		for (final AxisType axis : theAxes) {
 			final DefaultModuleItem<String> axisItem =
-				new DefaultModuleItem<String>(this, name(axis), String.class);
+				new DefaultModuleItem<String>(this, name(axis), String.class,
+					ItemIO.INPUT);
 			axisItem.setPersisted(false);
 			axisItem.setValue(this, fullRangeString(inputDisplay, axis));
-			addInput(axisItem);
+			addItem(axisItem);
 		}
 	}
 
@@ -235,7 +236,7 @@ public class DuplicateImage extends DynamicCommand implements Cancelable {
 		final SamplingDefinition sampleDef =
 			SamplingDefinition.sampleAllPlanes(inputDisplay);
 		for (final AxisType axis : theAxes) {
-			final String definition = (String) getInput(name(axis));
+			final String definition = (String) get(name(axis));
 			final AxisSubrange subrange =
 				new AxisSubrange(inputDisplay, axis, definition, true);
 			sampleDef.constrain(axis, subrange);

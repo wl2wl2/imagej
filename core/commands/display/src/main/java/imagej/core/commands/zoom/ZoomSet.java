@@ -149,7 +149,7 @@ public class ZoomSet extends DynamicCommand {
 
 		@SuppressWarnings("unchecked")
 		final DefaultModuleItem<Double> zoomItem =
-			(DefaultModuleItem<Double>) getInfo().getInput(ZOOM);
+			(DefaultModuleItem<Double>) getInfo().getItem(ZOOM);
 		zoomItem.setMinimumValue(0.1);
 		zoomItem.setMaximumValue(500000.0);
 		setZoomPercent(100 * canvas.getZoomFactor());
@@ -162,14 +162,14 @@ public class ZoomSet extends DynamicCommand {
 
 		@SuppressWarnings("unchecked")
 		final DefaultModuleItem<Double> centerUItem =
-			(DefaultModuleItem<Double>) getInfo().getInput(CTR_U);
+			(DefaultModuleItem<Double>) getInfo().getItem(CTR_U);
 		centerUItem.setMinimumValue(planeExtents.x);
 		centerUItem.setMaximumValue(planeExtents.x + planeExtents.width);
 		setCenterU(panCenter.x);
 
 		@SuppressWarnings("unchecked")
 		final DefaultModuleItem<Double> centerVItem =
-			(DefaultModuleItem<Double>) getInfo().getInput(CTR_V);
+			(DefaultModuleItem<Double>) getInfo().getItem(CTR_V);
 		centerVItem.setMinimumValue(planeExtents.y);
 		centerVItem.setMaximumValue(planeExtents.y + planeExtents.height);
 		setCenterV(panCenter.y);

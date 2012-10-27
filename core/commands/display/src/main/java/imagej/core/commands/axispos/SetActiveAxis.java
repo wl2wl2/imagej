@@ -121,7 +121,7 @@ public class SetActiveAxis extends DynamicCommand {
 	protected void initAxisName() {
 		@SuppressWarnings("unchecked")
 		final DefaultModuleItem<String> axisNameItem =
-			(DefaultModuleItem<String>) getInfo().getInput(AXIS_NAME);
+			(DefaultModuleItem<String>) getInfo().getItem(AXIS_NAME);
 		final AxisType[] axes = display.getAxes();
 		final ArrayList<String> choices = new ArrayList<String>();
 		for (final AxisType a : axes) {

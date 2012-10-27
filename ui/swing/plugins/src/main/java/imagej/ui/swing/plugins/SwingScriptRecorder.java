@@ -226,7 +226,7 @@ public class SwingScriptRecorder extends ContextCommand {
 
 			final String param = moduleItem.getName();
 			final Class<?> type = moduleItem.getType();
-			final Object value = module.getInput(param);
+			final Object value = module.get(param);
 			invocation.addParameter(param, type, value);
 			emitMessage("    " + param + " = " + value.toString() + "  {" +
 				type.getSimpleName() + "}");
