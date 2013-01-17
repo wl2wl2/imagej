@@ -189,6 +189,8 @@ public class PixelProbe extends AbstractTool {
 
 	}
 
+	// TODO - do we need an InverseLogScalingFunction?
+
 	// NB - only works for input values >= 0. For values < 1 the output is large
 	// and negative. Users need to think about best way to handle these
 	// constraints for their particular case.
@@ -247,6 +249,8 @@ public class PixelProbe extends AbstractTool {
 		}
 
 	}
+
+	// NB - can match Math.exp() behavior by passing Math.E as base.
 
 	private class ExponentialScalingFunction implements
 		Function<Double, DoubleType>
