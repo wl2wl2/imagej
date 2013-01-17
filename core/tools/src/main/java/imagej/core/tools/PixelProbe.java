@@ -36,6 +36,7 @@
 package imagej.core.tools;
 
 import imagej.data.ChannelCollection;
+import imagej.data.Dataset;
 import imagej.data.display.ImageDisplay;
 import imagej.data.display.ImageDisplayService;
 import imagej.display.event.input.MsMovedEvent;
@@ -43,7 +44,13 @@ import imagej.event.StatusService;
 import imagej.plugin.Plugin;
 import imagej.tool.AbstractTool;
 import imagej.tool.Tool;
+import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Axes;
+import net.imglib2.ops.function.Function;
+import net.imglib2.type.numeric.real.DoubleType;
+import ucar.units.SI;
+import ucar.units.StandardUnitDB;
+import ucar.units.Unit;
 
 /**
  * Displays pixel values under the cursor.
@@ -78,21 +85,13 @@ public class PixelProbe extends AbstractTool {
 		final long cx = recorder.getCX();
 		final long cy = recorder.getCY();
 		ChannelCollection values = recorder.getValues();
+		Dataset ds = dispService.getActiveDataset(disp);
+		ImgPlus<?> imgPlus = ds.getImgPlus();
 		StringBuilder builder = new StringBuilder();
 		builder.append("x=");
-		if (!Double.isNaN(xcal) && xcal != 1.0) {
-			String calibratedVal = String.format("%.2f", (xcal * cx));
-			builder.append(calibratedVal);
-		}
-		else
-			builder.append(cx);
+		appendAxisValue(builder, cx, xcal, imgPlus.calibrationUnit(xAxis));
 		builder.append(", y=");
-		if (!Double.isNaN(ycal) && ycal != 1.0) {
-			String calibratedVal = String.format("%.2f", (ycal * cy));
-			builder.append(calibratedVal);
-		}
-		else
-			builder.append(cy);
+		appendAxisValue(builder, cy, ycal, imgPlus.calibrationUnit(yAxis));
 		builder.append(", value=");
 		// single channel image
 		if ((channelIndex == -1) ||
@@ -124,4 +123,93 @@ public class PixelProbe extends AbstractTool {
 		return String.format("%f", value);
 	}
 
+	private void appendAxisValue(StringBuilder builder, long value, double scale,
+		String unitName)
+	{
+		Function<Double, DoubleType> scalingFunc =
+			new LinearScalingFunction(0.0, scale);
+		if (Double.isNaN(scale)) {
+			builder.append(value);
+			return;
+		}
+		Unit userUnit;
+		try {
+			userUnit = StandardUnitDB.instance().get(unitName);
+		}
+		catch (Exception e) {
+			userUnit = null;
+		}
+		DoubleType output = new DoubleType();
+		scalingFunc.compute((double) value, output);
+		double scaledValue = output.getRealDouble();
+		if (userUnit == null) {
+			String calibratedVal = String.format("%.2f", scaledValue);
+			builder.append(calibratedVal);
+		}
+		else { // userName != null
+			double val;
+			try {
+				val = userUnit.convertTo(scaledValue, SI.METER);
+			}
+			catch (Exception e) {
+				val = scaledValue;
+			}
+			builder.append(val);
+			builder.append(" m");
+		}
+	}
+
+	private class LinearScalingFunction implements Function<Double, DoubleType> {
+
+		private final double offset, scale;
+
+		public LinearScalingFunction(double offset, double scale) {
+			this.offset = offset;
+			this.scale = scale;
+		}
+
+		@Override
+		public void compute(Double input, DoubleType output) {
+			double value = offset + scale * input;
+			output.setReal(value);
+		}
+
+		@Override
+		public DoubleType createOutput() {
+			return new DoubleType();
+		}
+
+		@Override
+		public LinearScalingFunction copy() {
+			return new LinearScalingFunction(offset, scale);
+		}
+
+	}
+
+	private class LogScalingFunction implements Function<Double, DoubleType> {
+
+		private final double offset, scale;
+
+		public LogScalingFunction(double offset, double scale) {
+			this.offset = offset;
+			this.scale = scale;
+		}
+
+		@Override
+		public void compute(Double input, DoubleType output) {
+			double value = offset + scale * Math.log(input + 1);
+			output.setReal(value);
+		}
+
+		@Override
+		public DoubleType createOutput() {
+			return new DoubleType();
+		}
+
+		@Override
+		public LogScalingFunction copy() {
+			return new LogScalingFunction(offset, scale);
+		}
+
+	}
 }

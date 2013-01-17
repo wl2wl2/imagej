@@ -38,6 +38,7 @@ package imagej.legacy.translate;
 import ij.ImagePlus;
 import ij.measure.Calibration;
 import imagej.data.Dataset;
+import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Axes;
 
 /**
@@ -59,12 +60,33 @@ public class MetadataHarmonizer implements DataHarmonizer {
 		final int zIndex = ds.getAxisIndex(Axes.Z);
 		final int tIndex = ds.getAxisIndex(Axes.TIME);
 		final Calibration cal = imp.getCalibration();
-		if (xIndex >= 0) ds.setCalibration(cal.pixelWidth, xIndex);
-		if (yIndex >= 0) ds.setCalibration(cal.pixelHeight, yIndex);
+		if (xIndex >= 0) {
+			ds.setCalibration(cal.pixelWidth, xIndex);
+			String unit = cal.getXUnit();
+			if (unit == null) unit = cal.getUnit();
+			if ("pixel".equalsIgnoreCase(unit)) unit = "none";
+			ds.getImgPlus().setCalibrationUnit(unit, xIndex);
+		}
+		if (yIndex >= 0) {
+			ds.setCalibration(cal.pixelHeight, yIndex);
+			String unit = cal.getYUnit();
+			if (unit == null) unit = cal.getUnit();
+			if ("pixel".equalsIgnoreCase(unit)) unit = "none";
+			ds.getImgPlus().setCalibrationUnit(unit, yIndex);
+		}
 		// TODO - remove this next line?
 		if (cIndex >= 0) ds.setCalibration(1, cIndex);
-		if (zIndex >= 0) ds.setCalibration(cal.pixelDepth, zIndex);
-		if (tIndex >= 0) ds.setCalibration(cal.frameInterval, tIndex);
+		if (zIndex >= 0) {
+			ds.setCalibration(cal.pixelDepth, zIndex);
+			String unit = cal.getZUnit();
+			if (unit == null) unit = cal.getUnit();
+			if ("pixel".equalsIgnoreCase(unit)) unit = "none";
+			ds.getImgPlus().setCalibrationUnit(unit, zIndex);
+		}
+		if (tIndex >= 0) {
+			ds.setCalibration(cal.frameInterval, tIndex);
+			ds.getImgPlus().setCalibrationUnit(cal.getTimeUnit(), tIndex);
+		}
 		// no need to ds.update() - these calls should track that themselves
 	}
 
@@ -79,12 +101,35 @@ public class MetadataHarmonizer implements DataHarmonizer {
 		final int cIndex = ds.getAxisIndex(Axes.CHANNEL);
 		final int zIndex = ds.getAxisIndex(Axes.Z);
 		final int tIndex = ds.getAxisIndex(Axes.TIME);
-		if (xIndex >= 0) cal.pixelWidth = ds.calibration(xIndex);
-		if (yIndex >= 0) cal.pixelHeight = ds.calibration(yIndex);
+		ImgPlus<?> imgPlus = ds.getImgPlus();
+		boolean allMatch = true;
+		if (xIndex >= 0) {
+			cal.pixelWidth = ds.calibration(xIndex);
+			String unit = imgPlus.calibrationUnit(xIndex);
+			if ("none".equalsIgnoreCase(unit)) unit = "pixel";
+			cal.setXUnit(unit);
+		}
+		if (yIndex >= 0) {
+			cal.pixelHeight = ds.calibration(yIndex);
+			String unit = imgPlus.calibrationUnit(yIndex);
+			if ("none".equalsIgnoreCase(unit)) unit = null;
+			cal.setYUnit(unit);
+			allMatch |= cal.getYUnit().equals(cal.getXUnit());
+		}
 		if (cIndex >= 0) {
 			// nothing to set on IJ1 side
 		}
-		if (zIndex >= 0) cal.pixelDepth = ds.calibration(zIndex);
-		if (tIndex >= 0) cal.frameInterval = ds.calibration(tIndex);
+		if (zIndex >= 0) {
+			cal.pixelDepth = ds.calibration(zIndex);
+			String unit = imgPlus.calibrationUnit(zIndex);
+			if ("none".equalsIgnoreCase(unit)) unit = null;
+			cal.setZUnit(unit);
+			allMatch |= cal.getZUnit().equals(cal.getXUnit());
+		}
+		if (tIndex >= 0) {
+			cal.frameInterval = ds.calibration(tIndex);
+			cal.setTimeUnit(imgPlus.calibrationUnit(tIndex));
+		}
+		if (allMatch) cal.setUnit(imgPlus.calibrationUnit(xIndex));
 	}
 }
