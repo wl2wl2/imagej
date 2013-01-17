@@ -127,7 +127,7 @@ public class PixelProbe extends AbstractTool {
 		String unitName)
 	{
 		Function<Double, DoubleType> scalingFunc =
-			new LinearScalingFunction(0.0, scale);
+			new PowerScalingFunction(0.0, scale, 2);
 		if (Double.isNaN(scale)) {
 			builder.append(value);
 			return;
@@ -159,6 +159,9 @@ public class PixelProbe extends AbstractTool {
 		}
 	}
 
+	// NOTE that one could use any text specified equation as a scaling axis! It
+	// might require minor edits.
+
 	private class LinearScalingFunction implements Function<Double, DoubleType> {
 
 		private final double offset, scale;
@@ -186,6 +189,10 @@ public class PixelProbe extends AbstractTool {
 
 	}
 
+	// NB - only works for input values >= 0. For values < 1 the output is large
+	// and negative. Users need to think about best way to handle these
+	// constraints for their particular case.
+
 	private class LogScalingFunction implements Function<Double, DoubleType> {
 
 		private final double offset, scale;
@@ -197,7 +204,7 @@ public class PixelProbe extends AbstractTool {
 
 		@Override
 		public void compute(Double input, DoubleType output) {
-			double value = offset + scale * Math.log(input + 1);
+			double value = offset + scale * Math.log(input);
 			output.setReal(value);
 		}
 
@@ -212,4 +219,33 @@ public class PixelProbe extends AbstractTool {
 		}
 
 	}
+
+	private class PowerScalingFunction implements Function<Double, DoubleType> {
+
+		private final double offset, scale, power;
+
+		public PowerScalingFunction(double offset, double scale, double power) {
+			this.offset = offset;
+			this.scale = scale;
+			this.power = power;
+		}
+
+		@Override
+		public void compute(Double input, DoubleType output) {
+			double value = offset + scale * Math.pow(input, power);
+			output.setReal(value);
+		}
+
+		@Override
+		public DoubleType createOutput() {
+			return new DoubleType();
+		}
+
+		@Override
+		public PowerScalingFunction copy() {
+			return new PowerScalingFunction(offset, scale, power);
+		}
+
+	}
+
 }
