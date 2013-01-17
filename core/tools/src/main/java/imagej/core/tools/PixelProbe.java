@@ -49,6 +49,7 @@ import net.imglib2.meta.Axes;
 import net.imglib2.ops.function.BijectiveFunction;
 import net.imglib2.type.numeric.real.DoubleType;
 
+import org.eclipse.uomo.units.SymbolMap;
 import org.unitsofmeasurement.unit.Unit;
 import org.unitsofmeasurement.unit.UnitConverter;
 
@@ -132,25 +133,41 @@ public class PixelProbe extends AbstractTool {
 		return String.format("%f", value);
 	}
 
-	private void appendAxisValue(StringBuilder builder, double value, Axis axis)
+	private void
+		appendAxisValue(StringBuilder builder, double value, Axis<?> axis)
 	{
 		if (Double.isNaN(axis.getAbsoluteMeasure(1))) {
 			builder.append(value);
 			return;
 		}
-		/*
+
 		SymbolMap unitMap = null;
 		Unit<?> userUnit = unitMap.getUnit(axis.getUnit());
+		// TODO
+		// String displayUnitName passed in to method
+		// Unit<?> displayUnit = unitMap.getUnit(displayUnitName);
+		// HACK for now to prove working: display everything as meters
 		Unit<?> displayUnit = unitMap.getUnit("meter");
-		*/
-		Unit<?> userUnit = null;
-		Unit<?> displayUnit = null;
+		// Unit<?> userUnit = null;
+		// Unit<?> displayUnit = null;
+
 		double scaledValue = axis.getAbsoluteMeasure(value);
+
 		if (userUnit == null) {
-			String calibratedVal = String.format("%.2f", scaledValue);
-			builder.append(calibratedVal);
+			builder.append(String.format("%.3f", scaledValue));
+			if (displayUnit != null) {
+				// treat values as if they are in desired units
+				builder.append(" ");
+				builder.append(displayUnit.getSymbol());
+			}
 		}
-		else { // userName != null
+		else { // userUnit != null
+			if (displayUnit == null) {
+				// ideally this should never happen since displayUnit should fall back
+				// to dataset unit which we know is not null
+				throw new IllegalStateException(
+					"null display unit should not be possible here");
+			}
 			double val;
 			try {
 				UnitConverter converter = userUnit.getConverterTo((Unit) displayUnit);
