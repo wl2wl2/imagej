@@ -248,4 +248,35 @@ public class PixelProbe extends AbstractTool {
 
 	}
 
+	private class ExponentialScalingFunction implements
+		Function<Double, DoubleType>
+	{
+
+		private final double offset, scale, base;
+
+		public ExponentialScalingFunction(double offset, double scale, double base)
+		{
+			this.offset = offset;
+			this.scale = scale;
+			this.base = base;
+		}
+
+		@Override
+		public void compute(Double input, DoubleType output) {
+			double value = offset + scale * Math.pow(base, input);
+			output.setReal(value);
+		}
+
+		@Override
+		public DoubleType createOutput() {
+			return new DoubleType();
+		}
+
+		@Override
+		public ExponentialScalingFunction copy() {
+			return new ExponentialScalingFunction(offset, scale, base);
+		}
+
+	}
+
 }
