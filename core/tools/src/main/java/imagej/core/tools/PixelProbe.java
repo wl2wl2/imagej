@@ -184,11 +184,14 @@ public class PixelProbe extends AbstractTool {
 	// NOTE that one could use any text specified equation as a scaling axis! It
 	// might require edits to that equation class since it uses long[] input.
 
-	private abstract class ScalingFunction {
+	// TODO - write test code verifying that the definitions of the scaling funcs
+	// are indeed bijective
+
+	private abstract class AbstractScalingInfo {
 
 		protected double offset, scale;
 
-		public ScalingFunction(double offset, double scale) {
+		public AbstractScalingInfo(double offset, double scale) {
 			this.offset = offset;
 			this.scale = scale;
 		}
@@ -202,7 +205,7 @@ public class PixelProbe extends AbstractTool {
 		}
 	}
 
-	private class LinearScalingFunction extends ScalingFunction implements
+	private class LinearScalingFunction extends AbstractScalingInfo implements
 		BijectiveFunction<DoubleType, DoubleType>
 	{
 
@@ -245,7 +248,7 @@ public class PixelProbe extends AbstractTool {
 	// and negative. Users need to think about best way to handle these
 	// constraints for their particular case.
 
-	private class LogScalingFunction extends ScalingFunction implements
+	private class LogScalingFunction extends AbstractScalingInfo implements
 		BijectiveFunction<DoubleType, DoubleType>
 	{
 
@@ -282,7 +285,7 @@ public class PixelProbe extends AbstractTool {
 
 	}
 
-	private class PowerScalingFunction extends ScalingFunction implements
+	private class PowerScalingFunction extends AbstractScalingInfo implements
 		BijectiveFunction<DoubleType, DoubleType>
 	{
 
@@ -328,7 +331,8 @@ public class PixelProbe extends AbstractTool {
 
 	// NB - can match Math.exp() behavior by passing Math.E as base.
 
-	private class ExponentialScalingFunction extends ScalingFunction implements
+	private class ExponentialScalingFunction extends AbstractScalingInfo
+		implements
 		BijectiveFunction<DoubleType, DoubleType>
 	{
 
