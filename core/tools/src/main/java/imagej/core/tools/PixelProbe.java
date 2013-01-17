@@ -47,10 +47,8 @@ import imagej.tool.Tool;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Axes;
 import net.imglib2.ops.function.BijectiveFunction;
-import net.imglib2.ops.function.Function;
 import net.imglib2.type.numeric.real.DoubleType;
 
-import org.eclipse.uomo.units.SymbolMap;
 import org.unitsofmeasurement.unit.Unit;
 import org.unitsofmeasurement.unit.UnitConverter;
 
@@ -84,25 +82,29 @@ public class PixelProbe extends AbstractTool {
 			statusService.clearStatus();
 			return;
 		}
-		final int xAxis = disp.getAxisIndex(Axes.X); 
-		final int yAxis = disp.getAxisIndex(Axes.Y);
-		final double xcal = disp.calibration(xAxis);
-		final double ycal = disp.calibration(yAxis);
+		Dataset ds = dispService.getActiveDataset(disp);
+		ImgPlus<?> imgPlus = ds.getImgPlus();
+		final int xAxis = ds.getAxisIndex(Axes.X);
+		final int yAxis = ds.getAxisIndex(Axes.Y);
+		final double xcal = ds.calibration(xAxis);
+		final double ycal = ds.calibration(yAxis);
 		final int channelIndex = disp.getAxisIndex(Axes.CHANNEL);
 		final long cx = recorder.getCX();
 		final long cy = recorder.getCY();
 		ChannelCollection values = recorder.getValues();
-		Dataset ds = dispService.getActiveDataset(disp);
-		ImgPlus<?> imgPlus = ds.getImgPlus();
+		// TODO - hack. these will later be taken straight from ImgPlus
+		Axis<?> X = new LinearAxis(0, xcal);
+		X.setUnit(imgPlus.calibrationUnit(xAxis));
+		Axis<?> Y = new LogAxis(0, ycal);
+		Y.setUnit(imgPlus.calibrationUnit(yAxis));
 		StringBuilder builder = new StringBuilder();
 		builder.append("x=");
-		appendAxisValue(builder, cx, xcal, imgPlus.calibrationUnit(xAxis));
+		appendAxisValue(builder, cx, X);
 		builder.append(", y=");
-		appendAxisValue(builder, cy, ycal, imgPlus.calibrationUnit(yAxis));
+		appendAxisValue(builder, cy, Y);
 		builder.append(", value=");
 		// single channel image
-		if ((channelIndex == -1) ||
-				(recorder.getDataset().dimension(channelIndex) == 1))
+		if ((channelIndex == -1) || (disp.dimension(channelIndex) == 1))
 		{
 			String valueStr = valueString(values.getChannelValue(0));
 			builder.append(valueStr);
@@ -130,23 +132,20 @@ public class PixelProbe extends AbstractTool {
 		return String.format("%f", value);
 	}
 
-	private void appendAxisValue(StringBuilder builder, long value, double scale,
-		String unitName)
+	private void appendAxisValue(StringBuilder builder, double value, Axis axis)
 	{
-		Function<DoubleType, DoubleType> scalingFunc =
-			new PowerScalingFunction(0.0, scale, 2);
-		if (Double.isNaN(scale)) {
+		if (Double.isNaN(axis.getAbsoluteMeasure(1))) {
 			builder.append(value);
 			return;
 		}
+		/*
 		SymbolMap unitMap = null;
-		Unit<?> userUnit = unitMap.getUnit(unitName);
+		Unit<?> userUnit = unitMap.getUnit(axis.getUnit());
 		Unit<?> displayUnit = unitMap.getUnit("meter");
-		DoubleType input = new DoubleType();
-		DoubleType output = new DoubleType();
-		input.set(value);
-		scalingFunc.compute(input, output);
-		double scaledValue = output.getRealDouble();
+		*/
+		Unit<?> userUnit = null;
+		Unit<?> displayUnit = null;
+		double scaledValue = axis.getAbsoluteMeasure(value);
 		if (userUnit == null) {
 			String calibratedVal = String.format("%.2f", scaledValue);
 			builder.append(calibratedVal);
@@ -166,17 +165,32 @@ public class PixelProbe extends AbstractTool {
 	}
 
 	// NOTE that one could use any text specified equation as a scaling axis! It
-	// might require minor edits.
+	// might require edits to that equation class since it uses long[] input.
 
-	private class LinearScalingFunction implements
+	private abstract class ScalingFunction {
+
+		protected double offset, scale;
+
+		public ScalingFunction(double offset, double scale) {
+			this.offset = offset;
+			this.scale = scale;
+		}
+
+		public double getOffset() {
+			return offset;
+		}
+
+		public double getScale() {
+			return scale;
+		}
+	}
+
+	private class LinearScalingFunction extends ScalingFunction implements
 		BijectiveFunction<DoubleType, DoubleType>
 	{
 
-		private final double offset, scale;
-
 		public LinearScalingFunction(double offset, double scale) {
-			this.offset = offset;
-			this.scale = scale;
+			super(offset, scale);
 		}
 
 		@Override
@@ -214,15 +228,12 @@ public class PixelProbe extends AbstractTool {
 	// and negative. Users need to think about best way to handle these
 	// constraints for their particular case.
 
-	private class LogScalingFunction implements
+	private class LogScalingFunction extends ScalingFunction implements
 		BijectiveFunction<DoubleType, DoubleType>
 	{
 
-		private final double offset, scale;
-
 		public LogScalingFunction(double offset, double scale) {
-			this.offset = offset;
-			this.scale = scale;
+			super(offset, scale);
 		}
 
 		@Override
@@ -254,15 +265,14 @@ public class PixelProbe extends AbstractTool {
 
 	}
 
-	private class PowerScalingFunction implements
+	private class PowerScalingFunction extends ScalingFunction implements
 		BijectiveFunction<DoubleType, DoubleType>
 	{
 
-		private final double offset, scale, power;
+		private final double power;
 
 		public PowerScalingFunction(double offset, double scale, double power) {
-			this.offset = offset;
-			this.scale = scale;
+			super(offset, scale);
 			this.power = power;
 		}
 
@@ -293,20 +303,23 @@ public class PixelProbe extends AbstractTool {
 			return new PowerScalingFunction(offset, scale, power);
 		}
 
+		public double getPower() {
+			return power;
+		}
+
 	}
 
 	// NB - can match Math.exp() behavior by passing Math.E as base.
 
-	private class ExponentialScalingFunction implements
+	private class ExponentialScalingFunction extends ScalingFunction implements
 		BijectiveFunction<DoubleType, DoubleType>
 	{
 
-		private final double offset, scale, base;
+		private final double base;
 
 		public ExponentialScalingFunction(double offset, double scale, double base)
 		{
-			this.offset = offset;
-			this.scale = scale;
+			super(offset, scale);
 			this.base = base;
 		}
 
@@ -337,12 +350,20 @@ public class PixelProbe extends AbstractTool {
 			return new ExponentialScalingFunction(offset, scale, base);
 		}
 
+		public double getBase() {
+			return base;
+		}
+
+		// i.e. do a 6-based log via log(6, val);
+
 		private double log(double logBase, double val) {
 			return Math.log(val) / Math.log(logBase);
 		}
 	}
 
-	private interface Axis {
+	private interface Axis<T extends BijectiveFunction<DoubleType, DoubleType>> {
+
+		T getFunction();
 
 		double getRelativeMeasure(double absoluteMeasure);
 
@@ -353,31 +374,35 @@ public class PixelProbe extends AbstractTool {
 		String getUnit();
 	}
 
-	private abstract class AbstractAxis implements Axis {
+	private abstract class AbstractAxis<T extends BijectiveFunction<DoubleType, DoubleType>>
+		implements Axis<T>
+	{
 
-		// TODO - use a BijectiveFunction instead of two funcs?
-		private final BijectiveFunction<DoubleType, DoubleType> scaleFunc;
-
+		private final T function;
 		private String unitName = null;
 		private final DoubleType abs = new DoubleType();
 		private final DoubleType rel = new DoubleType();
 
-		protected AbstractAxis(BijectiveFunction<DoubleType, DoubleType> scaleFunc)
-		{
-			this.scaleFunc = scaleFunc;
+		public AbstractAxis(T func) {
+			this.function = func;
+		}
+
+		@Override
+		public T getFunction() {
+			return function;
 		}
 
 		@Override
 		synchronized public double getRelativeMeasure(double absoluteMeasure) {
 			abs.setReal(absoluteMeasure);
-			scaleFunc.computeInverse(abs, rel);
+			getFunction().computeInverse(abs, rel);
 			return rel.get();
 		}
 
 		@Override
 		synchronized public double getAbsoluteMeasure(double relativeMeasure) {
 			rel.setReal(relativeMeasure);
-			scaleFunc.compute(rel, abs);
+			getFunction().compute(rel, abs);
 			return abs.get();
 		}
 
@@ -392,7 +417,7 @@ public class PixelProbe extends AbstractTool {
 		}
 	}
 
-	private class LinearAxis extends AbstractAxis {
+	private class LinearAxis extends AbstractAxis<LinearScalingFunction> {
 
 		public LinearAxis(double offset, double scale) {
 			super(new LinearScalingFunction(offset, scale));
@@ -400,25 +425,28 @@ public class PixelProbe extends AbstractTool {
 
 	}
 
-	private class LogAxis extends AbstractAxis {
+	private class LogAxis extends AbstractAxis<LogScalingFunction> {
 
 		public LogAxis(double offset, double scale) {
 			super(new LogScalingFunction(offset, scale));
 		}
-
 	}
 
-	private class PowerAxis extends AbstractAxis {
+	private class PowerAxis extends AbstractAxis<PowerScalingFunction> {
 
 		public PowerAxis(double offset, double scale, double power) {
 			super(new PowerScalingFunction(offset, scale, power));
 		}
+
 	}
 
-	private class ExponentialAxis extends AbstractAxis {
+	private class ExponentialAxis extends
+		AbstractAxis<ExponentialScalingFunction>
+	{
 
 		public ExponentialAxis(double offset, double scale, double base) {
 			super(new ExponentialScalingFunction(offset, scale, base));
 		}
+
 	}
 }
