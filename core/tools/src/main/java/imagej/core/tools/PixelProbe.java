@@ -44,12 +44,16 @@ import imagej.event.StatusService;
 import imagej.plugin.Plugin;
 import imagej.tool.AbstractTool;
 import imagej.tool.Tool;
+
+import java.util.HashMap;
+
 import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Axes;
 import net.imglib2.ops.function.BijectiveFunction;
 import net.imglib2.type.numeric.real.DoubleType;
 
-import org.eclipse.uomo.units.SymbolMap;
+import org.eclipse.uomo.units.SI;
+import org.eclipse.uomo.units.impl.system.Imperial;
 import org.unitsofmeasurement.unit.Unit;
 import org.unitsofmeasurement.unit.UnitConverter;
 
@@ -67,6 +71,33 @@ import org.unitsofmeasurement.unit.UnitConverter;
 public class PixelProbe extends AbstractTool {
 
 	private final PixelRecorder recorder = new PixelRecorder(false);
+
+	private UnitLibrary UNITS = null;
+
+	private class UnitLibrary {
+
+		private HashMap<String, Unit<?>> unitMap;
+
+		UnitLibrary() {
+
+			unitMap = new HashMap<String, Unit<?>>();
+			unitMap.put("m", SI.METRE);
+			unitMap.put("meter", SI.METRE);
+			unitMap.put("metre", SI.METRE);
+			// unitMap.put("micron", SI.METRE);
+			// unitMap.put("nanometer", SI.METRE);
+			// unitMap.put("km", SI.METRE);
+			unitMap.put("in", Imperial.INCH);
+			unitMap.put("inch", Imperial.INCH);
+			// unitMap.put("foot", Imperial.INCH);
+			// unitMap.put("yard", Imperial.INCH);
+			// unitMap.put("mile", Imperial.INCH);
+		}
+
+		public Unit<?> getUnit(String unit) {
+			return unitMap.get(unit);
+		}
+	}
 
 	// -- Tool methods --
 
@@ -93,16 +124,21 @@ public class PixelProbe extends AbstractTool {
 		final long cx = recorder.getCX();
 		final long cy = recorder.getCY();
 		ChannelCollection values = recorder.getValues();
-		// TODO - hack. these will later be taken straight from ImgPlus
-		Axis<?> X = new LinearAxis(0, xcal);
+		// TODO - hack. these will later be taken straight from ImgPlus.
+		// NaN workaround should not be needed if we fix initialization bugs
+		Axis<?> X = new LinearAxis(0, Double.isNaN(xcal) ? 1 : xcal);
 		X.setUnit(imgPlus.calibrationUnit(xAxis));
-		Axis<?> Y = new LogAxis(0, ycal);
+		// NaN workaround should not be needed if we fix initialization bugs
+		Axis<?> Y = new LogAxis(0, Double.isNaN(ycal) ? 1 : ycal);
 		Y.setUnit(imgPlus.calibrationUnit(yAxis));
+		// TEMP HACK for testing purposes
+		disp.setUnit(Axes.X, "meter");
+		disp.setUnit(Axes.Y, "meter");
 		StringBuilder builder = new StringBuilder();
 		builder.append("x=");
-		appendAxisValue(builder, cx, X);
+		appendAxisValue(builder, cx, X, disp.getUnit(Axes.X));
 		builder.append(", y=");
-		appendAxisValue(builder, cy, Y);
+		appendAxisValue(builder, cy, Y, disp.getUnit(Axes.Y));
 		builder.append(", value=");
 		// single channel image
 		if ((channelIndex == -1) || (disp.dimension(channelIndex) == 1))
@@ -127,31 +163,29 @@ public class PixelProbe extends AbstractTool {
 	
 	// -- helpers --
 	
+	public Unit<?> getUnit(String unit) {
+		if (UNITS == null) UNITS = new UnitLibrary();
+		return UNITS.getUnit(unit);
+	}
+
 	private String valueString(double value) {
 		if (recorder.getDataset().isInteger())
 			return String.format("%d",(long)value);
 		return String.format("%f", value);
 	}
 
-	private void
-		appendAxisValue(StringBuilder builder, double value, Axis<?> axis)
+	private void appendAxisValue(StringBuilder builder, double value,
+		Axis<?> axis, String dispUnitName)
 	{
-		if (Double.isNaN(axis.getAbsoluteMeasure(1))) {
-			builder.append(value);
-			return;
-		}
+		double scaledValue = axis.getAbsoluteMeasure(value);
 
-		SymbolMap unitMap = null;
-		Unit<?> userUnit = unitMap.getUnit(axis.getUnit());
-		// TODO
-		// String displayUnitName passed in to method
-		// Unit<?> displayUnit = unitMap.getUnit(displayUnitName);
-		// HACK for now to prove working: display everything as meters
-		Unit<?> displayUnit = unitMap.getUnit("meter");
+		// SymbolMap unitMap = null;
+		// Unit<?> userUnit = unitMap.getUnit(axis.getUnit());
+		// Unit<?> displayUnit = unitMap.getUnit(dispUnitName);
 		// Unit<?> userUnit = null;
 		// Unit<?> displayUnit = null;
-
-		double scaledValue = axis.getAbsoluteMeasure(value);
+		Unit<?> userUnit = getUnit(axis.getUnit());
+		Unit<?> displayUnit = getUnit(dispUnitName);
 
 		if (userUnit == null) {
 			builder.append(String.format("%.3f", scaledValue));
@@ -163,10 +197,14 @@ public class PixelProbe extends AbstractTool {
 		}
 		else { // userUnit != null
 			if (displayUnit == null) {
-				// ideally this should never happen since displayUnit should fall back
-				// to dataset unit which we know is not null
+				// TEMP? treat user unit as display unit
+				displayUnit = userUnit;
+				/*
+				// ideally this case should never happen since displayUnit should fall
+				// back to dataset unit which we know is not null
 				throw new IllegalStateException(
 					"null display unit should not be possible here");
+				*/
 			}
 			double val;
 			try {
@@ -438,10 +476,15 @@ public class PixelProbe extends AbstractTool {
 		}
 	}
 
+	// TODO - should Axis class store an Axis_Type with it? Or no?
+
 	// TODO - is it incorrect to treat axes as some scaling func? I.e. is it
 	// fine to always have linear scaling? Or is the scaling function
 	// abstraction useful?
 	
+	// TODO - also is a BijectiveFunction always needed? Are we limiting ourselves
+	// here? Could have two funcs: a forward (required) and an inverse (optional)
+
 	// TODO - do we just have axes defined via any old bijective func as part
 	// of constructor?
 	
