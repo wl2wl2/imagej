@@ -438,6 +438,23 @@ public class PixelProbe extends AbstractTool {
 		}
 	}
 
+	// TODO - is it incorrect to treat axes as some scaling func? I.e. is it
+	// fine to always have linear scaling? Or is the scaling function
+	// abstraction useful?
+	
+	// TODO - do we just have axes defined via any old bijective func as part
+	// of constructor?
+	
+	// TODO - do we want to define an axis by an equation instead of all these
+	// classes? Sort of like IJ1's CurveFitter class.
+	
+	// TODO - the axes classes below may be limited in that they all emanate
+	// from origin 0,0. Invert Y is one issue. But so is a LogAxis that we
+	// might want to accelerate faster from right to left.
+	
+	// TODO - there is little reason for these next classes except for the
+	// ability to have a correctly typed getFunction() method.
+	
 	private class LinearAxis extends AbstractAxis<LinearScalingFunction> {
 
 		public LinearAxis(double offset, double scale) {
