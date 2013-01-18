@@ -88,6 +88,9 @@ public class DefaultImageDisplay extends AbstractDisplay<DataView>
 	// private final HashMap<AxisType, Long> pos =
 	// new HashMap<AxisType, Long>();
 
+	private final ConcurrentHashMap<AxisType, String> displayUnits =
+		new ConcurrentHashMap<AxisType, String>();
+
 	public DefaultImageDisplay() {
 		super(DataView.class);
 		canvas = new DefaultImageCanvas(this);
@@ -201,6 +204,16 @@ public class DefaultImageDisplay extends AbstractDisplay<DataView>
 		final double width = extents.realMax(xAxis) - extents.realMin(xAxis);
 		final double height = extents.realMax(yAxis) - extents.realMin(yAxis);
 		return new RealRect(xMin, yMin, width, height);
+	}
+
+	@Override
+	public void setUnit(AxisType axis, String unit) {
+		displayUnits.put(axis, unit);
+	}
+
+	@Override
+	public String getUnit(AxisType a) {
+		return displayUnits.get(a);
 	}
 
 	// -- Display methods --

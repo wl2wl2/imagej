@@ -79,4 +79,7 @@ public interface ImageDisplay extends Display<DataView>, CalibratedInterval,
 	 */
 	RealRect getPlaneExtents();
 
+	String getUnit(AxisType axis);
+
+	void setUnit(AxisType axis, String unit);
 }
