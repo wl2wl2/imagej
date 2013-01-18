@@ -74,6 +74,9 @@ public class PixelProbe extends AbstractTool {
 
 	private UnitLibrary UNITS = null;
 
+	// TEMP HACK: not how to do this. in longer run we need to query uomo for
+	// existing unit library loaded from xml file.
+
 	private class UnitLibrary {
 
 		private HashMap<String, Unit<?>> unitMap;
@@ -82,16 +85,34 @@ public class PixelProbe extends AbstractTool {
 
 			unitMap = new HashMap<String, Unit<?>>();
 			unitMap.put("m", SI.METRE);
-			unitMap.put("meter", SI.METRE);
-			unitMap.put("metre", SI.METRE);
-			// unitMap.put("micron", SI.METRE);
-			// unitMap.put("nanometer", SI.METRE);
-			// unitMap.put("km", SI.METRE);
+			unitMap.put("meter", unitMap.get("m"));
+			unitMap.put("metre", unitMap.get("m"));
+			unitMap.put("mm", SI.METRE.divide(1000));
+			unitMap.put("millimeter", unitMap.get("mm"));
+			unitMap.put("millimetre", unitMap.get("mm"));
+			unitMap.put("cm", SI.METRE.divide(100));
+			unitMap.put("centimeter", unitMap.get("cm"));
+			unitMap.put("centimetre", unitMap.get("cm"));
+			unitMap.put("km", SI.METRE.multiply(1000));
+			unitMap.put("kilometer", unitMap.get("km"));
+			unitMap.put("kilometre", unitMap.get("km"));
+			unitMap.put("um", SI.METRE.divide(1000000));
+			unitMap.put("micron", unitMap.get("um"));
+			unitMap.put("nm", SI.METRE.divide(1000000000));
+			unitMap.put("nanometer", unitMap.get("nm"));
+			unitMap.put("nanometre", unitMap.get("nm"));
 			unitMap.put("in", Imperial.INCH);
-			unitMap.put("inch", Imperial.INCH);
-			// unitMap.put("foot", Imperial.INCH);
-			// unitMap.put("yard", Imperial.INCH);
-			// unitMap.put("mile", Imperial.INCH);
+			unitMap.put("inch", unitMap.get("in"));
+			unitMap.put("inches", unitMap.get("in"));
+			unitMap.put("ft", Imperial.INCH.multiply(12));
+			unitMap.put("foot", unitMap.get("ft"));
+			unitMap.put("feet", unitMap.get("ft"));
+			unitMap.put("yd", Imperial.INCH.multiply(36));
+			unitMap.put("yard", unitMap.get("yd"));
+			unitMap.put("yards", unitMap.get("yd"));
+			unitMap.put("mi", unitMap.get("foot").multiply(5280));
+			unitMap.put("mile", unitMap.get("mi"));
+			unitMap.put("miles", unitMap.get("mi"));
 		}
 
 		public Unit<?> getUnit(String unit) {
@@ -131,9 +152,6 @@ public class PixelProbe extends AbstractTool {
 		// NaN workaround should not be needed if we fix initialization bugs
 		Axis<?> Y = new LogAxis(0, Double.isNaN(ycal) ? 1 : ycal);
 		Y.setUnit(imgPlus.calibrationUnit(yAxis));
-		// TEMP HACK for testing purposes
-		disp.setUnit(Axes.X, "meter");
-		disp.setUnit(Axes.Y, "meter");
 		StringBuilder builder = new StringBuilder();
 		builder.append("x=");
 		appendAxisValue(builder, cx, X, disp.getUnit(Axes.X));
@@ -164,6 +182,8 @@ public class PixelProbe extends AbstractTool {
 	// -- helpers --
 	
 	public Unit<?> getUnit(String unit) {
+		// Activator a = new Activator();
+		// a.start(null);
 		if (UNITS == null) UNITS = new UnitLibrary();
 		return UNITS.getUnit(unit);
 	}
@@ -192,13 +212,18 @@ public class PixelProbe extends AbstractTool {
 			if (displayUnit != null) {
 				// treat values as if they are in desired units
 				builder.append(" ");
-				builder.append(displayUnit.getSymbol());
+				builder.append(dispUnitName);
+				// TODO
+				// builder.append(displayUnit.getSymbol());
 			}
 		}
 		else { // userUnit != null
+			String unitName = dispUnitName;
+
 			if (displayUnit == null) {
 				// TEMP? treat user unit as display unit
 				displayUnit = userUnit;
+				unitName = axis.getUnit();
 				/*
 				// ideally this case should never happen since displayUnit should fall
 				// back to dataset unit which we know is not null
@@ -214,8 +239,9 @@ public class PixelProbe extends AbstractTool {
 			catch (Exception e) {
 				val = scaledValue;
 			}
-			builder.append(val);
-			builder.append(displayUnit.getSymbol());
+			builder.append(String.format("%.3f", val));
+			builder.append(" ");
+			builder.append(unitName);
 		}
 	}
 
