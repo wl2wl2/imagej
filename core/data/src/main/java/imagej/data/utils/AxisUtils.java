@@ -47,12 +47,26 @@ import net.imglib2.meta.AxisType;
  */
 public class AxisUtils {
 
+	/**
+	 * Returns a linear scaling axis (offset 0 and step scale of 1). The axis is
+	 * labeled as the given {@link AxisType}.
+	 * 
+	 * @param axisType
+	 * @return
+	 */
 	public static Axis<?> getDefaultAxis(AxisType axisType) {
 		Axis<?> axis = new LinearAxis(0, 1);
 		axis.setLabel(axisType.getLabel());
 		return axis;
 	}
 
+	/**
+	 * Returns an array of linear scaling axes (offset 0 and step scale of 1).
+	 * Each axis is labeled as given.
+	 * 
+	 * @param axisTypes
+	 * @return
+	 */
 	public static Axis<?>[] getDefaultAxes(AxisType[] axisTypes) {
 		Axis<?>[] axes = new Axis<?>[axisTypes.length];
 		for (int i = 0; i < axisTypes.length; i++) {
@@ -61,6 +75,13 @@ public class AxisUtils {
 		return axes;
 	}
 
+	/**
+	 * Makes an array of new axes whose data is copied from an existing set of
+	 * axes.
+	 * 
+	 * @param axes The {@link Axis}es to copy
+	 * @return
+	 */
 	public static Axis<?>[] copyAxes(Axis<?>[] axes) {
 		Axis<?>[] copy = new Axis<?>[axes.length];
 		for (int i = 0; i < axes.length; i++) {
@@ -69,6 +90,12 @@ public class AxisUtils {
 		return copy;
 	}
 
+	/**
+	 * Gets an array of {@link AxisType}s from an array of {@Axis}es.
+	 * 
+	 * @param axes
+	 * @return
+	 */
 	public static AxisType[] getTypes(Axis<?>[] axes) {
 		AxisType[] types = new AxisType[axes.length];
 		for (int i = 0; i < axes.length; i++) {
