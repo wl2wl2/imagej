@@ -43,8 +43,8 @@ import imagej.module.ItemIO;
 import imagej.plugin.Menu;
 import imagej.plugin.Parameter;
 import imagej.plugin.Plugin;
+import net.imglib2.Axis;
 import net.imglib2.Cursor;
-import net.imglib2.meta.AxisType;
 import net.imglib2.type.numeric.RealType;
 
 /**
@@ -201,7 +201,7 @@ public class AutoContrast extends ContextCommand {
 	// TODO - rewrite this ugly code unless we just throw this impl away
 
 	private int getNumChannels(final Dataset dataset) {
-		final AxisType[] axes = dataset.getAxes();
+		final Axis<?>[] axes = dataset.getAxes();
 		for (int d = 0; d < axes.length; d++) {
 			if (axes[d].getLabel() == "Channel") {
 				return (int) dataset.getDims()[d];

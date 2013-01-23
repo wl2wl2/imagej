@@ -47,6 +47,7 @@ import imagej.plugin.Plugin;
 
 import java.util.ArrayList;
 
+import net.imglib2.Axis;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
@@ -147,7 +148,7 @@ public class DeleteData extends DynamicCommand implements Cancelable {
 	public void run() {
 		final AxisType axis = Axes.get(axisName);
 		if (inputBad(axis)) return;
-		final AxisType[] axes = dataset.getAxes();
+		final Axis<?>[] axes = dataset.getAxes();
 		final long[] newDimensions =
 			RestructureUtils.getDimensions(dataset, axis, -quantity);
 		final ImgPlus<? extends RealType<?>> dstImgPlus =
@@ -302,9 +303,9 @@ public class DeleteData extends DynamicCommand implements Cancelable {
 		@SuppressWarnings("unchecked")
 		final DefaultModuleItem<String> axisNameItem =
 			(DefaultModuleItem<String>) getInfo().getInput(AXIS_NAME);
-		final AxisType[] axes = getDataset().getAxes();
+		final Axis<?>[] axes = getDataset().getAxes();
 		final ArrayList<String> choices = new ArrayList<String>();
-		for (final AxisType a : axes) {
+		for (final Axis<?> a : axes) {
 			choices.add(a.getLabel());
 		}
 		axisNameItem.setChoices(choices);

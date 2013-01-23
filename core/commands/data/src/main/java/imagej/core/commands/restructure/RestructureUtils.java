@@ -37,6 +37,7 @@ package imagej.core.commands.restructure;
 
 import imagej.data.Dataset;
 import imagej.data.Extents;
+import net.imglib2.Axis;
 import net.imglib2.RandomAccess;
 import net.imglib2.display.ColorTable;
 import net.imglib2.img.Img;
@@ -77,19 +78,13 @@ public class RestructureUtils {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static ImgPlus<? extends RealType<?>> createNewImgPlus(
-		final Dataset ds, final long[] dimensions, final AxisType[] axes)
+		final Dataset ds, final long[] dimensions, final Axis<?>[] axes)
 	{
 		final ImgFactory factory = ds.getImgPlus().factory();
 		final Img<? extends RealType<?>> img =
 			factory.create(dimensions, ds.getType());
 		final String name = ds.getName();
-		final double[] calibration = new double[axes.length];
-		for (int i = 0; i < axes.length; i++) {
-			final int index = ds.getAxisIndex(axes[i]);
-			if (index >= 0) calibration[i] = ds.calibration(index);
-			else calibration[i] = Double.NaN;
-		}
-		return new ImgPlus(img, name, axes, calibration);
+		return new ImgPlus(img, name, axes);
 	}
 
 	/**

@@ -35,8 +35,6 @@
 
 package imagej.core.commands.assign;
 
-import java.net.URL;
-
 import imagej.Cancelable;
 import imagej.command.ContextCommand;
 import imagej.data.Dataset;
@@ -54,10 +52,13 @@ import imagej.plugin.Menu;
 import imagej.plugin.Parameter;
 import imagej.plugin.Plugin;
 import imagej.widget.Button;
+
+import java.net.URL;
+
+import net.imglib2.function.Function;
 import net.imglib2.img.Img;
 import net.imglib2.meta.Axes;
 import net.imglib2.ops.condition.UVInsideRoiCondition;
-import net.imglib2.ops.function.Function;
 import net.imglib2.ops.img.ImageAssignment;
 import net.imglib2.ops.input.InputIteratorFactory;
 import net.imglib2.ops.input.PointInputIteratorFactory;

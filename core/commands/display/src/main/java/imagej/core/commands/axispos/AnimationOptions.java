@@ -45,6 +45,7 @@ import imagej.plugin.Plugin;
 
 import java.util.ArrayList;
 
+import net.imglib2.Axis;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 
@@ -177,10 +178,10 @@ public class AnimationOptions extends DynamicCommand {
 		@SuppressWarnings("unchecked")
 		final DefaultModuleItem<String> axisNameItem =
 			(DefaultModuleItem<String>) getInfo().getInput("axisName");
-		final AxisType[] axes = getDisplay().getAxes();
+		final Axis<?>[] axes = getDisplay().getAxes();
 		final ArrayList<String> choices = new ArrayList<String>();
-		for (final AxisType axis : axes) {
-			if (Axes.isXY(axis)) continue;
+		for (final Axis<?> axis : axes) {
+			if (Axes.isXY(axis.getType())) continue;
 			choices.add(axis.getLabel());
 		}
 		axisNameItem.setChoices(choices);

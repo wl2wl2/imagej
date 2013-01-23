@@ -42,6 +42,7 @@ import imagej.data.display.DatasetView;
 import imagej.data.display.ImageDisplay;
 import imagej.data.display.ImageDisplayService;
 import imagej.data.lut.LutService;
+import imagej.data.utils.AxisUtils;
 import imagej.display.DisplayService;
 import imagej.log.LogService;
 import imagej.module.ItemIO;
@@ -50,6 +51,7 @@ import imagej.plugin.Plugin;
 
 import java.net.URL;
 
+import net.imglib2.Axis;
 import net.imglib2.RandomAccess;
 import net.imglib2.display.ColorTable;
 import net.imglib2.meta.Axes;
@@ -144,7 +146,8 @@ public class ApplyLookupTable implements Command {
 		String name =
 			urlString.substring(urlString.lastIndexOf("/") + 1, urlString.length());
 		long[] dims = new long[] { WIDTH, HEIGHT };
-		AxisType[] axes = new AxisType[] { Axes.X, Axes.Y };
+		AxisType[] axisTypes = new AxisType[] { Axes.X, Axes.Y };
+		Axis<?>[] axes = AxisUtils.getDefaultAxes(axisTypes);
 		int bitsPerPixel = 8;
 		boolean signed = false;
 		boolean floating = false;

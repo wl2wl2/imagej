@@ -35,15 +35,31 @@
 
 package imagej.core.commands.debug;
 
+import imagej.command.Command;
+import imagej.data.Dataset;
+import imagej.data.DatasetService;
+import imagej.data.display.ImageDisplay;
+import imagej.data.display.OverlayService;
+import imagej.data.measure.BasicStats;
+import imagej.data.measure.BasicStatsFunction;
+import imagej.data.measure.MeasurementService;
+import imagej.data.overlay.Overlay;
+import imagej.data.utils.AxisUtils;
+import imagej.event.StatusService;
+import imagej.plugin.Parameter;
+import imagej.plugin.Plugin;
+import imagej.widget.Button;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import net.imglib2.Axis;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.function.Function;
 import net.imglib2.img.Img;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
-import net.imglib2.ops.function.Function;
 import net.imglib2.ops.function.real.RealAdaptiveMedianFunction;
 import net.imglib2.ops.function.real.RealArithmeticMeanFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
@@ -62,19 +78,6 @@ import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 import net.imglib2.type.numeric.real.DoubleType;
-import imagej.command.Command;
-import imagej.data.Dataset;
-import imagej.data.DatasetService;
-import imagej.data.display.ImageDisplay;
-import imagej.data.display.OverlayService;
-import imagej.data.measure.BasicStats;
-import imagej.data.measure.BasicStatsFunction;
-import imagej.data.measure.MeasurementService;
-import imagej.data.overlay.Overlay;
-import imagej.event.StatusService;
-import imagej.plugin.Parameter;
-import imagej.plugin.Plugin;
-import imagej.widget.Button;
 
 /**
  * Shows how to use the MeasurementService.
@@ -200,8 +203,10 @@ public class MeasurementDemo implements Command {
 	}
 	
 	private Dataset getTestData() {
+		AxisType[] axisTypes = new AxisType[] { Axes.X, Axes.Y };
+		Axis<?>[] axes = AxisUtils.getDefaultAxes(axisTypes);
 		Dataset ds =
-				dsSrv.create(new long[]{7,7}, "tmp", new AxisType[]{Axes.X, Axes.Y},
+			dsSrv.create(new long[] { 7, 7 }, "tmp", axes,
 											8, false, false);
 		Cursor<? extends RealType<?>> cursor = ds.getImgPlus().cursor();
 		int i = 0;

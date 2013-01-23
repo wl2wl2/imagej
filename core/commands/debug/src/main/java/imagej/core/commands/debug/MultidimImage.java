@@ -40,6 +40,7 @@ import imagej.data.ChannelCollection;
 import imagej.data.Dataset;
 import imagej.data.DatasetService;
 import imagej.data.DrawingTool;
+import imagej.data.utils.AxisUtils;
 import imagej.module.ItemIO;
 import imagej.plugin.Parameter;
 import imagej.plugin.Plugin;
@@ -49,6 +50,7 @@ import imagej.render.TextRenderer.TextJustification;
 import java.util.Arrays;
 import java.util.List;
 
+import net.imglib2.Axis;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 
@@ -74,9 +76,10 @@ public class MultidimImage implements Command {
 	public void run() {
 		final long[] dims = new long[] { 90, 35, 4, 5, 6, 7 };
 		final String name = "Multidimensional Example";
-		final AxisType[] axes =
+		final AxisType[] axisTypes =
 			new AxisType[] { Axes.X, Axes.Y, Axes.CHANNEL, Axes.FREQUENCY, Axes.Z,
 				Axes.TIME };
+		final Axis<?>[] axes = AxisUtils.getDefaultAxes(axisTypes);
 		final int bitsPerPixel = 8;
 		final boolean signed = false;
 		final boolean floating = false;

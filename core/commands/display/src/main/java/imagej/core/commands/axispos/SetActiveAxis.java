@@ -46,6 +46,7 @@ import imagej.plugin.Plugin;
 
 import java.util.ArrayList;
 
+import net.imglib2.Axis;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 
@@ -122,10 +123,10 @@ public class SetActiveAxis extends DynamicCommand {
 		@SuppressWarnings("unchecked")
 		final DefaultModuleItem<String> axisNameItem =
 			(DefaultModuleItem<String>) getInfo().getInput(AXIS_NAME);
-		final AxisType[] axes = display.getAxes();
+		final Axis<?>[] axes = display.getAxes();
 		final ArrayList<String> choices = new ArrayList<String>();
-		for (final AxisType a : axes) {
-			if (a.isXY()) continue;
+		for (final Axis<?> a : axes) {
+			if (a.getType().isXY()) continue;
 			choices.add(a.getLabel());
 		}
 		axisNameItem.setChoices(choices);

@@ -51,6 +51,7 @@ import imagej.plugin.Plugin;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.imglib2.Axis;
 import net.imglib2.meta.AxisType;
 
 /**
@@ -84,7 +85,7 @@ public class DuplicateImage extends DynamicCommand implements Cancelable {
 	// -- instance variables that are not parameters --
 
 	private Map<AxisType, AxisSubrange> definitions;
-	private AxisType[] theAxes;
+	private Axis<?>[] theAxes;
 	private String cancelReason;
 
 	// -- DuplicateImage methods --
@@ -202,7 +203,7 @@ public class DuplicateImage extends DynamicCommand implements Cancelable {
 	protected void initializer() {
 		definitions = new HashMap<AxisType, AxisSubrange>();
 		theAxes = inputDisplay.getAxes();
-		for (final AxisType axis : theAxes) {
+		for (final Axis<?> axis : theAxes) {
 			final DefaultModuleItem<String> axisItem =
 				new DefaultModuleItem<String>(this, name(axis), String.class);
 			axisItem.setPersisted(false);
@@ -213,8 +214,8 @@ public class DuplicateImage extends DynamicCommand implements Cancelable {
 
 	// -- private helpers --
 
-	private String fullRangeString(final ImageDisplay disp, final AxisType axis) {
-		final int axisIndex = disp.getAxisIndex(axis);
+	private String fullRangeString(final ImageDisplay disp, final Axis<?> axis) {
+		final int axisIndex = disp.getAxisIndex(axis.getType());
 		return "1-" + disp.dimension(axisIndex);
 	}
 
@@ -234,16 +235,16 @@ public class DuplicateImage extends DynamicCommand implements Cancelable {
 	private SamplingDefinition parsedDefinition() {
 		final SamplingDefinition sampleDef =
 			SamplingDefinition.sampleAllPlanes(inputDisplay);
-		for (final AxisType axis : theAxes) {
+		for (final Axis<?> axis : theAxes) {
 			final String definition = (String) getInput(name(axis));
 			final AxisSubrange subrange =
-				new AxisSubrange(inputDisplay, axis, definition, true);
-			sampleDef.constrain(axis, subrange);
+				new AxisSubrange(inputDisplay, axis.getType(), definition, true);
+			sampleDef.constrain(axis.getType(), subrange);
 		}
 		return sampleDef;
 	}
 
-	private String name(final AxisType axis) {
+	private String name(final Axis<?> axis) {
 		return axis.getLabel() + " axis range";
 	}
 }

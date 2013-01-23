@@ -196,7 +196,7 @@ public class ImageCalculator<U extends RealType<U>,V extends RealType<V>>
 				datasetService.create(span, "Result of operation", input1.getAxes(),
 					bits, signed, floating);
 			copyDataInto(output.getImgPlus(), img, span);
-			output.update(); // TODO - probably unecessary
+			output.update(); // TODO - probably unnecessary since it has type OUTPUT
 		}
 	}
 
@@ -275,5 +275,4 @@ public class ImageCalculator<U extends RealType<U>,V extends RealType<V>>
 			dst.get().setReal(value);
 		}
 	}
-
 }

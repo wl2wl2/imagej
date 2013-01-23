@@ -47,6 +47,8 @@ import imagej.plugin.Plugin;
 
 import java.util.ArrayList;
 
+import net.imglib2.Axis;
+import net.imglib2.axis.LinearAxis;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 
@@ -89,7 +91,7 @@ public class EditAxes extends DynamicCommand {
 		this.dataset = dataset;
 	}
 
-	public AxisType getAxisMapping(int axisNum) {
+	public AxisType getAxis(int axisNum) {
 		String axisName = (String) getInput(name(axisNum));
 		return Axes.get(axisName);
 	}
@@ -107,13 +109,11 @@ public class EditAxes extends DynamicCommand {
 		if (dataset == null) {
 			log.error("EditAxes plugin error: given a null dataset as input");
 		}
-		AxisType[] desiredAxes = getAxes();
+		Axis<?>[] desiredAxes = getAxes();
 		if (inputBad(desiredAxes)) {
 			// error already logged
 			return;
 		}
-		double[] newCal = getNewCalibration(dataset,desiredAxes);
-		dataset.setCalibration(newCal);
 		dataset.setAxes(desiredAxes);
 	}
 
@@ -144,10 +144,16 @@ public class EditAxes extends DynamicCommand {
 	/**
 	 * Gets the names of the axes in the order the user specified.
 	 */
-	private AxisType[] getAxes() {
-		AxisType[] axes = new AxisType[dataset.getImgPlus().numDimensions()];
+	private Axis<?>[] getAxes() {
+		Axis<?>[] axes = new Axis<?>[dataset.getImgPlus().numDimensions()];
 		for (int i = 0; i < axes.length; i++) {
-			axes[i] = getAxisMapping(i);
+			AxisType axisType = getAxis(i);
+			int index = dataset.getAxisIndex(axisType);
+			double scale =
+				(index < 0) ? Double.NaN : dataset.getImgPlus().axis(index).getScale();
+			Axis<?> axis = new LinearAxis(0, scale);
+			axis.setLabel(axisType.getLabel());
+			axes[i] = axis;
 		}
 		return axes;
 	}
@@ -156,10 +162,10 @@ public class EditAxes extends DynamicCommand {
 	 * Returns true if user input is invalid. Basically this is a test that the
 	 * user did not repeat any axis when specifying the axis ordering.
 	 */
-	private boolean inputBad(AxisType[] axes) {
+	private boolean inputBad(Axis<?>[] axes) {
 		for (int i = 0; i < axes.length; i++) {
 			for (int j = i+1; j < axes.length; j++) {
-				if (axes[i].equals(axes[j])) {
+				if (axes[i].getType().equals(axes[j].getType())) {
 					log.error("At least one axis designation is repeated:"
 							+ " axis designations must be mututally exclusive");
 					return true;
@@ -169,21 +175,4 @@ public class EditAxes extends DynamicCommand {
 		return false;
 	}
 
-	/**
-	 * Copies already existing calibration values into new calibration when
-	 * possible. If new axis is not present in original Dataset sets that
-	 * calibration value to NaN.
-	 */
-	double[] getNewCalibration(Dataset origDs, AxisType[] newAxes) {
-		double[] newCal = new double[newAxes.length];
-		int a = 0;
-		for (AxisType axis : newAxes) {
-			int index = origDs.getAxisIndex(axis);
-			if (index < 0)
-				newCal[a++] = Double.NaN;
-			else
-				newCal[a++] = origDs.calibration(index);
-		}
-		return newCal;
-	}
 }

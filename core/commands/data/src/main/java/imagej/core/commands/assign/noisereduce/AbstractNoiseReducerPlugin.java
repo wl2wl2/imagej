@@ -35,20 +35,6 @@
 
 package imagej.core.commands.assign.noisereduce;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Future;
-
-import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.ImgPlus;
-import net.imglib2.ops.function.Function;
-import net.imglib2.ops.function.real.RealImageFunction;
-import net.imglib2.ops.pointset.PointSet;
-import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
-import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
-import net.imglib2.type.numeric.RealType;
-import net.imglib2.type.numeric.real.DoubleType;
-
 import imagej.Cancelable;
 import imagej.ImageJ;
 import imagej.command.Command;
@@ -57,6 +43,20 @@ import imagej.command.CommandService;
 import imagej.data.Dataset;
 import imagej.module.ItemIO;
 import imagej.plugin.Parameter;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.Future;
+
+import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.function.Function;
+import net.imglib2.img.ImgPlus;
+import net.imglib2.ops.function.real.RealImageFunction;
+import net.imglib2.ops.pointset.PointSet;
+import net.imglib2.outofbounds.OutOfBoundsMirrorFactory;
+import net.imglib2.outofbounds.OutOfBoundsMirrorFactory.Boundary;
+import net.imglib2.type.numeric.RealType;
+import net.imglib2.type.numeric.real.DoubleType;
 
 /**
  * TODO

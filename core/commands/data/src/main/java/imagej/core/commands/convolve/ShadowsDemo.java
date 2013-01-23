@@ -53,6 +53,7 @@ import imagej.plugin.Menu;
 import imagej.plugin.Parameter;
 import imagej.plugin.Plugin;
 import imagej.util.RealRect;
+import net.imglib2.Axis;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 
@@ -181,10 +182,10 @@ public class ShadowsDemo extends ContextCommand implements Cancelable {
 	 */
 	private boolean unsupportedImage(ImageDisplay disp) {
 		final Dataset input = imgDispService.getActiveDataset(disp);
-		final AxisType[] axes = input.getAxes();
+		final Axis<?>[] axes = input.getAxes();
 		final long[] dims = input.getDims();
 		for (int i = 0; i < axes.length; i++) {
-			final AxisType axis = axes[i];
+			final AxisType axis = axes[i].getType();
 			if (axis == Axes.X) continue;
 			if (axis == Axes.Y) continue;
 			if (axis == Axes.CHANNEL && input.isRGBMerged()) continue;

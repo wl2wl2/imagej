@@ -48,6 +48,7 @@ import imagej.plugin.Plugin;
 
 import java.util.ArrayList;
 
+import net.imglib2.Axis;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
@@ -140,7 +141,7 @@ public class DeleteAxis extends DynamicCommand implements Cancelable {
 	public void run() {
 		final AxisType axis = getAxis();
 		if (inputBad(axis)) return;
-		final AxisType[] newAxes = getNewAxes(dataset, axis);
+		final Axis<?>[] newAxes = getNewAxes(dataset, axis);
 		final long[] newDimensions = getNewDimensions(dataset, axis);
 		final ImgPlus<? extends RealType<?>> dstImgPlus =
 			RestructureUtils.createNewImgPlus(dataset, newDimensions, newAxes);
@@ -224,13 +225,13 @@ public class DeleteAxis extends DynamicCommand implements Cancelable {
 	 * Creates an Axis[] that consists of all the axes from a Dataset minus a user
 	 * specified axis
 	 */
-	private AxisType[] getNewAxes(final Dataset ds, final AxisType axis) {
-		final AxisType[] origAxes = ds.getAxes();
+	private Axis<?>[] getNewAxes(final Dataset ds, final AxisType axis) {
+		final Axis<?>[] origAxes = ds.getAxes();
 		if (axis.isXY()) return origAxes;
-		final AxisType[] newAxes = new AxisType[origAxes.length - 1];
+		final Axis<?>[] newAxes = new Axis<?>[origAxes.length - 1];
 		int index = 0;
-		for (final AxisType a : origAxes)
-			if (a != axis) newAxes[index++] = a;
+		for (final Axis<?> a : origAxes)
+			if (a.getType() != axis) newAxes[index++] = a;
 		return newAxes;
 	}
 
@@ -245,11 +246,11 @@ public class DeleteAxis extends DynamicCommand implements Cancelable {
 			newDims[ds.getAxisIndex(axis)] = 1;
 			return newDims;
 		}
-		final AxisType[] origAxes = ds.getAxes();
+		final Axis<?>[] origAxes = ds.getAxes();
 		final long[] newDims = new long[origAxes.length - 1];
 		int index = 0;
 		for (int i = 0; i < origAxes.length; i++) {
-			final AxisType a = origAxes[i];
+			final AxisType a = origAxes[i].getType();
 			if (a != axis) newDims[index++] = origDims[i];
 		}
 		return newDims;
@@ -318,9 +319,9 @@ public class DeleteAxis extends DynamicCommand implements Cancelable {
 		@SuppressWarnings("unchecked")
 		final DefaultModuleItem<String> axisNameItem =
 			(DefaultModuleItem<String>) getInfo().getInput(AXIS_NAME);
-		final AxisType[] axes = getDataset().getAxes();
+		final Axis<?>[] axes = getDataset().getAxes();
 		final ArrayList<String> choices = new ArrayList<String>();
-		for (final AxisType a : axes) {
+		for (final Axis<?> a : axes) {
 			// if (Axes.isXY(a)) continue;
 			choices.add(a.getLabel());
 		}
@@ -329,7 +330,7 @@ public class DeleteAxis extends DynamicCommand implements Cancelable {
 
 	private void initPosition() {
 		final long max = getDataset().dimension(0);
-		final AxisType axis = getDataset().axis(0);
+		final AxisType axis = getDataset().axis(0).getType();
 		final long value = display.getLongPosition(axis) + 1;
 		initPositionRange(1, max);
 		setPosition(value);

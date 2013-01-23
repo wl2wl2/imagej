@@ -48,6 +48,7 @@ import imagej.plugin.Plugin;
 import java.util.ArrayList;
 import java.util.Map;
 
+import net.imglib2.Axis;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Axes;
@@ -105,7 +106,7 @@ public class ReorderData extends DynamicCommand {
 	 * @param fromPosition The index within the current axis order
 	 */
 	public void setNewAxisIndex(int index, int fromPosition) {
-		AxisType axis = dataset.axis(fromPosition);
+		AxisType axis = dataset.axis(fromPosition).getType();
 		setInput(name(index), axis.getLabel());
 	}
 
@@ -146,7 +147,7 @@ public class ReorderData extends DynamicCommand {
 	// -- Initializers --
 
 	protected void initAxes() {
-		final AxisType[] axes = dataset.getAxes();
+		final Axis<?>[] axes = dataset.getAxes();
 
 		final ArrayList<String> choices = new ArrayList<String>();
 		for (int i = 0; i < axes.length; i++) {
@@ -206,8 +207,8 @@ public class ReorderData extends DynamicCommand {
 	 * Takes a given set of axes (usually a subset of all possible axes) and
 	 * returns a permuted set of axes that reflect the user specified axis order
 	 */
-	private AxisType[] getPermutedAxes(final AxisType[] currAxes) {
-		final AxisType[] permuted = new AxisType[currAxes.length];
+	private Axis<?>[] getPermutedAxes(final Axis<?>[] currAxes) {
+		final Axis<?>[] permuted = new Axis<?>[currAxes.length];
 		int index = 0;
 		for (int i = 0; i < desiredAxisOrder.length; i++)
 			for (int j = 0; j < currAxes.length; j++) {
@@ -224,11 +225,11 @@ public class ReorderData extends DynamicCommand {
 	 * actually permute positions.
 	 */
 	private void setupPermutationVars() {
-		final AxisType[] currAxes = dataset.getAxes();
-		final AxisType[] permutedAxes = getPermutedAxes(currAxes);
+		final Axis<?>[] currAxes = dataset.getAxes();
+		final Axis<?>[] permutedAxes = getPermutedAxes(currAxes);
 		permutationAxisIndices = new int[currAxes.length];
 		for (int i = 0; i < currAxes.length; i++) {
-			final AxisType axis = currAxes[i];
+			final AxisType axis = currAxes[i].getType();
 			final int newIndex = getNewAxisIndex(permutedAxes, axis);
 			permutationAxisIndices[i] = newIndex;
 		}
@@ -246,9 +247,9 @@ public class ReorderData extends DynamicCommand {
 		final HyperVolumePointSet volume = new HyperVolumePointSet(inputSpan);
 		final PointSetIterator iter = volume.iterator();
 		final long[] origDims = dataset.getDims();
-		final AxisType[] origAxes = dataset.getAxes();
+		final Axis<?>[] origAxes = dataset.getAxes();
 		final long[] newDims = getNewDims(origDims);
-		final AxisType[] newAxes = getNewAxes(origAxes);
+		final Axis<?>[] newAxes = getNewAxes(origAxes);
 		final ImgPlus<? extends RealType<?>> newImgPlus =
 			RestructureUtils.createNewImgPlus(dataset, newDims, newAxes);
 		newImgPlus.setCompositeChannelCount(dataset.getCompositeChannelCount());
@@ -270,11 +271,11 @@ public class ReorderData extends DynamicCommand {
 	/**
 	 * Returns the axis index of an Axis given a permuted set of axes.
 	 */
-	private int getNewAxisIndex(final AxisType[] permutedAxes,
+	private int getNewAxisIndex(final Axis<?>[] permutedAxes,
 		final AxisType originalAxis)
 	{
 		for (int i = 0; i < permutedAxes.length; i++) {
-			if (permutedAxes[i] == originalAxis) return i;
+			if (permutedAxes[i].getType() == originalAxis) return i;
 		}
 		throw new IllegalArgumentException("axis not found!");
 	}
@@ -293,8 +294,8 @@ public class ReorderData extends DynamicCommand {
 	 * Taking the original axes order this method returns the new axes in the
 	 * order of the permuted space.
 	 */
-	private AxisType[] getNewAxes(final AxisType[] origAxes) {
-		final AxisType[] newAxes = new AxisType[origAxes.length];
+	private Axis<?>[] getNewAxes(final Axis<?>[] origAxes) {
+		final Axis<?>[] newAxes = new Axis<?>[origAxes.length];
 		permute(origAxes, newAxes);
 		return newAxes;
 	}
@@ -313,7 +314,7 @@ public class ReorderData extends DynamicCommand {
 	 * permuted space
 	 */
 	private void
-		permute(final AxisType[] origAxes, final AxisType[] permutedAxes)
+ permute(final Axis<?>[] origAxes, final Axis<?>[] permutedAxes)
 	{
 		for (int i = 0; i < origAxes.length; i++)
 			permutedAxes[permutationAxisIndices[i]] = origAxes[i];

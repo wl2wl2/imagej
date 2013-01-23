@@ -48,8 +48,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.imglib2.RandomAccessibleInterval;
+import net.imglib2.function.Function;
 import net.imglib2.img.ImgPlus;
-import net.imglib2.ops.function.Function;
 import net.imglib2.ops.function.real.RealAdaptiveMedianFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.pointset.HyperVolumePointSet;

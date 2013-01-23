@@ -47,6 +47,8 @@ import imagej.plugin.Plugin;
 
 import java.util.ArrayList;
 
+import net.imglib2.Axis;
+import net.imglib2.axis.LinearAxis;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
@@ -133,7 +135,7 @@ public class AddAxis extends DynamicCommand implements Cancelable {
 	public void run() {
 		final AxisType axis = Axes.get(axisName);
 		if (inputBad(axis)) return;
-		final AxisType[] newAxes = getNewAxes(dataset, axis);
+		final Axis<?>[] newAxes = getNewAxes(dataset, axis);
 		final long[] newDimensions = getNewDimensions(dataset, axisSize);
 		final ImgPlus<? extends RealType<?>> dstImgPlus =
 			RestructureUtils.createNewImgPlus(dataset, newDimensions, newAxes);
@@ -186,11 +188,13 @@ public class AddAxis extends DynamicCommand implements Cancelable {
 	 * Creates an Axis[] that consists of all the axes from a Dataset and an
 	 * additional axis appended.
 	 */
-	private AxisType[] getNewAxes(final Dataset ds, final AxisType axis) {
-		final AxisType[] origAxes = ds.getAxes();
-		final AxisType[] newAxes = new AxisType[origAxes.length + 1];
+	private Axis<?>[] getNewAxes(final Dataset ds, final AxisType axisType) {
+		final Axis<?>[] origAxes = ds.getAxes();
+		final Axis<?>[] newAxes = new Axis<?>[origAxes.length + 1];
 		for (int i = 0; i < origAxes.length; i++)
 			newAxes[i] = origAxes[i];
+		LinearAxis axis = new LinearAxis(0, 1);
+		axis.setLabel(axisType.getLabel());
 		newAxes[newAxes.length - 1] = axis;
 		return newAxes;
 	}

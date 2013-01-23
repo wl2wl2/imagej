@@ -47,6 +47,7 @@ import imagej.plugin.Plugin;
 
 import java.util.ArrayList;
 
+import net.imglib2.Axis;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
@@ -144,19 +145,19 @@ public class AddData extends DynamicCommand implements Cancelable {
 	 */
 	@Override
 	public void run() {
-		final AxisType axis = Axes.get(axisName);
-		if (inputBad(axis)) return;
-		final AxisType[] axes = dataset.getAxes();
+		final AxisType axisType = Axes.get(axisName);
+		if (inputBad(axisType)) return;
+		final Axis<?>[] axes = dataset.getAxes();
 		final long[] newDimensions =
-			RestructureUtils.getDimensions(dataset, axis, quantity);
+			RestructureUtils.getDimensions(dataset, axisType, quantity);
 		final ImgPlus<? extends RealType<?>> dstImgPlus =
 			RestructureUtils.createNewImgPlus(dataset, newDimensions, axes);
-		fillNewImgPlus(dataset.getImgPlus(), dstImgPlus, axis);
+		fillNewImgPlus(dataset.getImgPlus(), dstImgPlus, axisType);
 		final int compositeChannelCount =
-			compositeStatus(dataset, dstImgPlus, axis);
+			compositeStatus(dataset, dstImgPlus, axisType);
 		dstImgPlus.setCompositeChannelCount(compositeChannelCount);
 		RestructureUtils.allocateColorTables(dstImgPlus);
-		if (Axes.isXY(axis)) {
+		if (Axes.isXY(axisType)) {
 			RestructureUtils.copyColorTables(dataset.getImgPlus(), dstImgPlus);
 		}
 		else {
@@ -312,9 +313,9 @@ public class AddData extends DynamicCommand implements Cancelable {
 		@SuppressWarnings("unchecked")
 		final DefaultModuleItem<String> axisNameItem =
 			(DefaultModuleItem<String>) getInfo().getInput(AXIS_NAME);
-		final AxisType[] axes = getDataset().getAxes();
+		final Axis<?>[] axes = getDataset().getAxes();
 		final ArrayList<String> choices = new ArrayList<String>();
-		for (final AxisType a : axes) {
+		for (final Axis<?> a : axes) {
 			choices.add(a.getLabel());
 		}
 		axisNameItem.setChoices(choices);

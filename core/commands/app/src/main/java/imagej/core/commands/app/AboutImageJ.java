@@ -41,6 +41,7 @@ import imagej.data.ChannelCollection;
 import imagej.data.Dataset;
 import imagej.data.DatasetService;
 import imagej.data.DrawingTool;
+import imagej.data.utils.AxisUtils;
 import imagej.display.Display;
 import imagej.display.DisplayService;
 import imagej.io.IOService;
@@ -68,6 +69,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.imglib2.Axis;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.meta.Axes;
@@ -190,9 +192,11 @@ public class AboutImageJ extends ContextCommand {
 		if (ds == null) {
 			log.warn("Could not load a 3 channel unsigned 8 bit image as backdrop");
 			// make a black 3 channel 8-bit unsigned background image.
+			AxisType[] axisTypes = new AxisType[] { Axes.X, Axes.Y, Axes.CHANNEL };
+			Axis<?>[] axes = AxisUtils.getDefaultAxes(axisTypes);
 			ds =
-				dataSrv.create(new long[] { 500, 500, 3 }, title, new AxisType[] {
-					Axes.X, Axes.Y, Axes.CHANNEL }, 8, false, false);
+				dataSrv
+					.create(new long[] { 500, 500, 3 }, title, axes, 8, false, false);
 		}
 
 		ds.setName(title);

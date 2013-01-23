@@ -41,14 +41,14 @@ import imagej.module.DefaultModuleItem;
 import imagej.module.ItemIO;
 import imagej.plugin.Parameter;
 import imagej.util.Prefs;
+import net.imglib2.Axis;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
+import net.imglib2.function.Function;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Axes;
-import net.imglib2.meta.AxisType;
-import net.imglib2.ops.function.Function;
 import net.imglib2.ops.function.real.RealArithmeticMeanFunction;
 import net.imglib2.ops.function.real.RealImageFunction;
 import net.imglib2.ops.input.InputIterator;
@@ -213,8 +213,7 @@ public abstract class TypeChanger extends DynamicCommand {
 		// determine the attributes of the output image
 		final String name = inputImg.getName();
 		final long[] dims = outputDims(inputImg);
-		final AxisType[] axes = outputAxes(inputImg);
-		final double[] cal = outputCalibration(inputImg);
+		final Axis<?>[] axes = outputAxes(inputImg);
 
 		// create the output image
 		final ImgFactory<? extends RealType<?>> factory = inputImg.factory();
@@ -283,18 +282,18 @@ public abstract class TypeChanger extends DynamicCommand {
 		}
 
 		// return the result
-		return new ImgPlus<O>(outputImg, name, axes, cal);
+		return new ImgPlus<O>(outputImg, name, axes);
 	}
 
 	/** Determines the axes of the output image ignoring channels if necessary. */
-	private static AxisType[] outputAxes(final ImgPlus<?> inputImg) {
+	private static Axis<?>[] outputAxes(final ImgPlus<?> inputImg) {
 		final int inputAxisCount = inputImg.numDimensions();
 		final int chanIndex = inputImg.getAxisIndex(Axes.CHANNEL);
 		final int outputAxisCount =
 			(chanIndex < 0) ? inputAxisCount : inputAxisCount - 1;
-		final AxisType[] inputAxes = new AxisType[inputAxisCount];
+		final Axis<?>[] inputAxes = new Axis<?>[inputAxisCount];
 		inputImg.axes(inputAxes);
-		final AxisType[] outputAxes = new AxisType[outputAxisCount];
+		final Axis<?>[] outputAxes = new Axis<?>[outputAxisCount];
 		int o = 0;
 		for (int i = 0; i < inputAxisCount; i++) {
 			if (i != chanIndex) outputAxes[o++] = inputAxes[i];
@@ -316,25 +315,6 @@ public abstract class TypeChanger extends DynamicCommand {
 			if (i != chanIndex) outputDims[o++] = inputDims[i];
 		}
 		return outputDims;
-	}
-
-	/**
-	 * Determines the calibration of the output image ignoring channels if
-	 * necessary.
-	 */
-	private static double[] outputCalibration(final ImgPlus<?> inputImg) {
-		final int inputDimCount = inputImg.numDimensions();
-		final int chanIndex = inputImg.getAxisIndex(Axes.CHANNEL);
-		final int outputDimCount =
-			(chanIndex < 0) ? inputDimCount : inputDimCount - 1;
-		final double[] inputCal = new double[inputDimCount];
-		inputImg.calibration(inputCal);
-		final double[] outputCal = new double[outputDimCount];
-		int o = 0;
-		for (int i = 0; i < inputDimCount; i++) {
-			if (i != chanIndex) outputCal[o++] = inputCal[i];
-		}
-		return outputCal;
 	}
 
 	/**

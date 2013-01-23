@@ -85,7 +85,7 @@ public class Animation implements Runnable {
 			}
 			else {
 				// no preferred animation axes; use first non-spatial axis
-				axis = display.axis(2);
+				axis = display.axis(2).getType();
 			}
 			final int axisIndex = display.getAxisIndex(axis);
 			last = display.getExtents().dimension(axisIndex) - 1;

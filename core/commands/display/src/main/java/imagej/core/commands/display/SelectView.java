@@ -35,10 +35,6 @@
 
 package imagej.core.commands.display;
 
-import net.imglib2.meta.Axes;
-import net.imglib2.meta.AxisType;
-import net.imglib2.roi.RegionOfInterest;
-
 import imagej.ImageJ;
 import imagej.command.ContextCommand;
 import imagej.data.display.DataView;
@@ -52,6 +48,10 @@ import imagej.module.ItemIO;
 import imagej.plugin.Menu;
 import imagej.plugin.Parameter;
 import imagej.plugin.Plugin;
+import net.imglib2.Axis;
+import net.imglib2.meta.Axes;
+import net.imglib2.meta.AxisType;
+import net.imglib2.roi.RegionOfInterest;
 
 /**
  * Selects an overlay that encompasses the current view. If no such overlay
@@ -121,10 +121,13 @@ public class SelectView extends ContextCommand {
 	// -- private helpers --
 	
 	private boolean viewIsInCurrentDisplayedPlane(ImageDisplay disp, DataView view) {
-		AxisType[] axes = disp.getAxes();
-		for (AxisType axis : axes) {
-			if (Axes.isXY(axis)) continue;
-			if (disp.getLongPosition(axis) != view.getLongPosition(axis)) return false;
+		Axis<?>[] axes = disp.getAxes();
+		for (Axis<?> axis : axes) {
+			AxisType axisType = axis.getType();
+			if (Axes.isXY(axisType)) continue;
+			if (disp.getLongPosition(axisType) != view.getLongPosition(axisType)) {
+				return false;
+			}
 		}
 		return true;
 	}
@@ -144,7 +147,7 @@ public class SelectView extends ContextCommand {
 		Overlay newOverlay = makeOverlay(disp);
 		DataView dataView = imgDispService.createDataView(newOverlay);
 		for (int i = 0; i < disp.numDimensions(); i++) {
-			final AxisType axis = disp.axis(i);
+			final AxisType axis = disp.axis(i).getType();
 			if (Axes.isXY(axis)) continue;
 			if (dataView.getData().getAxisIndex(axis) < 0) {
 				dataView.setPosition(disp.getLongPosition(axis), axis);
