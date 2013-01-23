@@ -38,6 +38,7 @@ package imagej.data;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import net.imglib2.Axis;
 import net.imglib2.Positionable;
 import net.imglib2.RealPositionable;
 import net.imglib2.meta.Axes;
@@ -98,7 +99,7 @@ public class CombinedInterval extends ArrayList<CalibratedInterval> implements
 		indices.clear();
 		for (final CalibratedInterval interval : this) {
 			for (int d = 0; d < interval.numDimensions(); d++) {
-				final AxisType axis = interval.axis(d);
+				final AxisType axis = interval.axis(d).getType();
 				if (!indices.containsKey(axis)) {
 					// new axis; add to mappings
 					final DimensionMapping mapping = new DimensionMapping();
@@ -128,8 +129,8 @@ public class CombinedInterval extends ArrayList<CalibratedInterval> implements
 	// -- CalibratedInterval methods --
 
 	@Override
-	public AxisType[] getAxes() {
-		final AxisType[] axes = new AxisType[numDimensions()];
+	public Axis<?>[] getAxes() {
+		final Axis<?>[] axes = new Axis<?>[numDimensions()];
 		axes(axes);
 		return axes;
 	}
@@ -165,52 +166,19 @@ public class CombinedInterval extends ArrayList<CalibratedInterval> implements
 	}
 
 	@Override
-	public AxisType axis(final int d) {
+	public Axis<?> axis(final int d) {
 		final DimensionMapping mapping = mappings.get(d);
 		return mapping.interval.axis(mapping.index);
 	}
 
 	@Override
-	public void axes(final AxisType[] axes) {
+	public void axes(final Axis<?>[] axes) {
 		for (int i = 0; i < axes.length; i++)
 			axes[i] = axis(i);
 	}
 
 	@Override
-	public void setAxis(final AxisType axis, final int d) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public double calibration(final int d) {
-		final DimensionMapping mapping = mappings.get(d);
-		return mapping.interval.calibration(mapping.index);
-	}
-
-	@Override
-	public void calibration(final double[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			cal[i] = calibration(i);
-	}
-
-	@Override
-	public void calibration(float[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			cal[i] = (float) calibration(i);
-	}
-
-	@Override
-	public void setCalibration(final double cal, final int d) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void setCalibration(double[] cal) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void setCalibration(float[] cal) {
+	public void setAxis(final Axis<?> axis, final int d) {
 		throw new UnsupportedOperationException();
 	}
 

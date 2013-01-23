@@ -46,11 +46,11 @@ import imagej.service.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.imglib2.Axis;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.img.planar.PlanarImgFactory;
-import net.imglib2.meta.AxisType;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.logic.BitType;
 import net.imglib2.type.numeric.RealType;
@@ -106,7 +106,7 @@ public final class DefaultDatasetService extends AbstractService implements
 
 	@Override
 	public Dataset create(final long[] dims, final String name,
-		final AxisType[] axes, final int bitsPerPixel, final boolean signed,
+		final Axis<?>[] axes, final int bitsPerPixel, final boolean signed,
 		final boolean floating)
 	{
 		if (bitsPerPixel == 1) {
@@ -146,7 +146,8 @@ public final class DefaultDatasetService extends AbstractService implements
 
 	@Override
 	public <T extends RealType<T> & NativeType<T>> Dataset create(
-		final T type, final long[] dims, final String name, final AxisType[] axes)
+final T type,
+		final long[] dims, final String name, final Axis<?>[] axes)
 	{
 		final PlanarImgFactory<T> imgFactory = new PlanarImgFactory<T>();
 		return create(imgFactory, type, dims, name, axes);
@@ -154,11 +155,11 @@ public final class DefaultDatasetService extends AbstractService implements
 
 	@Override
 	public <T extends RealType<T>> Dataset create(
-		final ImgFactory<T> factory, final T type, final long[] dims,
-		final String name, final AxisType[] axes)
+ImgFactory<T> factory, T type,
+		long[] dims, String name, Axis<?>[] axes)
 	{
 		final Img<T> img = factory.create(dims, type);
-		final ImgPlus<T> imgPlus = new ImgPlus<T>(img, name, axes, null);
+		final ImgPlus<T> imgPlus = new ImgPlus<T>(img, name, axes);
 		return create(imgPlus);
 	}
 

@@ -43,7 +43,6 @@ import java.io.ObjectOutput;
 
 import net.imglib2.RealLocalizable;
 import net.imglib2.RealPoint;
-import net.imglib2.meta.Axes;
 import net.imglib2.roi.PolygonRegionOfInterest;
 
 /**
@@ -62,8 +61,6 @@ public class PolygonOverlay extends
 	
 	public PolygonOverlay(final ImageJ context) {
 		super(context, new PolygonRegionOfInterest());
-		setAxis(Axes.X, Axes.X.ordinal());
-		setAxis(Axes.Y, Axes.Y.ordinal());
 	}
 
 	private static final long serialVersionUID = 1L;

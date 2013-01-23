@@ -44,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.imglib2.Axis;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 
@@ -82,7 +83,7 @@ public class SamplingDefinition {
 	}
 
 	/** Returns the axes that are present in the input data. */
-	public AxisType[] getInputAxes() {
+	public Axis<?>[] getInputAxes() {
 		return display.getAxes();
 	}
 
@@ -95,10 +96,10 @@ public class SamplingDefinition {
 	 * [1,2,3]]
 	 */
 	public List<List<Long>> getInputRanges() {
-		final AxisType[] axes = display.getAxes();
+		final Axis<?>[] axes = display.getAxes();
 		final List<List<Long>> axesDefs = new ArrayList<List<Long>>();
-		for (final AxisType axis : axes) {
-			final AxisSubrange subrange = axisSubranges.get(axis);
+		for (final Axis<?> axis : axes) {
+			final AxisSubrange subrange = axisSubranges.get(axis.getType());
 			final List<Long> axisValues = subrange.getIndices();
 			axesDefs.add(axisValues);
 		}
@@ -109,17 +110,17 @@ public class SamplingDefinition {
 	 * Returns the axes that will be present in the output data. Those input axes
 	 * whose size is 1 are automatically collapsed.
 	 */
-	public AxisType[] getOutputAxes() {
-		final AxisType[] inputAxes = getInputAxes();
+	public Axis<?>[] getOutputAxes() {
+		final Axis<?>[] inputAxes = getInputAxes();
 		final List<List<Long>> inputRanges = getInputRanges();
 		int dimCount = 0;
 		for (int i = 0; i < inputRanges.size(); i++) {
 			if (inputRanges.get(i).size() > 1) dimCount++;
 		}
-		final AxisType[] outputAxes = new AxisType[dimCount];
+		final Axis<?>[] outputAxes = new Axis<?>[dimCount];
 		int d = 0;
 		for (int i = 0; i < inputRanges.size(); i++) {
-			if (inputRanges.get(i).size() > 1) outputAxes[d++] = inputAxes[i];
+			if (inputRanges.get(i).size() > 1) outputAxes[d++] = inputAxes[i].copy();
 		}
 		return outputAxes;
 	}
@@ -141,19 +142,6 @@ public class SamplingDefinition {
 			if (dimSize > 1) outputDims[d++] = dimSize;
 		}
 		return outputDims;
-	}
-
-	/**
-	 * Returns the calibration values that will be present in the output data.
-	 */
-	public double[] getOutputCalibration(final AxisType[] outputAxes) {
-		final double[] cal = new double[outputAxes.length];
-		int a = 0;
-		for (int i = 0; i < outputAxes.length; i++) {
-			final int axisIndex = display.getAxisIndex(outputAxes[i]);
-			if (axisIndex >= 0) cal[a++] = display.calibration(i);
-		}
-		return cal;
 	}
 
 	/**
@@ -209,18 +197,19 @@ public class SamplingDefinition {
 	{
 		final SamplingDefinition definition = new SamplingDefinition(display);
 		final Data data = display.getActiveView().getData();
-		final AxisType[] axes = data.getAxes();
-		for (final AxisType axis : axes) {
-			if ((axis == uAxis) || (axis == vAxis)) {
-				final int axisIndex = display.getAxisIndex(axis);
+		final Axis<?>[] axes = data.getAxes();
+		for (final Axis<?> axis : axes) {
+			AxisType axisType = axis.getType();
+			if ((axisType == uAxis) || (axisType == vAxis)) {
+				final int axisIndex = display.getAxisIndex(axisType);
 				final long size = display.getExtents().dimension(axisIndex);
 				final AxisSubrange subrange = new AxisSubrange(0, size - 1);
-				definition.constrain(axis, subrange);
+				definition.constrain(axisType, subrange);
 			}
 			else { // other axis
-				final long pos = display.getLongPosition(axis);
+				final long pos = display.getLongPosition(axisType);
 				final AxisSubrange subrange = new AxisSubrange(pos);
-				definition.constrain(axis, subrange);
+				definition.constrain(axisType, subrange);
 			}
 		}
 		return definition;
@@ -256,18 +245,21 @@ public class SamplingDefinition {
 		}
 		final SamplingDefinition definition = new SamplingDefinition(display);
 		final Data data = display.getActiveView().getData();
-		final AxisType[] axes = data.getAxes();
-		for (final AxisType axis : axes) {
-			if ((axis == uAxis) || (axis == vAxis) || (axis == Axes.CHANNEL)) {
-				final int axisIndex = display.getAxisIndex(axis);
+		final Axis<?>[] axes = data.getAxes();
+		for (final Axis<?> axis : axes) {
+			AxisType axisType = axis.getType();
+			if ((axisType == uAxis) || (axisType == vAxis) ||
+				(axisType == Axes.CHANNEL))
+			{
+				final int axisIndex = display.getAxisIndex(axisType);
 				final long size = display.getExtents().dimension(axisIndex);
 				final AxisSubrange subrange = new AxisSubrange(0, size - 1);
-				definition.constrain(axis, subrange);
+				definition.constrain(axisType, subrange);
 			}
 			else { // other axis
-				final long pos = display.getLongPosition(axis);
+				final long pos = display.getLongPosition(axisType);
 				final AxisSubrange subrange = new AxisSubrange(pos);
-				definition.constrain(axis, subrange);
+				definition.constrain(axisType, subrange);
 			}
 		}
 		return definition;
@@ -295,12 +287,12 @@ public class SamplingDefinition {
 	 */
 	public static SamplingDefinition sampleAllPlanes(final ImageDisplay display) {
 		final SamplingDefinition definition = new SamplingDefinition(display);
-		final AxisType[] axes = display.getAxes();
+		final Axis<?>[] axes = display.getAxes();
 		for (int i = 0; i < axes.length; i++) {
-			final AxisType axis = axes[i];
+			final Axis<?> axis = axes[i];
 			final long size = display.dimension(i);
 			final AxisSubrange subrange = new AxisSubrange(0, size - 1);
-			definition.constrain(axis, subrange);
+			definition.constrain(axis.getType(), subrange);
 		}
 		return definition;
 	}

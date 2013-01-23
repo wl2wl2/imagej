@@ -41,7 +41,6 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-import net.imglib2.meta.Axes;
 import net.imglib2.roi.LineRegionOfInterest;
 
 /**
@@ -61,8 +60,6 @@ public class LineOverlay extends AbstractROIOverlay<LineRegionOfInterest> {
 	
 	public LineOverlay(final ImageJ context) {
 		super(context, new LineRegionOfInterest(new double[2], new double[2]));
-		this.setAxis(Axes.X, 0);
-		this.setAxis(Axes.Y, 1);
 	}
 
 	public LineOverlay(final ImageJ context, final double[] ptStart,
@@ -70,8 +67,6 @@ public class LineOverlay extends AbstractROIOverlay<LineRegionOfInterest> {
 	{
 		super(context, new LineRegionOfInterest(ptStart,ptEnd));
 		assert ptStart.length == ptEnd.length;
-		this.setAxis(Axes.X, 0);
-		this.setAxis(Axes.Y, 1);
 	}
 
 	public void getLineStart(double[] pt) {

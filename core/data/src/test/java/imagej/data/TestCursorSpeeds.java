@@ -37,6 +37,7 @@ package imagej.data;
 
 import static org.junit.Assert.assertTrue;
 import imagej.ImageJ;
+import imagej.data.utils.AxisUtils;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
 import net.imglib2.img.Img;
@@ -67,13 +68,16 @@ public class TestCursorSpeeds {
 		final long[] dims = new long[] { X, Y, Z };
 		final Dataset ds1 =
 			datasetService.create(new UnsignedByteType(), dims, "junk1",
-				new AxisType[] { Axes.X, Axes.Y, Axes.Z });
+ AxisUtils
+				.getDefaultAxes(new AxisType[] { Axes.X, Axes.Y, Axes.Z }));
 		final Dataset ds2 =
 			datasetService.create(new UnsignedByteType(), dims, "junk2",
-				new AxisType[] { Axes.X, Axes.Y, Axes.Z });
+ AxisUtils
+				.getDefaultAxes(new AxisType[] { Axes.X, Axes.Y, Axes.Z }));
 		final Dataset ds3 =
 			datasetService.create(new UnsignedByteType(), dims, "junk3",
-				new AxisType[] { Axes.X, Axes.Y, Axes.Z });
+ AxisUtils
+				.getDefaultAxes(new AxisType[] { Axes.X, Axes.Y, Axes.Z }));
 
 		fill(ds1);
 		localizingCursorSpeedTest(ds1, ds2);

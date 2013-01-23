@@ -48,7 +48,7 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-import net.imglib2.meta.AxisType;
+import net.imglib2.Axis;
 
 /**
  * Base implementation of {@link Data}.
@@ -125,8 +125,8 @@ public abstract class AbstractData extends AbstractContextual implements Data,
 	// -- CalibratedInterval methods --
 
 	@Override
-	public AxisType[] getAxes() {
-		final AxisType[] axes = new AxisType[numDimensions()];
+	public Axis<?>[] getAxes() {
+		final Axis<?>[] axes = new Axis<?>[numDimensions()];
 		axes(axes);
 		return axes;
 	}

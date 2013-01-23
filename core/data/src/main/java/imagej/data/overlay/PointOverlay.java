@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.imglib2.meta.Axes;
 import net.imglib2.roi.RectangleRegionOfInterest;
 
 /**
@@ -66,8 +65,6 @@ public class PointOverlay extends AbstractROIOverlay<RectangleRegionOfInterest> 
 	
 	public PointOverlay(final ImageJ context) {
 		super(context, new RectangleRegionOfInterest(new double[2], new double[2]));
-		this.setAxis(Axes.X, 0);
-		this.setAxis(Axes.Y, 1);
 	}
 
 	public PointOverlay(final ImageJ context, final List<double[]> pts) {

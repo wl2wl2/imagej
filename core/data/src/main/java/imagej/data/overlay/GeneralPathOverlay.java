@@ -41,16 +41,14 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-import net.imglib2.meta.Axes;
 import net.imglib2.roi.GeneralPathRegionOfInterest;
 import net.imglib2.roi.GeneralPathSegmentHandler;
 
 /**
- * An overlay for the {@link GeneralPathRegionOfInterest}.
- * 
- * The {@link GeneralPathRegionOfInterest} class implements composite regions
- * of interest, consisting of areas defined by closed Beziér curves combined
- * via the even/odd winding rule.
+ * An overlay for the {@link GeneralPathRegionOfInterest}. The
+ * {@link GeneralPathRegionOfInterest} class implements composite regions of
+ * interest, consisting of areas defined by closed Beziér curves combined via
+ * the even/odd winding rule.
  * 
  * @author Johannes Schindelin
  * @author Lee Kamentsky
@@ -61,8 +59,6 @@ public class GeneralPathOverlay extends
 
 	public GeneralPathOverlay(final ImageJ context) {
 		super(context, new GeneralPathRegionOfInterest());
-		setAxis(Axes.X, Axes.X.ordinal());
-		setAxis(Axes.Y, Axes.Y.ordinal());
 	}
 
 	private static final long serialVersionUID = 1L;

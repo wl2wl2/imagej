@@ -52,6 +52,7 @@ import imagej.util.RealRect;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import net.imglib2.Axis;
 import net.imglib2.Localizable;
 import net.imglib2.Positionable;
 import net.imglib2.RealPositionable;
@@ -124,7 +125,7 @@ public class DefaultImageDisplay extends AbstractDisplay<DataView>
 
 		// initialize position of new axes
 		for (int i = 0; i < numDimensions(); i++) {
-			final AxisType axis = axis(i);
+			final AxisType axis = axis(i).getType();
 			if (Axes.isXY(axis)) continue; // do not track position of planar axes
 			if (!pos.containsKey(axis)) {
 				// start at minimum value
@@ -165,7 +166,7 @@ public class DefaultImageDisplay extends AbstractDisplay<DataView>
 	@Override
 	public boolean isVisible(final DataView view) {
 		for (int i = 0; i < numDimensions(); i++) {
-			final AxisType axis = axis(i);
+			final AxisType axis = axis(i).getType();
 			if (axis.isXY()) continue;
 			final long value = getLongPosition(axis);
 			final int index = view.getData().getAxisIndex(axis);
@@ -261,10 +262,11 @@ public class DefaultImageDisplay extends AbstractDisplay<DataView>
 		// TODO - is this a performance issue?
 		combinedInterval.update();
 		for (final DataView view : this) {
-			for (final AxisType axis : getAxes()) {
-				if (Axes.isXY(axis)) continue;
-				if (view.getData().getAxisIndex(axis) < 0) continue;
-				view.setPosition(getLongPosition(axis), axis);
+			for (final Axis<?> axis : getAxes()) {
+				AxisType axisType = axis.getType();
+				if (Axes.isXY(axisType)) continue;
+				if (view.getData().getAxisIndex(axisType) < 0) continue;
+				view.setPosition(getLongPosition(axisType), axisType);
 			}
 			view.update();
 		}
@@ -274,7 +276,7 @@ public class DefaultImageDisplay extends AbstractDisplay<DataView>
 	// -- CalibratedInterval methods --
 
 	@Override
-	public AxisType[] getAxes() {
+	public Axis<?>[] getAxes() {
 		return combinedInterval.getAxes();
 	}
 
@@ -382,48 +384,18 @@ public class DefaultImageDisplay extends AbstractDisplay<DataView>
 	}
 
 	@Override
-	public AxisType axis(final int d) {
+	public Axis<?> axis(final int d) {
 		return combinedInterval.axis(d);
 	}
 
 	@Override
-	public void axes(final AxisType[] axes) {
+	public void axes(final Axis<?>[] axes) {
 		combinedInterval.axes(axes);
 	}
 
 	@Override
-	public void setAxis(final AxisType axis, final int d) {
+	public void setAxis(final Axis<?> axis, final int d) {
 		combinedInterval.setAxis(axis, d);
-	}
-
-	@Override
-	public double calibration(final int d) {
-		return combinedInterval.calibration(d);
-	}
-
-	@Override
-	public void calibration(final double[] cal) {
-		combinedInterval.calibration(cal);
-	}
-
-	@Override
-	public void calibration(float[] cal) {
-		combinedInterval.calibration(cal);
-	}
-
-	@Override
-	public void setCalibration(final double cal, final int d) {
-		combinedInterval.setCalibration(cal, d);
-	}
-
-	@Override
-	public void setCalibration(double[] cal) {
-		combinedInterval.setCalibration(cal);
-	}
-
-	@Override
-	public void setCalibration(float[] cal) {
-		combinedInterval.setCalibration(cal);
 	}
 
 	// -- PositionableByAxis methods --
@@ -487,12 +459,12 @@ public class DefaultImageDisplay extends AbstractDisplay<DataView>
 
 	@Override
 	public int getIntPosition(final int d) {
-		return getIntPosition(axis(d));
+		return getIntPosition(axis(d).getType());
 	}
 
 	@Override
 	public long getLongPosition(final int d) {
-		return getLongPosition(axis(d));
+		return getLongPosition(axis(d).getType());
 	}
 
 	// -- RealLocalizable methods --
@@ -579,12 +551,12 @@ public class DefaultImageDisplay extends AbstractDisplay<DataView>
 
 	@Override
 	public void setPosition(final int position, final int d) {
-		setPosition(position, axis(d));
+		setPosition(position, axis(d).getType());
 	}
 
 	@Override
 	public void setPosition(final long position, final int d) {
-		setPosition(position, axis(d));
+		setPosition(position, axis(d).getType());
 	}
 
 	// -- Event handlers --
@@ -661,11 +633,12 @@ public class DefaultImageDisplay extends AbstractDisplay<DataView>
 
 	private void initActiveAxis() {
 		if (activeAxis == null) {
-			final AxisType[] axes = getAxes();
-			for (final AxisType axis : axes) {
-				if (axis == Axes.X) continue;
-				if (axis == Axes.Y) continue;
-				setActiveAxis(axis);
+			final Axis<?>[] axes = getAxes();
+			for (final Axis<?> axis : axes) {
+				AxisType axisType = axis.getType();
+				if (axisType == Axes.X) continue;
+				if (axisType == Axes.Y) continue;
+				setActiveAxis(axisType);
 				return;
 			}
 		}

@@ -36,10 +36,13 @@
 package imagej.data;
 
 import imagej.data.display.DatasetView;
+import imagej.data.utils.AxisUtils;
+import net.imglib2.Axis;
 import net.imglib2.RandomAccess;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Axes;
+import net.imglib2.meta.AxisType;
 import net.imglib2.type.numeric.RealType;
 import net.imglib2.type.numeric.integer.UnsignedByteType;
 
@@ -74,9 +77,10 @@ public class ImageGrabber {
 		int xSize = (int) dims[0];
 		int ySize = (int) dims[1];
 		int[] argbPixels = view.getScreenImage().getData();
+		AxisType[] axisTypes = new AxisType[] { Axes.X, Axes.Y, Axes.CHANNEL };
+		Axis<?>[] axes = AxisUtils.getDefaultAxes(axisTypes);
 		Dataset dataset = 
-				service.create(new UnsignedByteType(), dims, outputName,
-												new Axes[]{Axes.X, Axes.Y, Axes.CHANNEL});
+			service.create(new UnsignedByteType(), dims, outputName, axes);
 		ImgPlus<? extends RealType<?>> imgPlus = dataset.getImgPlus();
 		RandomAccess<? extends RealType<?>> accessor = imgPlus.randomAccess();
 		for (int x = 0; x < xSize; x++) {

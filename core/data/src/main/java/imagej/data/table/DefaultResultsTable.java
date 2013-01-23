@@ -35,10 +35,11 @@
 
 package imagej.data.table;
 
+import net.imglib2.Axis;
+import net.imglib2.axis.LinearAxis;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Axes;
-import net.imglib2.meta.AxisType;
 import net.imglib2.type.numeric.real.DoubleType;
 
 /**
@@ -75,7 +76,12 @@ public class DefaultResultsTable extends AbstractTable<DoubleColumn, Double>
 	@Override
 	public ImgPlus<DoubleType> img() {
 		final Img<DoubleType> img = new ResultsImg(this);
-		final AxisType[] axes = { Axes.X, Axes.Y };
+		Axis<?> X = new LinearAxis(0, 1);
+		X.setLabel(Axes.X.getLabel());
+		Axis<?> Y = new LinearAxis(0, 1);
+		X.setLabel(Axes.X.getLabel());
+		Y.setLabel(Axes.Y.getLabel());
+		final Axis<?>[] axes = { X, Y };
 		final String name = "Results";
 		final ImgPlus<DoubleType> imgPlus =
 			new ImgPlus<DoubleType>(img, name, axes);

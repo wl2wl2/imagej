@@ -115,7 +115,7 @@ public abstract class AbstractDataView extends AbstractContextual implements
 		final Extents planeExtents = new Extents(planeDims);
 		final Position planePos = planeExtents.createPosition();
 		for (int d = 0; d < planePos.numDimensions(); d++) {
-			final AxisType axis = data.axis(d + 2);
+			final AxisType axis = data.axis(d + 2).getType();
 			planePos.setPosition(getLongPosition(axis), d);
 		}
 		return planePos;
@@ -178,12 +178,12 @@ public abstract class AbstractDataView extends AbstractContextual implements
 
 	@Override
 	public int getIntPosition(final int d) {
-		return getIntPosition(getData().axis(d));
+		return getIntPosition(getData().axis(d).getType());
 	}
 
 	@Override
 	public long getLongPosition(final int d) {
-		return getLongPosition(getData().axis(d));
+		return getLongPosition(getData().axis(d).getType());
 	}
 
 	// -- RealLocalizable methods --
@@ -277,12 +277,12 @@ public abstract class AbstractDataView extends AbstractContextual implements
 
 	@Override
 	public void setPosition(final int position, final int d) {
-		setPosition(position, getData().axis(d));
+		setPosition(position, getData().axis(d).getType());
 	}
 
 	@Override
 	public void setPosition(final long position, final int d) {
-		setPosition(position, getData().axis(d));
+		setPosition(position, getData().axis(d).getType());
 	}
 
 	// -- Helper methods --

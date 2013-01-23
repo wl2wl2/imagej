@@ -41,7 +41,6 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-import net.imglib2.meta.Axes;
 import net.imglib2.roi.AngleRegionOfInterest;
 
 /**
@@ -61,8 +60,6 @@ public class AngleOverlay extends AbstractROIOverlay<AngleRegionOfInterest> {
 	
 	public AngleOverlay(final ImageJ context) {
 		super(context, new AngleRegionOfInterest(new double[2], new double[2], new double[2]));
-		this.setAxis(Axes.X, 0);
-		this.setAxis(Axes.Y, 1);
 	}
 
 	public AngleOverlay(final ImageJ context, double[] ctr,
@@ -79,8 +76,6 @@ public class AngleOverlay extends AbstractROIOverlay<AngleRegionOfInterest> {
 		roi.setCenter(ctr);
 		roi.setPoint1(end1);
 		roi.setPoint2(end2);
-		this.setAxis(Axes.X, 0);
-		this.setAxis(Axes.Y, 1);
 	}
 
 	public void getCenter(double[] pt) {

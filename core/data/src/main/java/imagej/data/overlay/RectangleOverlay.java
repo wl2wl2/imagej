@@ -41,7 +41,6 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-import net.imglib2.meta.Axes;
 import net.imglib2.roi.RectangleRegionOfInterest;
 
 /**
@@ -65,8 +64,6 @@ public class RectangleOverlay extends
 	public RectangleOverlay(final ImageJ context) {
 		super(context, new RectangleRegionOfInterest(new double[] { 0, 0 },
 			new double[] { 0, 0 }));
-		setAxis(Axes.X, Axes.X.ordinal());
-		setAxis(Axes.Y, Axes.Y.ordinal());
 	}
 
 	@Override

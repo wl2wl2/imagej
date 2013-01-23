@@ -54,8 +54,10 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.imglib2.Axis;
 import net.imglib2.Positionable;
 import net.imglib2.RealPositionable;
+import net.imglib2.axis.LinearAxis;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 import net.imglib2.roi.RegionOfInterest;
@@ -70,8 +72,7 @@ public abstract class AbstractOverlay extends AbstractData implements Overlay {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<AxisType> axes = new ArrayList<AxisType>();
-	private List<Double> cal = new ArrayList<Double>();
+	private List<Axis<?>> axes = new ArrayList<Axis<?>>();
 
 	private int alpha;
 	private ColorRGB fillColor;
@@ -93,10 +94,12 @@ public abstract class AbstractOverlay extends AbstractData implements Overlay {
 			context == null ? null : context.getService(OverlayService.class);
 		if (overlayService == null) applySettings(new OverlaySettings());
 		else applySettings(overlayService.getDefaultSettings());
-		axes.add(Axes.X);
-		axes.add(Axes.Y);
-		cal.add(1d);
-		cal.add(1d);
+		LinearAxis axis = new LinearAxis(0, 1);
+		axis.setLabel(Axes.X.getLabel());
+		axes.add(axis);
+		axis = new LinearAxis(0, 1);
+		axis.setLabel(Axes.Y.getLabel());
+		axes.add(axis);
 	}
 
 	// -- AbstractData methods --
@@ -239,53 +242,19 @@ public abstract class AbstractOverlay extends AbstractData implements Overlay {
 	}
 
 	@Override
-	public AxisType axis(final int d) {
+	public Axis<?> axis(final int d) {
 		return axes.get(d);
 	}
 
 	@Override
-	public void axes(final AxisType[] target) {
+	public void axes(final Axis<?>[] target) {
 		for (int i = 0; i < target.length; i++)
 			target[i] = axis(i);
 	}
 
 	@Override
-	public void setAxis(final AxisType axis, final int d) {
+	public void setAxis(final Axis<?> axis, final int d) {
 		axes.set(d, axis);
-	}
-
-	@Override
-	public double calibration(final int d) {
-		return cal.get(d);
-	}
-
-	@Override
-	public void calibration(final double[] target) {
-		for (int i = 0; i < target.length; i++)
-			target[i] = calibration(i);
-	}
-
-	@Override
-	public void calibration(float[] target) {
-		for (int i = 0; i < target.length; i++)
-			target[i] = (float) calibration(i);
-	}
-
-	@Override
-	public void setCalibration(final double value, final int d) {
-		cal.set(d, value);
-	}
-
-	@Override
-	public void setCalibration(double[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			setCalibration(cal[i], i);
-	}
-
-	@Override
-	public void setCalibration(float[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			setCalibration(cal[i], i);
 	}
 
 	// -- EuclideanSpace methods --
@@ -383,7 +352,6 @@ public abstract class AbstractOverlay extends AbstractData implements Overlay {
 	public void writeExternal(final ObjectOutput out) throws IOException {
 		super.writeExternal(out);
 		out.writeObject(axes);
-		out.writeObject(cal);
 		out.writeInt(alpha);
 		out.writeObject(fillColor);
 		out.writeObject(lineColor);
@@ -399,8 +367,7 @@ public abstract class AbstractOverlay extends AbstractData implements Overlay {
 		ClassNotFoundException
 	{
 		super.readExternal(in);
-		axes = (List<AxisType>) in.readObject();
-		cal = (List<Double>) in.readObject();
+		axes = (List<Axis<?>>) in.readObject();
 		alpha = in.readInt();
 		fillColor = (ColorRGB) in.readObject();
 		lineColor = (ColorRGB) in.readObject();

@@ -43,6 +43,7 @@ import imagej.data.event.DatasetRestructuredEvent;
 import imagej.data.event.DatasetTypeChangedEvent;
 import imagej.data.event.DatasetUpdatedEvent;
 import imagej.log.LogService;
+import net.imglib2.Axis;
 import net.imglib2.Cursor;
 import net.imglib2.Positionable;
 import net.imglib2.RandomAccess;
@@ -318,10 +319,8 @@ public class DefaultDataset extends AbstractData implements Dataset {
 		copyDataValues(other.getImgPlus(), newImg);
 
 		// create new imgplus to contain data using the current name
-		final double[] calib = new double[other.getDims().length];
-		other.calibration(calib);
 		final ImgPlus<? extends RealType<?>> newImgPlus =
-			wrapAsImgPlus(newImg, other.getAxes(), calib);
+			wrapAsImgPlus(newImg, other.getAxes());
 
 		// set my instance vars to the new values
 		setRGBMerged(other.isRGBMerged());
@@ -356,24 +355,24 @@ public class DefaultDataset extends AbstractData implements Dataset {
 	}
 
 	@Override
-	public AxisType axis(final int d) {
+	public Axis<?> axis(final int d) {
 		return imgPlus.axis(d);
 	}
 
 	@Override
-	public void axes(final AxisType[] axes) {
+	public void axes(final Axis<?>[] axes) {
 		imgPlus.axes(axes);
 	}
 
 	@Override
-	public void setAxes(final AxisType[] axes) {
+	public void setAxes(final Axis<?>[] axes) {
 		if (axes.length != numDimensions())
 			throw new IllegalArgumentException(
 				"number of axes must match dimensionality of dataset");
 		boolean changes = false;
 		for (int i = 0; i < axes.length; i++) {
-			AxisType axis = axes[i];
-			if (!imgPlus.axis(i).equals(axis)) {
+			Axis<?> axis = axes[i];
+			if (!imgPlus.axis(i).sameAs(axis)) {
 				changes = true;
 				imgPlus.setAxis(axis, i);
 			}
@@ -382,43 +381,11 @@ public class DefaultDataset extends AbstractData implements Dataset {
 	}
 
 	@Override
-	public void setAxis(final AxisType axis, final int d) {
-		if (imgPlus.axis(d).equals(axis)) return;
+	public void setAxis(final Axis<?> axis, final int d) {
+		if (imgPlus.axis(d).sameAs(axis)) return;
 		imgPlus.setAxis(axis, d);
 		update(true); // TODO : false instead of true?
 		// Maybe we need more levels of discrimination with update(bool)
-	}
-
-	@Override
-	public double calibration(final int d) {
-		return imgPlus.calibration(d);
-	}
-
-	@Override
-	public void calibration(final double[] cal) {
-		imgPlus.calibration(cal);
-	}
-
-	@Override
-	public void calibration(float[] cal) {
-		imgPlus.calibration(cal);
-	}
-
-	@Override
-	public void setCalibration(final double cal, final int d) {
-		if (imgPlus.calibration(d) == cal) return;
-		imgPlus.setCalibration(cal, d);
-		update(true);
-	}
-
-	@Override
-	public void setCalibration(double[] cal) {
-		imgPlus.setCalibration(cal);
-	}
-
-	@Override
-	public void setCalibration(float[] cal) {
-		imgPlus.setCalibration(cal);
 	}
 
 	// -- EuclideanSpace methods --
@@ -728,9 +695,10 @@ public class DefaultDataset extends AbstractData implements Dataset {
 	}
 
 	private <T extends RealType<?>> ImgPlus<T> wrapAsImgPlus(
-		final Img<T> newImg, final AxisType[] axes, final double[] calib)
+final Img<T> newImg,
+		final Axis<?>[] axes)
 	{
-		return new ImgPlus<T>(newImg, getName(), axes, calib);
+		return new ImgPlus<T>(newImg, getName(), axes);
 	}
 
 	private void update(boolean metadataOnly) {

@@ -41,9 +41,9 @@ import imagej.service.Service;
 
 import java.util.List;
 
+import net.imglib2.Axis;
 import net.imglib2.img.ImgFactory;
 import net.imglib2.img.ImgPlus;
-import net.imglib2.meta.AxisType;
 import net.imglib2.type.NativeType;
 import net.imglib2.type.numeric.RealType;
 
@@ -72,7 +72,7 @@ public interface DatasetService extends Service {
 	 * 
 	 * @param dims The dataset's dimensional extents.
 	 * @param name The dataset's name.
-	 * @param axes The dataset's dimensional axis labels.
+	 * @param axes The dataset's dimensional axes.
 	 * @param bitsPerPixel The dataset's bit depth. Currently supported bit depths
 	 *          include 1, 8, 12, 16, 32 and 64.
 	 * @param signed Whether the dataset's pixels can have negative values.
@@ -81,7 +81,7 @@ public interface DatasetService extends Service {
 	 * @throws IllegalArgumentException If the combination of bitsPerPixel, signed
 	 *           and floating parameters do not form a valid data type.
 	 */
-	Dataset create(long[] dims, String name, AxisType[] axes, int bitsPerPixel,
+	Dataset create(long[] dims, String name, Axis<?>[] axes, int bitsPerPixel,
 		boolean signed, boolean floating);
 
 	/**
@@ -91,11 +91,11 @@ public interface DatasetService extends Service {
 	 * @param type The type of the dataset.
 	 * @param dims The dataset's dimensional extents.
 	 * @param name The dataset's name.
-	 * @param axes The dataset's dimensional axis labels.
+	 * @param axes The dataset's dimensional axes.
 	 * @return The newly created dataset.
 	 */
 	<T extends RealType<T> & NativeType<T>> Dataset create(T type, long[] dims,
-		String name, AxisType[] axes);
+		String name, Axis<?>[] axes);
 
 	/**
 	 * Creates a new dataset using the provided {@link ImgFactory}.
@@ -105,11 +105,12 @@ public interface DatasetService extends Service {
 	 * @param type The type of the dataset.
 	 * @param dims The dataset's dimensional extents.
 	 * @param name The dataset's name.
-	 * @param axes The dataset's dimensional axis labels.
+	 * @param axes The dataset's dimensional axes.
 	 * @return The newly created dataset.
 	 */
 	<T extends RealType<T>> Dataset create(
-		ImgFactory<T> factory, T type, long[] dims, String name, AxisType[] axes);
+ImgFactory<T> factory, T type,
+		long[] dims, String name, Axis<?>[] axes);
 
 	/**
 	 * Creates a new dataset using the provided {@link ImgPlus}.

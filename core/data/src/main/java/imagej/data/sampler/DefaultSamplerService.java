@@ -42,6 +42,7 @@ import imagej.data.display.ImageDisplay;
 import imagej.data.display.ImageDisplayService;
 import imagej.data.display.OverlayService;
 import imagej.data.overlay.Overlay;
+import imagej.data.utils.AxisUtils;
 import imagej.display.DisplayService;
 import imagej.plugin.Parameter;
 import imagej.plugin.Plugin;
@@ -52,6 +53,7 @@ import imagej.util.RealRect;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.imglib2.Axis;
 import net.imglib2.RandomAccess;
 import net.imglib2.display.ColorTable;
 import net.imglib2.meta.Axes;
@@ -182,15 +184,14 @@ public class DefaultSamplerService extends AbstractService implements
 		final Dataset origDs = (Dataset) origDisp.getActiveView().getData();
 		final long[] dims = def.getOutputDims();
 		final String name = origDisp.getName();
-		final AxisType[] axes = def.getOutputAxes();
-		final double[] cal = def.getOutputCalibration(axes);
+		final Axis<?>[] axes = def.getOutputAxes();
 		final int bitsPerPixel = origDs.getType().getBitsPerPixel();
 		final boolean signed = origDs.isSigned();
 		final boolean floating = !origDs.isInteger();
 		final Dataset output =
-			datasetService.create(dims, name, axes, bitsPerPixel, signed, floating);
-		output.setCalibration(cal);
-		long numPlanes = calcNumPlanes(dims, axes);
+			datasetService.create(dims, name, axes, bitsPerPixel, signed,
+				floating);
+		long numPlanes = calcNumPlanes(dims, AxisUtils.getTypes(axes));
 		if (numPlanes > Integer.MAX_VALUE) {
 			throw new IllegalArgumentException(
 				"output image has more too many planes "+numPlanes+" (max = "+Integer.MAX_VALUE+")");
@@ -408,4 +409,5 @@ public class DefaultSamplerService extends AbstractService implements
 		//view.getProjector().map();
 		//view.update();
 	}
+
 }
