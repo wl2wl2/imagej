@@ -41,6 +41,8 @@ import ij.gui.NewImage;
 import imagej.ImageJ;
 import imagej.data.Dataset;
 import imagej.data.DatasetService;
+import imagej.data.utils.AxisUtils;
+import net.imglib2.Axis;
 import net.imglib2.Cursor;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Axes;
@@ -85,19 +87,20 @@ public class LegacyImageMapTest {
 
 		Dataset ds0;
 		final ImagePlus imp1, imp2;
-		final AxisType[] axes =
-			new AxisType[] { Axes.X, Axes.Y, Axes.CHANNEL, Axes.Z, Axes.TIME };
+		final Axis<?>[] axes =
+			AxisUtils.getDefaultAxes(new AxisType[] { Axes.X, Axes.Y, Axes.CHANNEL,
+				Axes.Z, Axes.TIME });
 
 		// register a gray dataset
 		ds0 =
 			datasetService.create(new long[] { 1, 2, 3, 4, 5 }, "temp", axes, 16,
 				false, false);
 		fill(ds0);
-		ds0.getImgPlus().setCalibration(5, 0);
-		ds0.getImgPlus().setCalibration(6, 1);
-		ds0.getImgPlus().setCalibration(1, 2);
-		ds0.getImgPlus().setCalibration(7, 3);
-		ds0.getImgPlus().setCalibration(8, 4);
+		ds0.getImgPlus().axis(0).setScale(5);
+		ds0.getImgPlus().axis(1).setScale(6);
+		ds0.getImgPlus().axis(2).setScale(1);
+		ds0.getImgPlus().axis(3).setScale(7);
+		ds0.getImgPlus().axis(4).setScale(8);
 		// CTR FIXME - Fix comparison tests.
 //		imp1 = map.registerDataset(ds0);
 //		Utils.testSame(ds0, imp1);
@@ -113,11 +116,11 @@ public class LegacyImageMapTest {
 			datasetService.create(new long[] { 1, 2, 3, 4, 5 }, "temp", axes, 8,
 				false, false);
 		fill(ds0);
-		ds0.getImgPlus().setCalibration(5, 0);
-		ds0.getImgPlus().setCalibration(6, 1);
-		ds0.getImgPlus().setCalibration(1, 2);
-		ds0.getImgPlus().setCalibration(7, 3);
-		ds0.getImgPlus().setCalibration(8, 4);
+		ds0.getImgPlus().axis(0).setScale(5);
+		ds0.getImgPlus().axis(1).setScale(6);
+		ds0.getImgPlus().axis(2).setScale(1);
+		ds0.getImgPlus().axis(3).setScale(7);
+		ds0.getImgPlus().axis(4).setScale(8);
 		ds0.setRGBMerged(true);
 		// CTR FIXME - Fix comparison tests.
 //		imp1 = map.registerDataset(ds0);

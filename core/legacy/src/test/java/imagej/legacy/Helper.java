@@ -47,6 +47,7 @@ import imagej.data.overlay.BinaryMaskOverlay;
 import imagej.data.overlay.EllipseOverlay;
 import imagej.data.overlay.PolygonOverlay;
 import imagej.data.overlay.RectangleOverlay;
+import imagej.data.utils.AxisUtils;
 
 import java.awt.Transparency;
 import java.awt.color.ColorSpace;
@@ -55,6 +56,7 @@ import java.awt.image.ComponentColorModel;
 import java.awt.image.DataBuffer;
 import java.util.Random;
 
+import net.imglib2.Axis;
 import net.imglib2.RandomAccess;
 import net.imglib2.RealPoint;
 import net.imglib2.img.Img;
@@ -188,10 +190,11 @@ public class Helper {
 				ra.get().set(data[i][j]);
 			}
 		}
+		Axis<?>[] axes =
+			AxisUtils.getDefaultAxes(new AxisType[] { Axes.X, Axes.Y });
 		final DatasetService datasetService =
 			context.getService(DatasetService.class);
-		return datasetService.create(new ImgPlus<ByteType>(img, name,
-			new AxisType[] { Axes.X, Axes.Y }));
+		return datasetService.create(new ImgPlus<ByteType>(img, name, axes));
 	}
 
 	public static PolygonRoi makePolygonROI(final int[] x, final int[] y) {

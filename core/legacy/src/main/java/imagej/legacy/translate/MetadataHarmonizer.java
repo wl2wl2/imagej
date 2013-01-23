@@ -59,12 +59,12 @@ public class MetadataHarmonizer implements DataHarmonizer {
 		final int zIndex = ds.getAxisIndex(Axes.Z);
 		final int tIndex = ds.getAxisIndex(Axes.TIME);
 		final Calibration cal = imp.getCalibration();
-		if (xIndex >= 0) ds.setCalibration(cal.pixelWidth, xIndex);
-		if (yIndex >= 0) ds.setCalibration(cal.pixelHeight, yIndex);
+		if (xIndex >= 0) ds.getImgPlus().axis(xIndex).setScale(cal.pixelWidth);
+		if (yIndex >= 0) ds.getImgPlus().axis(yIndex).setScale(cal.pixelHeight);
 		// TODO - remove this next line?
-		if (cIndex >= 0) ds.setCalibration(1, cIndex);
-		if (zIndex >= 0) ds.setCalibration(cal.pixelDepth, zIndex);
-		if (tIndex >= 0) ds.setCalibration(cal.frameInterval, tIndex);
+		if (cIndex >= 0) ds.getImgPlus().axis(cIndex).setScale(1);
+		if (zIndex >= 0) ds.getImgPlus().axis(zIndex).setScale(cal.pixelDepth);
+		if (tIndex >= 0) ds.getImgPlus().axis(tIndex).setScale(cal.frameInterval);
 		// no need to ds.update() - these calls should track that themselves
 	}
 
@@ -79,12 +79,12 @@ public class MetadataHarmonizer implements DataHarmonizer {
 		final int cIndex = ds.getAxisIndex(Axes.CHANNEL);
 		final int zIndex = ds.getAxisIndex(Axes.Z);
 		final int tIndex = ds.getAxisIndex(Axes.TIME);
-		if (xIndex >= 0) cal.pixelWidth = ds.calibration(xIndex);
-		if (yIndex >= 0) cal.pixelHeight = ds.calibration(yIndex);
+		if (xIndex >= 0) cal.pixelWidth = ds.axis(xIndex).getScale();
+		if (yIndex >= 0) cal.pixelHeight = ds.axis(yIndex).getScale();
 		if (cIndex >= 0) {
 			// nothing to set on IJ1 side
 		}
-		if (zIndex >= 0) cal.pixelDepth = ds.calibration(zIndex);
-		if (tIndex >= 0) cal.frameInterval = ds.calibration(tIndex);
+		if (zIndex >= 0) cal.pixelDepth = ds.axis(zIndex).getScale();
+		if (tIndex >= 0) cal.frameInterval = ds.axis(tIndex).getScale();
 	}
 }

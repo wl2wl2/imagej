@@ -42,6 +42,8 @@ import ij.gui.ImageWindow;
 import ij.macro.Interpreter;
 import ij.process.ImageProcessor;
 import imagej.data.Dataset;
+import imagej.data.utils.AxisUtils;
+import net.imglib2.Axis;
 import net.imglib2.img.basictypeaccess.PlanarAccess;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
@@ -56,8 +58,10 @@ public class LegacyUtils {
 
 	// -- static variables --
 
-	private final static AxisType[] defaultAxes = new AxisType[] { Axes.X,
-		Axes.Y, Axes.CHANNEL, Axes.Z, Axes.TIME };
+	private final static Axis<?>[] defaultAxes =
+ AxisUtils
+		.getDefaultAxes(new AxisType[] { Axes.X, Axes.Y, Axes.CHANNEL, Axes.Z,
+			Axes.TIME });
 
 	// -- public static methods --
 
@@ -84,13 +88,14 @@ public class LegacyUtils {
 	 * Returns true if any of the given Axes cannot be represented in an legacy
 	 * ImageJ ImagePlus.
 	 */
-	static boolean hasNonIJ1Axes(final AxisType[] axes) {
-		for (final AxisType axis : axes) {
-			if (axis == Axes.X) continue;
-			if (axis == Axes.Y) continue;
-			if (axis == Axes.CHANNEL) continue;
-			if (axis == Axes.Z) continue;
-			if (axis == Axes.TIME) continue;
+	static boolean hasNonIJ1Axes(final Axis<?>[] axes) {
+		for (final Axis<?> axis : axes) {
+			AxisType axisType = axis.getType();
+			if (axisType == Axes.X) continue;
+			if (axisType == Axes.Y) continue;
+			if (axisType == Axes.CHANNEL) continue;
+			if (axisType == Axes.Z) continue;
+			if (axisType == Axes.TIME) continue;
 			return true;
 		}
 		return false;
@@ -101,15 +106,16 @@ public class LegacyUtils {
 	 * the axes of a modern ImageJ Dataset. Incompatible modern axes are encoded
 	 * as extra channels in the legacy ImageJ image.
 	 */
-	static long ij1ChannelCount(final long[] dims, final AxisType[] axes) {
+	static long ij1ChannelCount(final long[] dims, final Axis<?>[] axes) {
 		long cCount = 1;
 		int axisIndex = 0;
-		for (final AxisType axis : axes) {
+		for (final Axis<?> axis : axes) {
 			final long axisSize = dims[axisIndex++];
-			if (axis == Axes.X) continue;
-			if (axis == Axes.Y) continue;
-			if (axis == Axes.Z) continue;
-			if (axis == Axes.TIME) continue;
+			final AxisType axisType = axis.getType();
+			if (axisType == Axes.X) continue;
+			if (axisType == Axes.Y) continue;
+			if (axisType == Axes.Z) continue;
+			if (axisType == Axes.TIME) continue;
 			cCount *= axisSize;
 		}
 		return cCount;
@@ -154,7 +160,7 @@ public class LegacyUtils {
 
 	// -- package access static methods --
 
-	static AxisType[] getPreferredAxisOrder() {
+	static Axis<?>[] getPreferredAxisOrder() {
 		return defaultAxes;
 	}
 
@@ -165,26 +171,28 @@ public class LegacyUtils {
 	 * preferred order and then unspecified axes of nontrivial dimension are
 	 * concatenated in default order
 	 */
-	static AxisType[] orderedAxes(final AxisType[] preferredOrder,
+	static Axis<?>[] orderedAxes(final Axis<?>[] preferredOrder,
 		final int[] fullDimensions)
 	{
 		int dimCount = 0;
 		for (int i = 0; i < fullDimensions.length; i++) {
-			if (defaultAxes[i] == Axes.X || defaultAxes[i] == Axes.Y ||
+			if (defaultAxes[i].getType() == Axes.X ||
+				defaultAxes[i].getType() == Axes.Y ||
 //				defaultAxes[i] == Axes.CHANNEL ||
-				getDim(defaultAxes[i], fullDimensions) > 1)
+				getDim(defaultAxes[i].getType(), fullDimensions) > 1)
 			{
 				dimCount++;
 			}
 		}
-		final AxisType[] axes = new AxisType[dimCount];
+		final Axis<?>[] axes = new Axis<?>[dimCount];
 		int index = 0;
-		for (final AxisType axis : preferredOrder) {
-			for (final AxisType other : defaultAxes) {
+		for (final Axis<?> axis : preferredOrder) {
+			for (final Axis<?> other : defaultAxes) {
 				if (axis == other) {
-					if (axis == Axes.X || axis == Axes.Y ||
+					AxisType axisType = axis.getType();
+					if (axisType == Axes.X || axisType == Axes.Y ||
 //						axis == Axes.CHANNEL ||
-						getDim(axis, fullDimensions) > 1)
+						getDim(axisType, fullDimensions) > 1)
 					{
 						axes[index++] = axis;
 					}
@@ -192,18 +200,19 @@ public class LegacyUtils {
 				}
 			}
 		}
-		for (final AxisType axis : defaultAxes) {
+		for (final Axis<?> axis : defaultAxes) {
 			boolean present = false;
-			for (final AxisType other : preferredOrder) {
+			for (final Axis<?> other : preferredOrder) {
 				if (axis == other) {
 					present = true;
 					break;
 				}
 			}
 			if (!present) {
-				if (axis == Axes.X || axis == Axes.Y ||
+				AxisType axisType = axis.getType();
+				if (axisType == Axes.X || axisType == Axes.Y ||
 //					axis == Axes.CHANNEL ||
-					getDim(axis, fullDimensions) > 1)
+					getDim(axisType, fullDimensions) > 1)
 				{
 					axes[index++] = axis;
 				}
@@ -216,12 +225,12 @@ public class LegacyUtils {
 	 * makes a set of dimensions in a given Axis order. Assumes that all
 	 * nontrivial dimensions have already been prescreened to be included
 	 */
-	static long[] orderedDims(final AxisType[] axes, final int[] fullDimensions)
+	static long[] orderedDims(final Axis<?>[] axes, final int[] fullDimensions)
 	{
 		final long[] orderedDims = new long[axes.length];
 		int index = 0;
-		for (final AxisType axis : axes) {
-			orderedDims[index++] = getDim(axis, fullDimensions);
+		for (final Axis<?> axis : axes) {
+			orderedDims[index++] = getDim(axis.getType(), fullDimensions);
 		}
 		return orderedDims;
 	}
@@ -253,7 +262,7 @@ public class LegacyUtils {
 	{
 		final long[] dims = dataset.getDims();
 
-		final AxisType[] axes = dataset.getAxes();
+		final Axis<?>[] axes = dataset.getAxes();
 
 		// get axis indices
 		final int xIndex = dataset.getAxisIndex(Axes.X);
@@ -310,7 +319,7 @@ public class LegacyUtils {
 	 */
 	static boolean datasetIsIJ1Compatible(final Dataset ds) {
 		if (ds == null) return true;
-		final AxisType[] axes = ds.getAxes();
+		final Axis<?>[] axes = ds.getAxes();
 		if (LegacyUtils.hasNonIJ1Axes(axes)) return false;
 		return ij1StorageCompatible(ds) && ij1TypeCompatible(ds);
 	}

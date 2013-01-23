@@ -37,7 +37,7 @@ package imagej.legacy.translate;
 
 import ij.ImagePlus;
 import imagej.data.display.ImageDisplay;
-import net.imglib2.meta.AxisType;
+import net.imglib2.Axis;
 
 /**
  * The interface for creating {@link ImageDisplay}s from {@link ImagePlus}es.
@@ -55,7 +55,7 @@ public interface DisplayCreator {
 	 * do not send nonsense values as input. For instance isBinaryImp should never
 	 * fail to match actual imp.isBinary() value.
 	 */
-	ImageDisplay createDisplay(ImagePlus imp, AxisType[] preferredOrder,
+	ImageDisplay createDisplay(ImagePlus imp, Axis<?>[] preferredOrder,
 		boolean isBinaryImp);
 
 }
