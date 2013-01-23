@@ -75,11 +75,12 @@ public class AxisPositionForward extends ContextCommand {
 	@Override
 	public void run() {
 		animationService.getAnimation(display).stop();
-		AxisType axis = display.getActiveAxis();
-		if (axis == null) return;
+		AxisType axisType = display.getActiveAxisType();
+		if (axisType == null) return;
 		long increment = 1;
 		if (keyboardService.isAltDown()) increment = 10;
-		display.setPosition(display.getLongPosition(axis) + increment, axis);
+		display
+			.setPosition(display.getLongPosition(axisType) + increment, axisType);
 	}
 
 	public void setDisplay(ImageDisplay disp) {

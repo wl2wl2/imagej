@@ -133,7 +133,7 @@ public class DefaultImageDisplay extends AbstractDisplay<DataView>
 			}
 		}
 		
-		if (getActiveAxis() == null) initActiveAxis();
+		if (getActiveAxisType() == null) initActiveAxis();
 	}
 
 	// -- ImageDisplay methods --
@@ -144,12 +144,12 @@ public class DefaultImageDisplay extends AbstractDisplay<DataView>
 	}
 
 	@Override
-	public AxisType getActiveAxis() {
+	public AxisType getActiveAxisType() {
 		return activeAxis;
 	}
 
 	@Override
-	public void setActiveAxis(final AxisType axis) {
+	public void setActiveAxisType(final AxisType axis) {
 		if (getAxisIndex(axis) < 0) {
 			throw new IllegalArgumentException("Unknown axis: " + axis);
 		}
@@ -638,7 +638,7 @@ public class DefaultImageDisplay extends AbstractDisplay<DataView>
 				AxisType axisType = axis.getType();
 				if (axisType == Axes.X) continue;
 				if (axisType == Axes.Y) continue;
-				setActiveAxis(axisType);
+				setActiveAxisType(axisType);
 				return;
 			}
 		}

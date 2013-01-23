@@ -232,14 +232,15 @@ public class SamplingDefinition {
 	 * by the user.
 	 * 
 	 * @param display The ImageDisplay to sample
-	 * @param uAxis The U axis of the sample space
-	 * @param vAxis The V axis of the sample space
+	 * @param uAxisType The U axis of the sample space
+	 * @param vAxisType The V axis of the sample space
 	 * @return The specified SamplingDefinition
 	 */
 	public static SamplingDefinition sampleCompositeUVPlane(
-		final ImageDisplay display, final AxisType uAxis, final AxisType vAxis)
+		final ImageDisplay display, final AxisType uAxisType,
+		final AxisType vAxisType)
 	{
-		if ((uAxis == Axes.CHANNEL) || (vAxis == Axes.CHANNEL)) {
+		if ((uAxisType == Axes.CHANNEL) || (vAxisType == Axes.CHANNEL)) {
 			throw new IllegalArgumentException(
 					"UV composite plane - cannot specify channels as one of the axes");
 		}
@@ -248,7 +249,7 @@ public class SamplingDefinition {
 		final Axis<?>[] axes = data.getAxes();
 		for (final Axis<?> axis : axes) {
 			AxisType axisType = axis.getType();
-			if ((axisType == uAxis) || (axisType == vAxis) ||
+			if ((axisType == uAxisType) || (axisType == vAxisType) ||
 				(axisType == Axes.CHANNEL))
 			{
 				final int axisIndex = display.getAxisIndex(axisType);

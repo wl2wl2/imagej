@@ -75,11 +75,12 @@ public class AxisPositionBackward extends ContextCommand {
 	@Override
 	public void run() {
 		animationService.getAnimation(display).stop();
-		AxisType axis = display.getActiveAxis();
-		if (axis == null) return;
+		AxisType axisType = display.getActiveAxisType();
+		if (axisType == null) return;
 		long decrement = 1;
 		if (keyboardService.isAltDown()) decrement = 10;
-		display.setPosition(display.getLongPosition(axis) - decrement, axis);
+		display
+			.setPosition(display.getLongPosition(axisType) - decrement, axisType);
 	}
 
 	public void setDisplay(ImageDisplay disp) {

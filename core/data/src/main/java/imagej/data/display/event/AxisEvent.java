@@ -49,7 +49,7 @@ public abstract class AxisEvent extends ImageDisplayEvent {
 	private final AxisType axis;
 
 	public AxisEvent(final ImageDisplay display) {
-		this(display, display.getActiveAxis());
+		this(display, display.getActiveAxisType());
 	}
 
 	public AxisEvent(final ImageDisplay display, final AxisType axis) {

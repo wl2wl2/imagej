@@ -58,7 +58,7 @@ public class Animation implements Runnable {
 	private boolean active;
 	private Thread thread;
 
-	private AxisType axis;
+	private AxisType axisType;
 	private long first;
 	private long last;
 	private double fps = 8;
@@ -77,17 +77,17 @@ public class Animation implements Runnable {
 		if (display.numDimensions() > 2) {
 			if (display.getAxisIndex(Axes.TIME) >= 0) {
 				// animation over time is preferred by default
-				axis = Axes.TIME;
+				axisType = Axes.TIME;
 			}
 			else if (display.getAxisIndex(Axes.Z) >= 0) {
 				// failing that, animation over Z is OK
-				axis = Axes.Z;
+				axisType = Axes.Z;
 			}
 			else {
 				// no preferred animation axes; use first non-spatial axis
-				axis = display.axis(2).getType();
+				axisType = display.axis(2).getType();
 			}
-			final int axisIndex = display.getAxisIndex(axis);
+			final int axisIndex = display.getAxisIndex(axisType);
 			last = display.getExtents().dimension(axisIndex) - 1;
 		}
 	}
@@ -96,7 +96,7 @@ public class Animation implements Runnable {
 
 	/** Starts the animation. */
 	public void start() {
-		if (axis == null) return; // no axis over which to animate
+		if (axisType == null) return; // no axis over which to animate
 		active = true;
 		if (thread == null) {
 			thread = new Thread(this);
@@ -130,11 +130,11 @@ public class Animation implements Runnable {
 
 	/** Gets the axis over which to animate. */
 	public AxisType getAxis() {
-		return axis;
+		return axisType;
 	}
 
 	public void setAxis(final AxisType axis) {
-		this.axis = axis;
+		this.axisType = axis;
 		clampPosition();
 	}
 
@@ -190,7 +190,7 @@ public class Animation implements Runnable {
 	// -- Helper methods --
 
 	private synchronized void updatePosition() {
-		long currPos = display.getLongPosition(axis);
+		long currPos = display.getLongPosition(axisType);
 
 		// reached right end
 		if (increment > 0 && currPos == last) {
@@ -233,16 +233,16 @@ public class Animation implements Runnable {
 		}
 
 		final long pos =
-			isRelative ? display.getLongPosition(axis) + delta : delta;
-		display.setPosition(pos, axis);
+			isRelative ? display.getLongPosition(axisType) + delta : delta;
+		display.setPosition(pos, axisType);
 	}
 
 	/** Ensures the position of the relevant axis is within the legal range. */
 	private void clampPosition() {
-		if (axis == null) return;
-		final long pos = display.getLongPosition(axis);
+		if (axisType == null) return;
+		final long pos = display.getLongPosition(axisType);
 		if (pos < first || pos > last) {
-			display.setPosition(first, axis);
+			display.setPosition(first, axisType);
 		}
 	}
 

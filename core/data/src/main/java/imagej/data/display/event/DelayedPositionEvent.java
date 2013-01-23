@@ -50,7 +50,7 @@ public class DelayedPositionEvent extends ImageDisplayEvent {
 	private final AxisType axis;
 
 	public DelayedPositionEvent(final ImageDisplay display) {
-		this(display, display.getActiveAxis());
+		this(display, display.getActiveAxisType());
 	}
 
 	public DelayedPositionEvent(final ImageDisplay display, final AxisType axis) {

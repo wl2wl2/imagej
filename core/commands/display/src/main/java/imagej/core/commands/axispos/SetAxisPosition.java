@@ -73,9 +73,9 @@ public class SetAxisPosition extends DynamicCommand {
 			(DefaultModuleItem<Long>) getInfo().getInput("oneBasedPosition");
 		positionItem.setLabel("Position");
 		positionItem.setMinimumValue(1L);
-		final AxisType axis = display.getActiveAxis();
-		if (axis == null) return;
-		int dim = display.getAxisIndex(axis);
+		final AxisType axisType = display.getActiveAxisType();
+		if (axisType == null) return;
+		int dim = display.getAxisIndex(axisType);
 		Long value = display.getDims()[dim];
 		positionItem.setMaximumValue(value);
 	}
@@ -83,9 +83,9 @@ public class SetAxisPosition extends DynamicCommand {
 	@Override
 	public void run() {
 		animationService.stop(display);
-		final AxisType axis = display.getActiveAxis();
-		if (axis == null) return;
+		final AxisType axisType = display.getActiveAxisType();
+		if (axisType == null) return;
 		final long newPosition = oneBasedPosition - 1;
-		display.setPosition(newPosition, axis);
+		display.setPosition(newPosition, axisType);
 	}
 }

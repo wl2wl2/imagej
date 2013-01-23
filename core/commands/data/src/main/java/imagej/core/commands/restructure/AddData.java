@@ -191,20 +191,20 @@ public class AddData extends DynamicCommand implements Cancelable {
 	/**
 	 * Detects if user specified data is invalid
 	 */
-	private boolean inputBad(final AxisType axis) {
+	private boolean inputBad(final AxisType axisType) {
 		// axis not determined by dialog
-		if (axis == null) {
+		if (axisType == null) {
 			err = "Axis must not be null.";
 			return true;
 		}
 
 		// setup some working variables
-		final int axisIndex = dataset.getAxisIndex(axis);
+		final int axisIndex = dataset.getAxisIndex(axisType);
 		final long axisSize = dataset.getImgPlus().dimension(axisIndex);
 
 		// axis not present in Dataset
 		if (axisIndex < 0) {
-			err = "Axis "+axis.getLabel()+" is not present in input dataset.";
+			err = "Axis " + axisType.getLabel() + " is not present in input dataset.";
 			return true;
 		}
 

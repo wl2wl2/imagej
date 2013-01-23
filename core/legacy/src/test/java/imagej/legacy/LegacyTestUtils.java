@@ -58,12 +58,12 @@ public class LegacyTestUtils {
 		return true;
 	}
 
-	public static boolean repeated(final AxisType[] axes) {
+	public static boolean repeated(final AxisType[] axisTypes) {
 		int cCount = 0, zCount = 0, tCount = 0;
-		for (final AxisType axis : axes) {
-			if (axis == Axes.CHANNEL) cCount++;
-			if (axis == Axes.Z) zCount++;
-			if (axis == Axes.TIME) tCount++;
+		for (final AxisType axisType : axisTypes) {
+			if (axisType == Axes.CHANNEL) cCount++;
+			if (axisType == Axes.Z) zCount++;
+			if (axisType == Axes.TIME) tCount++;
 		}
 		return (cCount > 1 || zCount > 1 || tCount > 1);
 	}

@@ -335,22 +335,22 @@ public class LegacyUtils {
 	 * channel position back into (CHANNEL,SPECTRA) pairs.
 	 * 
 	 * @param dims - the dimensions of the modern ImageJ Dataset
-	 * @param axes - the axes labels that match the Dataset dimensions
+	 * @param axisTypes - the axes labels that match the Dataset dimensions
 	 * @param ij1Channel - the channel value in legacy ImageJ (to be decoded for
 	 *          modern ImageJ)
 	 * @param pos - the position array to fill with rasterized values
 	 */
-	static void fillChannelIndices(final long[] dims, final AxisType[] axes,
+	static void fillChannelIndices(final long[] dims, final AxisType[] axisTypes,
 		final long ij1Channel, final long[] pos)
 	{
 		long workingIndex = ij1Channel;
 		for (int i = 0; i < dims.length; i++) {
-			final AxisType axis = axes[i];
+			final AxisType axisType = axisTypes[i];
 			// skip axes we don't encode as channels
-			if (axis == Axes.X) continue;
-			if (axis == Axes.Y) continue;
-			if (axis == Axes.Z) continue;
-			if (axis == Axes.TIME) continue;
+			if (axisType == Axes.X) continue;
+			if (axisType == Axes.Y) continue;
+			if (axisType == Axes.Z) continue;
+			if (axisType == Axes.TIME) continue;
 			// calc index of encoded channels
 			final long subIndex = workingIndex % dims[i];
 			pos[i] = subIndex;
@@ -358,16 +358,16 @@ public class LegacyUtils {
 		}
 	}
 	
-	static long calcIJ1ChannelPos(long[] dims, AxisType[] axes, long[] pos) {
+	static long calcIJ1ChannelPos(long[] dims, AxisType[] axisTypes, long[] pos) {
 		long multiplier = 1;
 		long ij1Pos = 0;
-		for (int i = 0; i < axes.length; i++) {
-			AxisType axis = axes[i];
+		for (int i = 0; i < axisTypes.length; i++) {
+			AxisType axisType = axisTypes[i];
 			// skip axes we don't encode as channels
-			if (axis == Axes.X) continue;
-			if (axis == Axes.Y) continue;
-			if (axis == Axes.Z) continue;
-			if (axis == Axes.TIME) continue;
+			if (axisType == Axes.X) continue;
+			if (axisType == Axes.Y) continue;
+			if (axisType == Axes.Z) continue;
+			if (axisType == Axes.TIME) continue;
 			ij1Pos += multiplier * pos[i];
 			multiplier *= dims[i];
 		}
@@ -379,12 +379,14 @@ public class LegacyUtils {
 	/**
 	 * Gets a dimension for a given axis from a list of dimensions in XYCZT order.
 	 */
-	private static int getDim(final AxisType axis, final int[] fullDimensions) {
-		if (axis == Axes.X) return fullDimensions[0];
-		else if (axis == Axes.Y) return fullDimensions[1];
-		else if (axis == Axes.CHANNEL) return fullDimensions[2];
-		else if (axis == Axes.Z) return fullDimensions[3];
-		else if (axis == Axes.TIME) return fullDimensions[4];
+	private static int
+		getDim(final AxisType axisType, final int[] fullDimensions)
+	{
+		if (axisType == Axes.X) return fullDimensions[0];
+		else if (axisType == Axes.Y) return fullDimensions[1];
+		else if (axisType == Axes.CHANNEL) return fullDimensions[2];
+		else if (axisType == Axes.Z) return fullDimensions[3];
+		else if (axisType == Axes.TIME) return fullDimensions[4];
 		else throw new IllegalArgumentException(
 			"incompatible dimension type specified");
 	}

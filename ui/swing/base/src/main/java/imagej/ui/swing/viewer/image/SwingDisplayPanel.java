@@ -316,10 +316,10 @@ public class SwingDisplayPanel extends JPanel implements ImageDisplayPanel {
 	// update mechanism smarter if possible. Perhaps by giving it hints about
 	// the changes being made.
 	
-	private void updateAxis(final AxisType axis) {
-		final int value = (int) display.getLongPosition(axis);
-		if (axis == Axes.CHANNEL) updateColorBar(value);
-		final JScrollBar scrollBar = axisSliders.get(axis);
+	private void updateAxis(final AxisType axisType) {
+		final int value = (int) display.getLongPosition(axisType);
+		if (axisType == Axes.CHANNEL) updateColorBar(value);
+		final JScrollBar scrollBar = axisSliders.get(axisType);
 		if (scrollBar != null) scrollBar.setValue(value);
 		getDisplay().update();
 	}

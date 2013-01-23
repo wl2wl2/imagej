@@ -190,20 +190,20 @@ public class DeleteData extends DynamicCommand implements Cancelable {
 	// -- Helper methods --
 
 	/** Detects if user-specified data is invalid. */
-	private boolean inputBad(final AxisType axis) {
+	private boolean inputBad(final AxisType axisType) {
 		// axis not determined by dialog
-		if (axis == null) {
+		if (axisType == null) {
 			err = "Axis must not be null.";
 			return true;
 		}
 
 		// setup some working variables
-		final int axisIndex = dataset.getAxisIndex(axis);
+		final int axisIndex = dataset.getAxisIndex(axisType);
 		final long axisSize = dataset.getImgPlus().dimension(axisIndex);
 
 		// axis not present in Dataset
 		if (axisIndex < 0) {
-			err = "Axis "+axis.getLabel()+" is not present in input dataset.";
+			err = "Axis " + axisType.getLabel() + " is not present in input dataset.";
 			return true;
 		}
 
@@ -221,7 +221,7 @@ public class DeleteData extends DynamicCommand implements Cancelable {
 
 		// trying to delete all hyperplanes along axis
 		if (quantity >= axisSize) {
-			err = "Cannot delete all entries along axis "+axis.getLabel();
+			err = "Cannot delete all entries along axis " + axisType.getLabel();
 			return true;
 		}
 
@@ -253,9 +253,9 @@ public class DeleteData extends DynamicCommand implements Cancelable {
 	}
 
 	private int compositeStatus(final int compositeCount,
-		final ImgPlus<?> output, final AxisType axis)
+		final ImgPlus<?> output, final AxisType axisType)
 	{
-		if (axis == Axes.CHANNEL) {
+		if (axisType == Axes.CHANNEL) {
 			final int axisIndex = output.getAxisIndex(Axes.CHANNEL);
 			final long numChannels = output.dimension(axisIndex);
 			if (numChannels < compositeCount) return (int) numChannels;

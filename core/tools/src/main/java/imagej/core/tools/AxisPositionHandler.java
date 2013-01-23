@@ -88,11 +88,11 @@ public class AxisPositionHandler extends AbstractTool {
 		}
 		else return; // inapplicable key
 
-		final AxisType axis = getAxis(imageDisplay, evt.getModifiers());
-		if (axis == null) return;
+		final AxisType axisType = getAxis(imageDisplay, evt.getModifiers());
+		if (axisType == null) return;
 
-		final long pos = imageDisplay.getLongPosition(axis) + delta;
-		imageDisplay.setPosition(pos, axis);
+		final long pos = imageDisplay.getLongPosition(axisType) + delta;
+		imageDisplay.setPosition(pos, axisType);
 		evt.consume();
 	}
 
@@ -102,13 +102,13 @@ public class AxisPositionHandler extends AbstractTool {
 		if (!(display instanceof ImageDisplay)) return;
 		final ImageDisplay imageDisplay = (ImageDisplay) display;
 
-		final AxisType axis = getAxis(imageDisplay, evt.getModifiers());
-		if (axis == null) return;
+		final AxisType axisType = getAxis(imageDisplay, evt.getModifiers());
+		if (axisType == null) return;
 
 		final int rotation = evt.getWheelRotation();
 
-		final long pos = imageDisplay.getLongPosition(axis) + rotation;
-		imageDisplay.setPosition(pos, axis);
+		final long pos = imageDisplay.getLongPosition(axisType) + rotation;
+		imageDisplay.setPosition(pos, axisType);
 		evt.consume();
 	}
 

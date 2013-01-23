@@ -185,10 +185,10 @@ public class ShadowsDemo extends ContextCommand implements Cancelable {
 		final Axis<?>[] axes = input.getAxes();
 		final long[] dims = input.getDims();
 		for (int i = 0; i < axes.length; i++) {
-			final AxisType axis = axes[i].getType();
-			if (axis == Axes.X) continue;
-			if (axis == Axes.Y) continue;
-			if (axis == Axes.CHANNEL && input.isRGBMerged()) continue;
+			final AxisType axisType = axes[i].getType();
+			if (axisType == Axes.X) continue;
+			if (axisType == Axes.Y) continue;
+			if (axisType == Axes.CHANNEL && input.isRGBMerged()) continue;
 			if (dims[i] != 1) return true;
 		}
 		return false;

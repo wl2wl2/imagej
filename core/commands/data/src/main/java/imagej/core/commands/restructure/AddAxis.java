@@ -161,17 +161,17 @@ public class AddAxis extends DynamicCommand implements Cancelable {
 	/**
 	 * Detects if user specified data is invalid
 	 */
-	private boolean inputBad(final AxisType axis) {
+	private boolean inputBad(final AxisType axisType) {
 		// axis not determined by dialog
-		if (axis == null) {
+		if (axisType == null) {
 			err = "Axis must not be null.";
 			return true;
 		}
 
 		// axis already present in Dataset
-		final int axisIndex = dataset.getAxisIndex(axis);
+		final int axisIndex = dataset.getAxisIndex(axisType);
 		if (axisIndex >= 0) {
-			err = "Axis "+axis.getLabel()+" already present in dataset.";
+			err = "Axis " + axisType.getLabel() + " already present in dataset.";
 			return true;
 		}
 

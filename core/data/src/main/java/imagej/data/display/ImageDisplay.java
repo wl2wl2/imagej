@@ -58,10 +58,10 @@ public interface ImageDisplay extends Display<DataView>, CalibratedInterval,
 	DataView getActiveView();
 
 	/** Gets the axis currently designated as active. */
-	AxisType getActiveAxis();
+	AxisType getActiveAxisType();
 
 	/** Sets the axis currently designated as active. */
-	void setActiveAxis(AxisType axis);
+	void setActiveAxisType(AxisType axis);
 
 	/**
 	 * Tests whether the given view should currently be visible in this display. A
