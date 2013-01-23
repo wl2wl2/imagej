@@ -136,7 +136,7 @@ public class AxisPositionHandler extends AbstractTool {
 
 		if (display.getAxisIndex(axis) < 0) {
 			// preferred axis does not exist; return first available axis instead
-			return display.axis(2);
+			return display.axis(2).getType();
 		}
 		return axis;
 	}

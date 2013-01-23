@@ -43,6 +43,7 @@ import imagej.data.display.ImageDisplayService;
 import imagej.data.display.event.AxisPositionEvent;
 import imagej.data.display.event.DelayedPositionEvent;
 import imagej.data.display.event.LutsChangedEvent;
+import imagej.data.utils.AxisUtils;
 import imagej.event.EventHandler;
 import imagej.event.EventService;
 import imagej.event.EventSubscriber;
@@ -231,7 +232,7 @@ public class SwingDisplayPanel extends JPanel implements ImageDisplayPanel {
 	// -- Helper methods --
 
 	private void createSliders() {
-		final AxisType[] axes = display.getAxes();
+		final AxisType[] axes = AxisUtils.getTypes(display.getAxes());
 		final Extents extents = display.getExtents();
 
 		// remove obsolete sliders

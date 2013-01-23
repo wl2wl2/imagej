@@ -38,11 +38,13 @@ package imagej.io.plugins;
 import imagej.command.ContextCommand;
 import imagej.data.Dataset;
 import imagej.data.DatasetService;
+import imagej.data.utils.AxisUtils;
 import imagej.menu.MenuConstants;
 import imagej.module.ItemIO;
 import imagej.plugin.Menu;
 import imagej.plugin.Parameter;
 import imagej.plugin.Plugin;
+import net.imglib2.Axis;
 import net.imglib2.Cursor;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
@@ -178,7 +180,8 @@ public class NewImage extends ContextCommand {
 		// create the dataset
 		final int bitsPerPixel = getBitsPerPixel();
 		final long[] dims = { width, height };
-		final AxisType[] axes = { Axes.X, Axes.Y };
+		final AxisType[] axisTypes = { Axes.X, Axes.Y };
+		final Axis<?>[] axes = AxisUtils.getDefaultAxes(axisTypes);
 		dataset =
 			datasetService.create(dims, name, axes, bitsPerPixel, signed, floating);
 

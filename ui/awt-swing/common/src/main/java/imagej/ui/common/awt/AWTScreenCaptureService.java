@@ -38,6 +38,7 @@ package imagej.ui.common.awt;
 import imagej.data.Dataset;
 import imagej.data.DatasetService;
 import imagej.data.display.ScreenCaptureService;
+import imagej.data.utils.AxisUtils;
 import imagej.plugin.Parameter;
 import imagej.plugin.Plugin;
 import imagej.service.AbstractService;
@@ -50,6 +51,7 @@ import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 
+import net.imglib2.Axis;
 import net.imglib2.RandomAccess;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
@@ -185,16 +187,18 @@ public class AWTScreenCaptureService
 		}
 		String name = "Image Capture";
 		final long[] dims;
-		final AxisType[] axes;
+		final Axis<?>[] axes;
 		final int bpp;
 		if (bitsPerPixel == 24) {
 			dims = new long[]{width, height, 3};
-			axes = new AxisType[]{Axes.X, Axes.Y, Axes.CHANNEL};
+			axes =
+				AxisUtils
+					.getDefaultAxes(new AxisType[] { Axes.X, Axes.Y, Axes.CHANNEL });
 			bpp = 8;
 		}
 		else {
 			dims = new long[]{width, height};
-			axes = new AxisType[]{Axes.X, Axes.Y};
+			axes = AxisUtils.getDefaultAxes(new AxisType[] { Axes.X, Axes.Y });
 			bpp = bitsPerPixel;
 		}
 		boolean signed = false;

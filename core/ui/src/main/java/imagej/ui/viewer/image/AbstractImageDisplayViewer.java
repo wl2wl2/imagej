@@ -53,8 +53,8 @@ import imagej.tool.ToolService;
 import imagej.ui.viewer.AbstractDisplayViewer;
 import imagej.ui.viewer.DisplayWindow;
 import imagej.util.UnitUtils;
+import net.imglib2.Axis;
 import net.imglib2.meta.Axes;
-import net.imglib2.meta.AxisType;
 
 /**
  * The AbstractImageDisplayViewer implements the UI-independent elements of an
@@ -130,15 +130,15 @@ public abstract class AbstractImageDisplayViewer extends
 		final int xIndex = dataset.getAxisIndex(Axes.X);
 		final int yIndex = dataset.getAxisIndex(Axes.Y);
 		final long[] dims = dataset.getDims();
-		final AxisType[] axes = dataset.getAxes();
+		final Axis<?>[] axes = dataset.getAxes();
 		final Position pos = view.getPlanePosition();
 
 		final StringBuilder sb = new StringBuilder();
 		for (int i = 0, p = -1; i < dims.length; i++) {
-			if (Axes.isXY(axes[i])) continue;
+			if (Axes.isXY(axes[i].getType())) continue;
 			p++;
 			if (dims[i] == 1) continue;
-			sb.append(axes[i]);
+			sb.append(axes[i].getType());
 			sb.append(": ");
 			sb.append(pos.getLongPosition(p) + 1);
 			sb.append("/");

@@ -43,6 +43,7 @@ import imagej.event.StatusService;
 import imagej.plugin.Plugin;
 import imagej.tool.AbstractTool;
 import imagej.tool.Tool;
+import net.imglib2.Axis;
 import net.imglib2.meta.Axes;
 
 /**
@@ -70,29 +71,23 @@ public class PixelProbe extends AbstractTool {
 			statusService.clearStatus();
 			return;
 		}
-		final int xAxis = disp.getAxisIndex(Axes.X); 
-		final int yAxis = disp.getAxisIndex(Axes.Y);
-		final double xcal = disp.calibration(xAxis);
-		final double ycal = disp.calibration(yAxis);
+		final int xAxisIndex = disp.getAxisIndex(Axes.X);
+		final int yAxisIndex = disp.getAxisIndex(Axes.Y);
+		final Axis<?> xAxis = disp.axis(xAxisIndex);
+		final Axis<?> yAxis = disp.axis(yAxisIndex);
 		final int channelIndex = disp.getAxisIndex(Axes.CHANNEL);
 		final long cx = recorder.getCX();
 		final long cy = recorder.getCY();
+		double xVal = xAxis.getCalibratedMeasure(cx);
+		double yVal = yAxis.getCalibratedMeasure(cy);
 		ChannelCollection values = recorder.getValues();
 		StringBuilder builder = new StringBuilder();
 		builder.append("x=");
-		if (!Double.isNaN(xcal) && xcal != 1.0) {
-			String calibratedVal = String.format("%.2f", (xcal * cx));
-			builder.append(calibratedVal);
-		}
-		else
-			builder.append(cx);
+		builder.append(String.format("%.2f", xVal));
+		if (xAxis.getUnit() != null) builder.append(xAxis.getUnit());
 		builder.append(", y=");
-		if (!Double.isNaN(ycal) && ycal != 1.0) {
-			String calibratedVal = String.format("%.2f", (ycal * cy));
-			builder.append(calibratedVal);
-		}
-		else
-			builder.append(cy);
+		builder.append(String.format("%.2f", yVal));
+		if (yAxis.getUnit() != null) builder.append(yAxis.getUnit());
 		builder.append(", value=");
 		// single channel image
 		if ((channelIndex == -1) ||

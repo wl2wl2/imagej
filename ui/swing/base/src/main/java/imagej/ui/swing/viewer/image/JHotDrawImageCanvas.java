@@ -48,6 +48,7 @@ import imagej.data.display.event.DataViewDeselectedEvent;
 import imagej.data.display.event.DataViewSelectedEvent;
 import imagej.data.display.event.MouseCursorEvent;
 import imagej.data.display.event.PanZoomEvent;
+import imagej.data.utils.AxisUtils;
 import imagej.display.event.DisplayDeletedEvent;
 import imagej.event.EventHandler;
 import imagej.event.EventService;
@@ -88,6 +89,7 @@ import java.util.Set;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import net.imglib2.Axis;
 import net.imglib2.RandomAccess;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.meta.Axes;
@@ -229,11 +231,14 @@ public class JHotDrawImageCanvas extends JPanel implements AdjustmentListener,
 		}
 
 		// create a dataset that has view data with overlay info on top
+		final AxisType[] axisTypes =
+			new AxisType[] { Axes.X, Axes.Y, Axes.CHANNEL };
+		final Axis<?>[] axes = AxisUtils.getDefaultAxes(axisTypes);
 		final DatasetService datasetService =
 			display.getContext().getService(DatasetService.class);
 		final Dataset dataset =
-			datasetService.create(new long[] { w, h, 3 }, "Captured view",
-				new AxisType[] { Axes.X, Axes.Y, Axes.CHANNEL }, 8, false, false);
+			datasetService.create(new long[] { w, h, 3 }, "Captured view", axes, 8,
+				false, false);
 		dataset.setRGBMerged(true);
 		final RandomAccess<? extends RealType<?>> accessor =
 			dataset.getImgPlus().randomAccess();
@@ -381,7 +386,7 @@ public class JHotDrawImageCanvas extends JPanel implements AdjustmentListener,
 
 		final OverlayView overlay = event.getView();
 		for (int i = 0; i < display.numDimensions(); i++) {
-			final AxisType axis = display.axis(i);
+			final AxisType axis = display.axis(i).getType();
 			if (Axes.isXY(axis)) continue;
 			if (overlay.getData().getAxisIndex(axis) < 0) {
 				overlay.setPosition(display.getLongPosition(axis), axis);
