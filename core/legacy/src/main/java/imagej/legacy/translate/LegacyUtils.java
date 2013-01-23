@@ -58,8 +58,10 @@ public class LegacyUtils {
 
 	// -- static variables --
 
-	private final static Axis<?>[] defaultAxes =
- AxisUtils
+	// NOTE - it i incorrect behavior in this class to do anything but read and
+	// copy the default axes.
+
+	private final static Axis<?>[] defaultAxes = AxisUtils
 		.getDefaultAxes(new AxisType[] { Axes.X, Axes.Y, Axes.CHANNEL, Axes.Z,
 			Axes.TIME });
 
@@ -161,7 +163,7 @@ public class LegacyUtils {
 	// -- package access static methods --
 
 	static Axis<?>[] getPreferredAxisOrder() {
-		return defaultAxes;
+		return AxisUtils.copyAxes(defaultAxes);
 	}
 
 	/**
@@ -188,8 +190,8 @@ public class LegacyUtils {
 		int index = 0;
 		for (final Axis<?> axis : preferredOrder) {
 			for (final Axis<?> other : defaultAxes) {
-				if (axis == other) {
-					AxisType axisType = axis.getType();
+				AxisType axisType = axis.getType();
+				if (axisType == other.getType()) {
 					if (axisType == Axes.X || axisType == Axes.Y ||
 //						axis == Axes.CHANNEL ||
 						getDim(axisType, fullDimensions) > 1)
@@ -203,7 +205,7 @@ public class LegacyUtils {
 		for (final Axis<?> axis : defaultAxes) {
 			boolean present = false;
 			for (final Axis<?> other : preferredOrder) {
-				if (axis == other) {
+				if (axis.getType() == other.getType()) {
 					present = true;
 					break;
 				}
@@ -214,7 +216,7 @@ public class LegacyUtils {
 //					axis == Axes.CHANNEL ||
 					getDim(axisType, fullDimensions) > 1)
 				{
-					axes[index++] = axis;
+					axes[index++] = axis.copy();
 				}
 			}
 		}
