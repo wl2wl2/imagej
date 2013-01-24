@@ -37,6 +37,7 @@ package imagej.data.display;
 
 import imagej.data.CalibratedInterval;
 import imagej.data.Data;
+import imagej.data.Dataset;
 import imagej.data.PositionableByAxis;
 import imagej.display.Display;
 import imagej.util.RealRect;
@@ -79,4 +80,17 @@ public interface ImageDisplay extends Display<DataView>, CalibratedInterval,
 	 */
 	RealRect getPlaneExtents();
 
+	/**
+	 * Gets the unit of display for the given axis. This may be different than the
+	 * units associated with a given {@link Dataset}. {@link ImageDisplay}s may do
+	 * unit conversion as needed.
+	 */
+	String getUnit(AxisType axisType);
+
+	/**
+	 * Sets the unit of display for the given axis. This may be different than the
+	 * units associated with a given {@link Dataset}. {@link ImageDisplay}s may do
+	 * unit conversion as needed.
+	 */
+	void setUnit(AxisType axisType, String unit);
 }

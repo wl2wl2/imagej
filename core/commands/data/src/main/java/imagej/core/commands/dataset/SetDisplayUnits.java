@@ -6,7 +6,7 @@ import imagej.plugin.Parameter;
 import imagej.plugin.Plugin;
 import net.imglib2.meta.Axes;
 
-@Plugin(menuPath = "Plugins>Sandbox>Set Display Units")
+@Plugin(menuPath = "Image>Units>Set Display Units")
 public class SetDisplayUnits implements Command {
 
 	@Parameter

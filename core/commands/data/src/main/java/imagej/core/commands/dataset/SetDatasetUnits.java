@@ -5,7 +5,7 @@ import imagej.data.Dataset;
 import imagej.plugin.Parameter;
 import imagej.plugin.Plugin;
 
-@Plugin(menuPath = "Plugins>Sandbox>Set Data Units")
+@Plugin(menuPath = "Image>Units>Set Data Units")
 public class SetDatasetUnits implements Command {
 
 	@Parameter
@@ -19,8 +19,8 @@ public class SetDatasetUnits implements Command {
 
 	@Override
 	public void run() {
-		dataset.getImgPlus().setCalibrationUnit(xUnit, 0);
-		dataset.getImgPlus().setCalibrationUnit(yUnit, 1);
+		dataset.getImgPlus().axis(0).setUnit(xUnit);
+		dataset.getImgPlus().axis(1).setUnit(yUnit);
 	}
 
 }

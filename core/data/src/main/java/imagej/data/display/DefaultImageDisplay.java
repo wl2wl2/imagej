@@ -89,6 +89,10 @@ public class DefaultImageDisplay extends AbstractDisplay<DataView>
 	// private final HashMap<AxisType, Long> pos =
 	// new HashMap<AxisType, Long>();
 
+	// NB BDZ - concurrent version to match previous comments
+	private final ConcurrentHashMap<AxisType, String> units =
+		new ConcurrentHashMap<AxisType, String>();
+
 	public DefaultImageDisplay() {
 		super(DataView.class);
 		canvas = new DefaultImageCanvas(this);
@@ -202,6 +206,16 @@ public class DefaultImageDisplay extends AbstractDisplay<DataView>
 		final double width = extents.realMax(xAxis) - extents.realMin(xAxis);
 		final double height = extents.realMax(yAxis) - extents.realMin(yAxis);
 		return new RealRect(xMin, yMin, width, height);
+	}
+
+	@Override
+	public String getUnit(AxisType axisType) {
+		return units.get(axisType);
+	}
+
+	@Override
+	public void setUnit(AxisType axisType, String unit) {
+		units.put(axisType, unit);
 	}
 
 	// -- Display methods --
