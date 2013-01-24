@@ -43,6 +43,7 @@ import imagej.event.StatusService;
 import imagej.plugin.Plugin;
 import imagej.tool.AbstractTool;
 import imagej.tool.Tool;
+import imagej.util.UnitUtils;
 import net.imglib2.Axis;
 import net.imglib2.meta.Axes;
 
@@ -84,13 +85,13 @@ public class PixelProbe extends AbstractTool {
 		StringBuilder builder = new StringBuilder();
 		builder.append("x=");
 		builder.append(String.format("%.2f", xVal));
-		if (xAxis.getUnit() != null) {
+		if (UnitUtils.filterUnit(xAxis.getUnit()) != null) {
 			builder.append(" ");
 			builder.append(xAxis.getUnit());
 		}
 		builder.append(", y=");
 		builder.append(String.format("%.2f", yVal));
-		if (yAxis.getUnit() != null) {
+		if (UnitUtils.filterUnit(yAxis.getUnit()) != null) {
 			builder.append(" ");
 			builder.append(yAxis.getUnit());
 		}

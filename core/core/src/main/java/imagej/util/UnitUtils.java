@@ -70,4 +70,11 @@ public final class UnitUtils {
 		return String.format(format, value, BYTE_UNITS[pow]);
 	}
 
+	public static String filterUnit(String unit) {
+		if ("none".equalsIgnoreCase(unit)) return null;
+		if ("pixel".equalsIgnoreCase(unit)) return null;
+		if ("pixels".equalsIgnoreCase(unit)) return null;
+		return unit;
+	}
+
 }
