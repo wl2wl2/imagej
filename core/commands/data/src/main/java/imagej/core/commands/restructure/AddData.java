@@ -247,11 +247,11 @@ public class AddData extends DynamicCommand implements Cancelable {
 	}
 
 	private int compositeStatus(final Dataset origData,
-		final ImgPlus<?> dstImgPlus, final AxisType axis)
+		final ImgPlus<?> dstImgPlus, final AxisType axisType)
 	{
 
 		// adding along non-channel axis
-		if (axis != Axes.CHANNEL) {
+		if (axisType != Axes.CHANNEL) {
 			return origData.getCompositeChannelCount();
 		}
 
