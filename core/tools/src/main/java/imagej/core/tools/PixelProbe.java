@@ -84,10 +84,16 @@ public class PixelProbe extends AbstractTool {
 		StringBuilder builder = new StringBuilder();
 		builder.append("x=");
 		builder.append(String.format("%.2f", xVal));
-		if (xAxis.getUnit() != null) builder.append(xAxis.getUnit());
+		if (xAxis.getUnit() != null) {
+			builder.append(" ");
+			builder.append(xAxis.getUnit());
+		}
 		builder.append(", y=");
 		builder.append(String.format("%.2f", yVal));
-		if (yAxis.getUnit() != null) builder.append(yAxis.getUnit());
+		if (yAxis.getUnit() != null) {
+			builder.append(" ");
+			builder.append(yAxis.getUnit());
+		}
 		builder.append(", value=");
 		// single channel image
 		if ((channelIndex == -1) ||
