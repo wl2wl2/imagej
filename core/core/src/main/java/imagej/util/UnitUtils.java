@@ -71,6 +71,7 @@ public final class UnitUtils {
 	}
 
 	public static String filterUnit(String unit) {
+		if ("".equalsIgnoreCase(unit)) return null;
 		if ("none".equalsIgnoreCase(unit)) return null;
 		if ("pixel".equalsIgnoreCase(unit)) return null;
 		if ("pixels".equalsIgnoreCase(unit)) return null;
