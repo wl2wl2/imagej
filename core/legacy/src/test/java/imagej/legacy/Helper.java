@@ -190,7 +190,7 @@ public class Helper {
 				ra.get().set(data[i][j]);
 			}
 		}
-		Axis<?>[] axes =
+		Axis[] axes =
 			AxisUtils.getDefaultAxes(new AxisType[] { Axes.X, Axes.Y });
 		final DatasetService datasetService =
 			context.getService(DatasetService.class);

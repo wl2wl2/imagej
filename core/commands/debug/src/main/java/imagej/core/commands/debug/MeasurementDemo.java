@@ -204,7 +204,7 @@ public class MeasurementDemo implements Command {
 	
 	private Dataset getTestData() {
 		AxisType[] axisTypes = new AxisType[] { Axes.X, Axes.Y };
-		Axis<?>[] axes = AxisUtils.getDefaultAxes(axisTypes);
+		Axis[] axes = AxisUtils.getDefaultAxes(axisTypes);
 		Dataset ds =
 			dsSrv.create(new long[] { 7, 7 }, "tmp", axes,
 											8, false, false);

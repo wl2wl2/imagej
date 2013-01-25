@@ -125,8 +125,8 @@ public abstract class AbstractData extends AbstractContextual implements Data,
 	// -- CalibratedInterval methods --
 
 	@Override
-	public Axis<?>[] getAxes() {
-		final Axis<?>[] axes = new Axis<?>[numDimensions()];
+	public Axis[] getAxes() {
+		final Axis[] axes = new Axis[numDimensions()];
 		axes(axes);
 		return axes;
 	}

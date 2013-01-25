@@ -85,7 +85,7 @@ public class DuplicateImage extends DynamicCommand implements Cancelable {
 	// -- instance variables that are not parameters --
 
 	private Map<AxisType, AxisSubrange> definitions;
-	private Axis<?>[] theAxes;
+	private Axis[] theAxes;
 	private String cancelReason;
 
 	// -- DuplicateImage methods --
@@ -203,7 +203,7 @@ public class DuplicateImage extends DynamicCommand implements Cancelable {
 	protected void initializer() {
 		definitions = new HashMap<AxisType, AxisSubrange>();
 		theAxes = inputDisplay.getAxes();
-		for (final Axis<?> axis : theAxes) {
+		for (final Axis axis : theAxes) {
 			final DefaultModuleItem<String> axisItem =
 				new DefaultModuleItem<String>(this, name(axis), String.class);
 			axisItem.setPersisted(false);
@@ -214,7 +214,7 @@ public class DuplicateImage extends DynamicCommand implements Cancelable {
 
 	// -- private helpers --
 
-	private String fullRangeString(final ImageDisplay disp, final Axis<?> axis) {
+	private String fullRangeString(final ImageDisplay disp, final Axis axis) {
 		final int axisIndex = disp.getAxisIndex(axis.getType());
 		return "1-" + disp.dimension(axisIndex);
 	}
@@ -235,7 +235,7 @@ public class DuplicateImage extends DynamicCommand implements Cancelable {
 	private SamplingDefinition parsedDefinition() {
 		final SamplingDefinition sampleDef =
 			SamplingDefinition.sampleAllPlanes(inputDisplay);
-		for (final Axis<?> axis : theAxes) {
+		for (final Axis axis : theAxes) {
 			final String definition = (String) getInput(name(axis));
 			final AxisSubrange subrange =
 				new AxisSubrange(inputDisplay, axis.getType(), definition, true);
@@ -244,7 +244,7 @@ public class DuplicateImage extends DynamicCommand implements Cancelable {
 		return sampleDef;
 	}
 
-	private String name(final Axis<?> axis) {
+	private String name(final Axis axis) {
 		return axis.getLabel() + " axis range";
 	}
 }

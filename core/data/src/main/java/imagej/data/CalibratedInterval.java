@@ -59,7 +59,7 @@ import net.imglib2.meta.Named;
 public interface CalibratedInterval extends CalibratedSpace, Interval, Named {
 
 	/** Gets the dimensional axes of the space. */
-	Axis<?>[] getAxes();
+	Axis[] getAxes();
 
 	/**
 	 * Gets whether the coordinate space provides a discrete sampling of its

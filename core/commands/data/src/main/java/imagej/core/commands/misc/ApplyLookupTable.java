@@ -147,7 +147,7 @@ public class ApplyLookupTable implements Command {
 			urlString.substring(urlString.lastIndexOf("/") + 1, urlString.length());
 		long[] dims = new long[] { WIDTH, HEIGHT };
 		AxisType[] axisTypes = new AxisType[] { Axes.X, Axes.Y };
-		Axis<?>[] axes = AxisUtils.getDefaultAxes(axisTypes);
+		Axis[] axes = AxisUtils.getDefaultAxes(axisTypes);
 		int bitsPerPixel = 8;
 		boolean signed = false;
 		boolean floating = false;

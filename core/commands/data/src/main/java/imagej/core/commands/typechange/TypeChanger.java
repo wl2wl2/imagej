@@ -213,7 +213,7 @@ public abstract class TypeChanger extends DynamicCommand {
 		// determine the attributes of the output image
 		final String name = inputImg.getName();
 		final long[] dims = outputDims(inputImg);
-		final Axis<?>[] axes = outputAxes(inputImg);
+		final Axis[] axes = outputAxes(inputImg);
 
 		// create the output image
 		final ImgFactory<? extends RealType<?>> factory = inputImg.factory();
@@ -286,14 +286,14 @@ public abstract class TypeChanger extends DynamicCommand {
 	}
 
 	/** Determines the axes of the output image ignoring channels if necessary. */
-	private static Axis<?>[] outputAxes(final ImgPlus<?> inputImg) {
+	private static Axis[] outputAxes(final ImgPlus<?> inputImg) {
 		final int inputAxisCount = inputImg.numDimensions();
 		final int chanIndex = inputImg.getAxisIndex(Axes.CHANNEL);
 		final int outputAxisCount =
 			(chanIndex < 0) ? inputAxisCount : inputAxisCount - 1;
-		final Axis<?>[] inputAxes = new Axis<?>[inputAxisCount];
+		final Axis[] inputAxes = new Axis[inputAxisCount];
 		inputImg.axes(inputAxes);
-		final Axis<?>[] outputAxes = new Axis<?>[outputAxisCount];
+		final Axis[] outputAxes = new Axis[outputAxisCount];
 		int o = 0;
 		for (int i = 0; i < inputAxisCount; i++) {
 			if (i != chanIndex) outputAxes[o++] = inputAxes[i];

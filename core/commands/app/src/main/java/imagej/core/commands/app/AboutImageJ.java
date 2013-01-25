@@ -193,7 +193,7 @@ public class AboutImageJ extends ContextCommand {
 			log.warn("Could not load a 3 channel unsigned 8 bit image as backdrop");
 			// make a black 3 channel 8-bit unsigned background image.
 			AxisType[] axisTypes = new AxisType[] { Axes.X, Axes.Y, Axes.CHANNEL };
-			Axis<?>[] axes = AxisUtils.getDefaultAxes(axisTypes);
+			Axis[] axes = AxisUtils.getDefaultAxes(axisTypes);
 			ds =
 				dataSrv
 					.create(new long[] { 500, 500, 3 }, title, axes, 8, false, false);

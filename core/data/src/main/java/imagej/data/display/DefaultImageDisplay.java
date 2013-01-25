@@ -276,7 +276,7 @@ public class DefaultImageDisplay extends AbstractDisplay<DataView>
 		// TODO - is this a performance issue?
 		combinedInterval.update();
 		for (final DataView view : this) {
-			for (final Axis<?> axis : getAxes()) {
+			for (final Axis axis : getAxes()) {
 				AxisType axisType = axis.getType();
 				if (Axes.isXY(axisType)) continue;
 				if (view.getData().getAxisIndex(axisType) < 0) continue;
@@ -290,7 +290,7 @@ public class DefaultImageDisplay extends AbstractDisplay<DataView>
 	// -- CalibratedInterval methods --
 
 	@Override
-	public Axis<?>[] getAxes() {
+	public Axis[] getAxes() {
 		return combinedInterval.getAxes();
 	}
 
@@ -398,17 +398,17 @@ public class DefaultImageDisplay extends AbstractDisplay<DataView>
 	}
 
 	@Override
-	public Axis<?> axis(final int d) {
+	public Axis axis(final int d) {
 		return combinedInterval.axis(d);
 	}
 
 	@Override
-	public void axes(final Axis<?>[] axes) {
+	public void axes(final Axis[] axes) {
 		combinedInterval.axes(axes);
 	}
 
 	@Override
-	public void setAxis(final Axis<?> axis, final int d) {
+	public void setAxis(final Axis axis, final int d) {
 		combinedInterval.setAxis(axis, d);
 	}
 
@@ -647,8 +647,8 @@ public class DefaultImageDisplay extends AbstractDisplay<DataView>
 
 	private void initActiveAxis() {
 		if (activeAxis == null) {
-			final Axis<?>[] axes = getAxes();
-			for (final Axis<?> axis : axes) {
+			final Axis[] axes = getAxes();
+			for (final Axis axis : axes) {
 				AxisType axisType = axis.getType();
 				if (axisType == Axes.X) continue;
 				if (axisType == Axes.Y) continue;

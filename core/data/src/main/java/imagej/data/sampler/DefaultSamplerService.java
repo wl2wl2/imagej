@@ -184,7 +184,7 @@ public class DefaultSamplerService extends AbstractService implements
 		final Dataset origDs = (Dataset) origDisp.getActiveView().getData();
 		final long[] dims = def.getOutputDims();
 		final String name = origDisp.getName();
-		final Axis<?>[] axes = def.getOutputAxes();
+		final Axis[] axes = def.getOutputAxes();
 		final int bitsPerPixel = origDs.getType().getBitsPerPixel();
 		final boolean signed = origDs.isSigned();
 		final boolean floating = !origDs.isInteger();

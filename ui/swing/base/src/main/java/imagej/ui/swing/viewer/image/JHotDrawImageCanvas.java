@@ -233,7 +233,7 @@ public class JHotDrawImageCanvas extends JPanel implements AdjustmentListener,
 		// create a dataset that has view data with overlay info on top
 		final AxisType[] axisTypes =
 			new AxisType[] { Axes.X, Axes.Y, Axes.CHANNEL };
-		final Axis<?>[] axes = AxisUtils.getDefaultAxes(axisTypes);
+		final Axis[] axes = AxisUtils.getDefaultAxes(axisTypes);
 		final DatasetService datasetService =
 			display.getContext().getService(DatasetService.class);
 		final Dataset dataset =

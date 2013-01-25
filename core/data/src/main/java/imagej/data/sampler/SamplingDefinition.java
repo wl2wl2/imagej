@@ -83,7 +83,7 @@ public class SamplingDefinition {
 	}
 
 	/** Returns the axes that are present in the input data. */
-	public Axis<?>[] getInputAxes() {
+	public Axis[] getInputAxes() {
 		return display.getAxes();
 	}
 
@@ -96,9 +96,9 @@ public class SamplingDefinition {
 	 * [1,2,3]]
 	 */
 	public List<List<Long>> getInputRanges() {
-		final Axis<?>[] axes = display.getAxes();
+		final Axis[] axes = display.getAxes();
 		final List<List<Long>> axesDefs = new ArrayList<List<Long>>();
-		for (final Axis<?> axis : axes) {
+		for (final Axis axis : axes) {
 			final AxisSubrange subrange = axisSubranges.get(axis.getType());
 			final List<Long> axisValues = subrange.getIndices();
 			axesDefs.add(axisValues);
@@ -110,14 +110,14 @@ public class SamplingDefinition {
 	 * Returns the axes that will be present in the output data. Those input axes
 	 * whose size is 1 are automatically collapsed.
 	 */
-	public Axis<?>[] getOutputAxes() {
-		final Axis<?>[] inputAxes = getInputAxes();
+	public Axis[] getOutputAxes() {
+		final Axis[] inputAxes = getInputAxes();
 		final List<List<Long>> inputRanges = getInputRanges();
 		int dimCount = 0;
 		for (int i = 0; i < inputRanges.size(); i++) {
 			if (inputRanges.get(i).size() > 1) dimCount++;
 		}
-		final Axis<?>[] outputAxes = new Axis<?>[dimCount];
+		final Axis[] outputAxes = new Axis[dimCount];
 		int d = 0;
 		for (int i = 0; i < inputRanges.size(); i++) {
 			if (inputRanges.get(i).size() > 1) outputAxes[d++] = inputAxes[i].copy();
@@ -197,8 +197,8 @@ public class SamplingDefinition {
 	{
 		final SamplingDefinition definition = new SamplingDefinition(display);
 		final Data data = display.getActiveView().getData();
-		final Axis<?>[] axes = data.getAxes();
-		for (final Axis<?> axis : axes) {
+		final Axis[] axes = data.getAxes();
+		for (final Axis axis : axes) {
 			AxisType axisType = axis.getType();
 			if ((axisType == uAxis) || (axisType == vAxis)) {
 				final int axisIndex = display.getAxisIndex(axisType);
@@ -246,8 +246,8 @@ public class SamplingDefinition {
 		}
 		final SamplingDefinition definition = new SamplingDefinition(display);
 		final Data data = display.getActiveView().getData();
-		final Axis<?>[] axes = data.getAxes();
-		for (final Axis<?> axis : axes) {
+		final Axis[] axes = data.getAxes();
+		for (final Axis axis : axes) {
 			AxisType axisType = axis.getType();
 			if ((axisType == uAxisType) || (axisType == vAxisType) ||
 				(axisType == Axes.CHANNEL))
@@ -288,9 +288,9 @@ public class SamplingDefinition {
 	 */
 	public static SamplingDefinition sampleAllPlanes(final ImageDisplay display) {
 		final SamplingDefinition definition = new SamplingDefinition(display);
-		final Axis<?>[] axes = display.getAxes();
+		final Axis[] axes = display.getAxes();
 		for (int i = 0; i < axes.length; i++) {
-			final Axis<?> axis = axes[i];
+			final Axis axis = axes[i];
 			final long size = display.dimension(i);
 			final AxisSubrange subrange = new AxisSubrange(0, size - 1);
 			definition.constrain(axis.getType(), subrange);

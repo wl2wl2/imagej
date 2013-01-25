@@ -54,8 +54,8 @@ public class AxisUtils {
 	 * @param axisType
 	 * @return
 	 */
-	public static Axis<?> getDefaultAxis(AxisType axisType) {
-		Axis<?> axis = new LinearAxis(0, 1);
+	public static Axis getDefaultAxis(AxisType axisType) {
+		Axis axis = new LinearAxis(0, 1);
 		axis.setLabel(axisType.getLabel());
 		return axis;
 	}
@@ -67,8 +67,8 @@ public class AxisUtils {
 	 * @param axisTypes
 	 * @return
 	 */
-	public static Axis<?>[] getDefaultAxes(AxisType[] axisTypes) {
-		Axis<?>[] axes = new Axis<?>[axisTypes.length];
+	public static Axis[] getDefaultAxes(AxisType[] axisTypes) {
+		Axis[] axes = new Axis[axisTypes.length];
 		for (int i = 0; i < axisTypes.length; i++) {
 			axes[i] = getDefaultAxis(axisTypes[i]);
 		}
@@ -82,8 +82,8 @@ public class AxisUtils {
 	 * @param axes The {@link Axis}es to copy
 	 * @return
 	 */
-	public static Axis<?>[] copyAxes(Axis<?>[] axes) {
-		Axis<?>[] copy = new Axis<?>[axes.length];
+	public static Axis[] copyAxes(Axis[] axes) {
+		Axis[] copy = new Axis[axes.length];
 		for (int i = 0; i < axes.length; i++) {
 			copy[i] = axes[i].copy();
 		}
@@ -96,7 +96,7 @@ public class AxisUtils {
 	 * @param axes
 	 * @return
 	 */
-	public static AxisType[] getTypes(Axis<?>[] axes) {
+	public static AxisType[] getTypes(Axis[] axes) {
 		AxisType[] types = new AxisType[axes.length];
 		for (int i = 0; i < axes.length; i++) {
 			types[i] = axes[i].getType();

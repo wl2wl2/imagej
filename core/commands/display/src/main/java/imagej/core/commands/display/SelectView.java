@@ -121,8 +121,8 @@ public class SelectView extends ContextCommand {
 	// -- private helpers --
 	
 	private boolean viewIsInCurrentDisplayedPlane(ImageDisplay disp, DataView view) {
-		Axis<?>[] axes = disp.getAxes();
-		for (Axis<?> axis : axes) {
+		Axis[] axes = disp.getAxes();
+		for (Axis axis : axes) {
 			AxisType axisType = axis.getType();
 			if (Axes.isXY(axisType)) continue;
 			if (disp.getLongPosition(axisType) != view.getLongPosition(axisType)) {

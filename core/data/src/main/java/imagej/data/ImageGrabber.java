@@ -78,7 +78,7 @@ public class ImageGrabber {
 		int ySize = (int) dims[1];
 		int[] argbPixels = view.getScreenImage().getData();
 		AxisType[] axisTypes = new AxisType[] { Axes.X, Axes.Y, Axes.CHANNEL };
-		Axis<?>[] axes = AxisUtils.getDefaultAxes(axisTypes);
+		Axis[] axes = AxisUtils.getDefaultAxes(axisTypes);
 		Dataset dataset = 
 			service.create(new UnsignedByteType(), dims, outputName, axes);
 		ImgPlus<? extends RealType<?>> imgPlus = dataset.getImgPlus();

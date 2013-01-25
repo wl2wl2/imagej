@@ -74,8 +74,8 @@ public class PixelProbe extends AbstractTool {
 		}
 		final int xAxisIndex = disp.getAxisIndex(Axes.X);
 		final int yAxisIndex = disp.getAxisIndex(Axes.Y);
-		final Axis<?> xAxis = disp.axis(xAxisIndex);
-		final Axis<?> yAxis = disp.axis(yAxisIndex);
+		final Axis xAxis = disp.axis(xAxisIndex);
+		final Axis yAxis = disp.axis(yAxisIndex);
 		final int channelIndex = disp.getAxisIndex(Axes.CHANNEL);
 		final long cx = recorder.getCX();
 		final long cy = recorder.getCY();

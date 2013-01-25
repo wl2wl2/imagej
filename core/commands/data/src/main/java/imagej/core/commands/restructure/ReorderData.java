@@ -147,7 +147,7 @@ public class ReorderData extends DynamicCommand {
 	// -- Initializers --
 
 	protected void initAxes() {
-		final Axis<?>[] axes = dataset.getAxes();
+		final Axis[] axes = dataset.getAxes();
 
 		final ArrayList<String> choices = new ArrayList<String>();
 		for (int i = 0; i < axes.length; i++) {
@@ -207,8 +207,8 @@ public class ReorderData extends DynamicCommand {
 	 * Takes a given set of axes (usually a subset of all possible axes) and
 	 * returns a permuted set of axes that reflect the user specified axis order
 	 */
-	private Axis<?>[] getPermutedAxes(final Axis<?>[] currAxes) {
-		final Axis<?>[] permuted = new Axis<?>[currAxes.length];
+	private Axis[] getPermutedAxes(final Axis[] currAxes) {
+		final Axis[] permuted = new Axis[currAxes.length];
 		int index = 0;
 		for (int i = 0; i < desiredAxisOrder.length; i++)
 			for (int j = 0; j < currAxes.length; j++) {
@@ -225,8 +225,8 @@ public class ReorderData extends DynamicCommand {
 	 * actually permute positions.
 	 */
 	private void setupPermutationVars() {
-		final Axis<?>[] currAxes = dataset.getAxes();
-		final Axis<?>[] permutedAxes = getPermutedAxes(currAxes);
+		final Axis[] currAxes = dataset.getAxes();
+		final Axis[] permutedAxes = getPermutedAxes(currAxes);
 		permutationAxisIndices = new int[currAxes.length];
 		for (int i = 0; i < currAxes.length; i++) {
 			final AxisType axis = currAxes[i].getType();
@@ -247,9 +247,9 @@ public class ReorderData extends DynamicCommand {
 		final HyperVolumePointSet volume = new HyperVolumePointSet(inputSpan);
 		final PointSetIterator iter = volume.iterator();
 		final long[] origDims = dataset.getDims();
-		final Axis<?>[] origAxes = dataset.getAxes();
+		final Axis[] origAxes = dataset.getAxes();
 		final long[] newDims = getNewDims(origDims);
-		final Axis<?>[] newAxes = getNewAxes(origAxes);
+		final Axis[] newAxes = getNewAxes(origAxes);
 		final ImgPlus<? extends RealType<?>> newImgPlus =
 			RestructureUtils.createNewImgPlus(dataset, newDims, newAxes);
 		newImgPlus.setCompositeChannelCount(dataset.getCompositeChannelCount());
@@ -271,7 +271,7 @@ public class ReorderData extends DynamicCommand {
 	/**
 	 * Returns the axis index of an Axis given a permuted set of axes.
 	 */
-	private int getNewAxisIndex(final Axis<?>[] permutedAxes,
+	private int getNewAxisIndex(final Axis[] permutedAxes,
 		final AxisType originalAxis)
 	{
 		for (int i = 0; i < permutedAxes.length; i++) {
@@ -294,8 +294,8 @@ public class ReorderData extends DynamicCommand {
 	 * Taking the original axes order this method returns the new axes in the
 	 * order of the permuted space.
 	 */
-	private Axis<?>[] getNewAxes(final Axis<?>[] origAxes) {
-		final Axis<?>[] newAxes = new Axis<?>[origAxes.length];
+	private Axis[] getNewAxes(final Axis[] origAxes) {
+		final Axis[] newAxes = new Axis[origAxes.length];
 		permute(origAxes, newAxes);
 		return newAxes;
 	}
@@ -314,7 +314,7 @@ public class ReorderData extends DynamicCommand {
 	 * permuted space
 	 */
 	private void
- permute(final Axis<?>[] origAxes, final Axis<?>[] permutedAxes)
+ permute(final Axis[] origAxes, final Axis[] permutedAxes)
 	{
 		for (int i = 0; i < origAxes.length; i++)
 			permutedAxes[permutationAxisIndices[i]] = origAxes[i];

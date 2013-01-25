@@ -181,7 +181,7 @@ public class NewImage extends ContextCommand {
 		final int bitsPerPixel = getBitsPerPixel();
 		final long[] dims = { width, height };
 		final AxisType[] axisTypes = { Axes.X, Axes.Y };
-		final Axis<?>[] axes = AxisUtils.getDefaultAxes(axisTypes);
+		final Axis[] axes = AxisUtils.getDefaultAxes(axisTypes);
 		dataset =
 			datasetService.create(dims, name, axes, bitsPerPixel, signed, floating);
 

@@ -78,7 +78,7 @@ public class RestructureUtils {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static ImgPlus<? extends RealType<?>> createNewImgPlus(
-		final Dataset ds, final long[] dimensions, final Axis<?>[] axes)
+		final Dataset ds, final long[] dimensions, final Axis[] axes)
 	{
 		final ImgFactory factory = ds.getImgPlus().factory();
 		final Img<? extends RealType<?>> img =

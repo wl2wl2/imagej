@@ -182,7 +182,7 @@ public class ShadowsDemo extends ContextCommand implements Cancelable {
 	 */
 	private boolean unsupportedImage(ImageDisplay disp) {
 		final Dataset input = imgDispService.getActiveDataset(disp);
-		final Axis<?>[] axes = input.getAxes();
+		final Axis[] axes = input.getAxes();
 		final long[] dims = input.getDims();
 		for (int i = 0; i < axes.length; i++) {
 			final AxisType axisType = axes[i].getType();

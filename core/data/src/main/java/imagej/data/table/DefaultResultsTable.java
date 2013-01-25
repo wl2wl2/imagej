@@ -76,12 +76,12 @@ public class DefaultResultsTable extends AbstractTable<DoubleColumn, Double>
 	@Override
 	public ImgPlus<DoubleType> img() {
 		final Img<DoubleType> img = new ResultsImg(this);
-		Axis<?> X = new LinearAxis(0, 1);
+		Axis X = new LinearAxis(0, 1);
 		X.setLabel(Axes.X.getLabel());
-		Axis<?> Y = new LinearAxis(0, 1);
+		Axis Y = new LinearAxis(0, 1);
 		X.setLabel(Axes.X.getLabel());
 		Y.setLabel(Axes.Y.getLabel());
-		final Axis<?>[] axes = { X, Y };
+		final Axis[] axes = { X, Y };
 		final String name = "Results";
 		final ImgPlus<DoubleType> imgPlus =
 			new ImgPlus<DoubleType>(img, name, axes);

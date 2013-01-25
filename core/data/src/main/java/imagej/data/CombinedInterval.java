@@ -129,8 +129,8 @@ public class CombinedInterval extends ArrayList<CalibratedInterval> implements
 	// -- CalibratedInterval methods --
 
 	@Override
-	public Axis<?>[] getAxes() {
-		final Axis<?>[] axes = new Axis<?>[numDimensions()];
+	public Axis[] getAxes() {
+		final Axis[] axes = new Axis[numDimensions()];
 		axes(axes);
 		return axes;
 	}
@@ -166,19 +166,19 @@ public class CombinedInterval extends ArrayList<CalibratedInterval> implements
 	}
 
 	@Override
-	public Axis<?> axis(final int d) {
+	public Axis axis(final int d) {
 		final DimensionMapping mapping = mappings.get(d);
 		return mapping.interval.axis(mapping.index);
 	}
 
 	@Override
-	public void axes(final Axis<?>[] axes) {
+	public void axes(final Axis[] axes) {
 		for (int i = 0; i < axes.length; i++)
 			axes[i] = axis(i);
 	}
 
 	@Override
-	public void setAxis(final Axis<?> axis, final int d) {
+	public void setAxis(final Axis axis, final int d) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -79,7 +79,7 @@ public class MultidimImage implements Command {
 		final AxisType[] axisTypes =
 			new AxisType[] { Axes.X, Axes.Y, Axes.CHANNEL, Axes.FREQUENCY, Axes.Z,
 				Axes.TIME };
-		final Axis<?>[] axes = AxisUtils.getDefaultAxes(axisTypes);
+		final Axis[] axes = AxisUtils.getDefaultAxes(axisTypes);
 		final int bitsPerPixel = 8;
 		final boolean signed = false;
 		final boolean floating = false;

@@ -62,7 +62,7 @@ public class MetadataHarmonizer implements DataHarmonizer {
 		final int tIndex = ds.getAxisIndex(Axes.TIME);
 		final ImgPlus<?> imgPlus = ds.getImgPlus();
 		final Calibration cal = imp.getCalibration();
-		Axis<?> axis;
+		Axis axis;
 		if (xIndex >= 0) {
 			axis = imgPlus.axis(xIndex);
 			axis.setScale(cal.pixelWidth);
@@ -105,7 +105,7 @@ public class MetadataHarmonizer implements DataHarmonizer {
 		final int cIndex = ds.getAxisIndex(Axes.CHANNEL);
 		final int zIndex = ds.getAxisIndex(Axes.Z);
 		final int tIndex = ds.getAxisIndex(Axes.TIME);
-		Axis<?> axis;
+		Axis axis;
 		if (xIndex >= 0) {
 			axis = ds.axis(xIndex);
 			cal.pixelWidth = axis.getScale();

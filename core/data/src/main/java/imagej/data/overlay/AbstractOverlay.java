@@ -72,7 +72,7 @@ public abstract class AbstractOverlay extends AbstractData implements Overlay {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<Axis<?>> axes = new ArrayList<Axis<?>>();
+	private List<Axis> axes = new ArrayList<Axis>();
 
 	private int alpha;
 	private ColorRGB fillColor;
@@ -242,18 +242,18 @@ public abstract class AbstractOverlay extends AbstractData implements Overlay {
 	}
 
 	@Override
-	public Axis<?> axis(final int d) {
+	public Axis axis(final int d) {
 		return axes.get(d);
 	}
 
 	@Override
-	public void axes(final Axis<?>[] target) {
+	public void axes(final Axis[] target) {
 		for (int i = 0; i < target.length; i++)
 			target[i] = axis(i);
 	}
 
 	@Override
-	public void setAxis(final Axis<?> axis, final int d) {
+	public void setAxis(final Axis axis, final int d) {
 		axes.set(d, axis);
 	}
 
@@ -367,7 +367,7 @@ public abstract class AbstractOverlay extends AbstractData implements Overlay {
 		ClassNotFoundException
 	{
 		super.readExternal(in);
-		axes = (List<Axis<?>>) in.readObject();
+		axes = (List<Axis>) in.readObject();
 		alpha = in.readInt();
 		fillColor = (ColorRGB) in.readObject();
 		lineColor = (ColorRGB) in.readObject();

@@ -90,7 +90,7 @@ public class ColorDisplayCreator implements DisplayCreator {
 
 	@Override
 	public ImageDisplay createDisplay(final ImagePlus imp,
-		final Axis<?>[] preferredOrder, boolean isBinaryImp)
+		final Axis[] preferredOrder, boolean isBinaryImp)
 	{
 		final Dataset ds = makeColorDataset(imp, preferredOrder);
 		pixelHarmonizer.updateDataset(ds, imp);
@@ -122,7 +122,7 @@ public class ColorDisplayCreator implements DisplayCreator {
 	 * ImagePlus is not single channel RGB.
 	 */
 	private Dataset makeColorDataset(final ImagePlus imp,
-		final Axis<?>[] preferredOrder)
+		final Axis[] preferredOrder)
 	{
 		final int x = imp.getWidth();
 		final int y = imp.getHeight();
@@ -141,7 +141,7 @@ public class ColorDisplayCreator implements DisplayCreator {
 		}
 
 		final int[] inputDims = new int[] { x, y, 3, z, t };
-		final Axis<?>[] axes = LegacyUtils.orderedAxes(preferredOrder, inputDims);
+		final Axis[] axes = LegacyUtils.orderedAxes(preferredOrder, inputDims);
 		final long[] dims = LegacyUtils.orderedDims(axes, inputDims);
 		final String name = imp.getTitle();
 		final int bitsPerPixel = 8;

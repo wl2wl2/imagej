@@ -355,23 +355,23 @@ public class DefaultDataset extends AbstractData implements Dataset {
 	}
 
 	@Override
-	public Axis<?> axis(final int d) {
+	public Axis axis(final int d) {
 		return imgPlus.axis(d);
 	}
 
 	@Override
-	public void axes(final Axis<?>[] axes) {
+	public void axes(final Axis[] axes) {
 		imgPlus.axes(axes);
 	}
 
 	@Override
-	public void setAxes(final Axis<?>[] axes) {
+	public void setAxes(final Axis[] axes) {
 		if (axes.length != numDimensions())
 			throw new IllegalArgumentException(
 				"number of axes must match dimensionality of dataset");
 		boolean changes = false;
 		for (int i = 0; i < axes.length; i++) {
-			Axis<?> axis = axes[i];
+			Axis axis = axes[i];
 			if (!imgPlus.axis(i).sameAs(axis)) {
 				changes = true;
 				imgPlus.setAxis(axis, i);
@@ -381,7 +381,7 @@ public class DefaultDataset extends AbstractData implements Dataset {
 	}
 
 	@Override
-	public void setAxis(final Axis<?> axis, final int d) {
+	public void setAxis(final Axis axis, final int d) {
 		if (imgPlus.axis(d).sameAs(axis)) return;
 		imgPlus.setAxis(axis, d);
 		update(true); // TODO : false instead of true?
@@ -696,7 +696,7 @@ public class DefaultDataset extends AbstractData implements Dataset {
 
 	private <T extends RealType<?>> ImgPlus<T> wrapAsImgPlus(
 final Img<T> newImg,
-		final Axis<?>[] axes)
+		final Axis[] axes)
 	{
 		return new ImgPlus<T>(newImg, getName(), axes);
 	}

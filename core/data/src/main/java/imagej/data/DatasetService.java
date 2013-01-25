@@ -81,7 +81,7 @@ public interface DatasetService extends Service {
 	 * @throws IllegalArgumentException If the combination of bitsPerPixel, signed
 	 *           and floating parameters do not form a valid data type.
 	 */
-	Dataset create(long[] dims, String name, Axis<?>[] axes, int bitsPerPixel,
+	Dataset create(long[] dims, String name, Axis[] axes, int bitsPerPixel,
 		boolean signed, boolean floating);
 
 	/**
@@ -95,7 +95,7 @@ public interface DatasetService extends Service {
 	 * @return The newly created dataset.
 	 */
 	<T extends RealType<T> & NativeType<T>> Dataset create(T type, long[] dims,
-		String name, Axis<?>[] axes);
+		String name, Axis[] axes);
 
 	/**
 	 * Creates a new dataset using the provided {@link ImgFactory}.
@@ -110,7 +110,7 @@ public interface DatasetService extends Service {
 	 */
 	<T extends RealType<T>> Dataset create(
 ImgFactory<T> factory, T type,
-		long[] dims, String name, Axis<?>[] axes);
+		long[] dims, String name, Axis[] axes);
 
 	/**
 	 * Creates a new dataset using the provided {@link ImgPlus}.

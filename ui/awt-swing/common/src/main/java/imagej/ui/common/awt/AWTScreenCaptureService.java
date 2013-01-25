@@ -187,7 +187,7 @@ public class AWTScreenCaptureService
 		}
 		String name = "Image Capture";
 		final long[] dims;
-		final Axis<?>[] axes;
+		final Axis[] axes;
 		final int bpp;
 		if (bitsPerPixel == 24) {
 			dims = new long[]{width, height, 3};

@@ -95,7 +95,7 @@ public class GrayDisplayCreator implements DisplayCreator {
 
 	@Override
 	public ImageDisplay createDisplay(final ImagePlus imp,
-		final Axis<?>[] preferredOrder, boolean isBinaryImp)
+		final Axis[] preferredOrder, boolean isBinaryImp)
 	{
 		if (imp.getType() == ImagePlus.COLOR_RGB)
 			return colorCase(imp, preferredOrder, isBinaryImp);
@@ -105,7 +105,7 @@ public class GrayDisplayCreator implements DisplayCreator {
 	// -- private interface --
 
 	private ImageDisplay colorCase(final ImagePlus imp,
-		final Axis<?>[] preferredOrder,
+ final Axis[] preferredOrder,
 		@SuppressWarnings("unused") boolean isBinaryImp)
 	{
 		final Dataset ds = makeGrayDatasetFromColorImp(imp, preferredOrder);
@@ -128,7 +128,7 @@ public class GrayDisplayCreator implements DisplayCreator {
 	}
 
 	private ImageDisplay grayCase(final ImagePlus imp,
-		final Axis<?>[] preferredOrder, boolean isBinaryImp)
+		final Axis[] preferredOrder, boolean isBinaryImp)
 	{
 		Dataset ds;
 		if (preferredOrder[0].getType() == Axes.X &&
@@ -169,7 +169,7 @@ public class GrayDisplayCreator implements DisplayCreator {
 	 * not RGB.
 	 */
 	private Dataset makeGrayDatasetFromColorImp(final ImagePlus imp,
-		final Axis<?>[] preferredOrder)
+		final Axis[] preferredOrder)
 	{
 		final int x = imp.getWidth();
 		final int y = imp.getHeight();
@@ -183,7 +183,7 @@ public class GrayDisplayCreator implements DisplayCreator {
 		}
 
 		final int[] inputDims = new int[] { x, y, c * 3, z, t };
-		final Axis<?>[] axes = LegacyUtils.orderedAxes(preferredOrder, inputDims);
+		final Axis[] axes = LegacyUtils.orderedAxes(preferredOrder, inputDims);
 		final long[] dims = LegacyUtils.orderedDims(axes, inputDims);
 		final String name = imp.getTitle();
 		final int bitsPerPixel = 8;
@@ -256,7 +256,7 @@ public class GrayDisplayCreator implements DisplayCreator {
 	 * any kind of color ImagePlus. Does not set metadata of Dataset.
 	 */
 	private Dataset makeExactDataset(final ImagePlus imp,
-		final Axis<?>[] preferredOrder)
+		final Axis[] preferredOrder)
 	{
 		final int x = imp.getWidth();
 		final int y = imp.getHeight();
@@ -264,7 +264,7 @@ public class GrayDisplayCreator implements DisplayCreator {
 		final int z = imp.getNSlices();
 		final int t = imp.getNFrames();
 		final int[] inputDims = new int[] { x, y, c, z, t };
-		final Axis<?>[] axes = LegacyUtils.orderedAxes(preferredOrder, inputDims);
+		final Axis[] axes = LegacyUtils.orderedAxes(preferredOrder, inputDims);
 		final long[] dims = LegacyUtils.orderedDims(axes, inputDims);
 		final String name = imp.getTitle();
 		final int bitsPerPixel = imp.getBitDepth();
@@ -287,7 +287,7 @@ public class GrayDisplayCreator implements DisplayCreator {
 	 * metadata of Dataset.
 	 */
 	private Dataset makeGrayDatasetFromGrayImp(final ImagePlus imp,
-		final Axis<?>[] preferredOrder, boolean isBinaryImp)
+		final Axis[] preferredOrder, boolean isBinaryImp)
 	{
 		final int x = imp.getWidth();
 		final int y = imp.getHeight();
@@ -296,7 +296,7 @@ public class GrayDisplayCreator implements DisplayCreator {
 		final int t = imp.getNFrames();
 
 		final int[] inputDims = new int[] { x, y, c, z, t };
-		final Axis<?>[] axes = LegacyUtils.orderedAxes(preferredOrder, inputDims);
+		final Axis[] axes = LegacyUtils.orderedAxes(preferredOrder, inputDims);
 		final long[] dims = LegacyUtils.orderedDims(axes, inputDims);
 		final String name = imp.getTitle();
 

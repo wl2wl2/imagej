@@ -86,7 +86,7 @@ public class DefaultImageTranslator implements ImageTranslator {
 	 */
 	@Override
 	public ImageDisplay createDisplay(final ImagePlus imp,
-		final Axis<?>[] preferredOrder, boolean isBinaryImp)
+		final Axis[] preferredOrder, boolean isBinaryImp)
 	{
 
 		if ((imp.getType() == ImagePlus.COLOR_RGB) && (imp.getNChannels() == 1)) {

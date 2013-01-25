@@ -136,7 +136,7 @@ public class ShowLUT extends ContextCommand {
 		long[] dims = new long[]{326,188,3};
 		String name = "Look-Up Table";
 		AxisType[] axisTypes = new AxisType[] { Axes.X, Axes.Y, Axes.CHANNEL };
-		Axis<?>[] axes = AxisUtils.getDefaultAxes(axisTypes);
+		Axis[] axes = AxisUtils.getDefaultAxes(axisTypes);
 		int bitsPerPixel = 8;
 		boolean signed = false;
 		boolean floating = false;

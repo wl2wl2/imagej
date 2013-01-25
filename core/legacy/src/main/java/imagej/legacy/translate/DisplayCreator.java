@@ -55,7 +55,7 @@ public interface DisplayCreator {
 	 * do not send nonsense values as input. For instance isBinaryImp should never
 	 * fail to match actual imp.isBinary() value.
 	 */
-	ImageDisplay createDisplay(ImagePlus imp, Axis<?>[] preferredOrder,
+	ImageDisplay createDisplay(ImagePlus imp, Axis[] preferredOrder,
 		boolean isBinaryImp);
 
 }

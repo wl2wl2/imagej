@@ -201,7 +201,7 @@ public class AutoContrast extends ContextCommand {
 	// TODO - rewrite this ugly code unless we just throw this impl away
 
 	private int getNumChannels(final Dataset dataset) {
-		final Axis<?>[] axes = dataset.getAxes();
+		final Axis[] axes = dataset.getAxes();
 		for (int d = 0; d < axes.length; d++) {
 			if (axes[d].getLabel() == "Channel") {
 				return (int) dataset.getDims()[d];

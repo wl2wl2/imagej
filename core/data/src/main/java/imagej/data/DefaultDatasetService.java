@@ -106,7 +106,7 @@ public final class DefaultDatasetService extends AbstractService implements
 
 	@Override
 	public Dataset create(final long[] dims, final String name,
-		final Axis<?>[] axes, final int bitsPerPixel, final boolean signed,
+		final Axis[] axes, final int bitsPerPixel, final boolean signed,
 		final boolean floating)
 	{
 		if (bitsPerPixel == 1) {
@@ -147,7 +147,7 @@ public final class DefaultDatasetService extends AbstractService implements
 	@Override
 	public <T extends RealType<T> & NativeType<T>> Dataset create(
 final T type,
-		final long[] dims, final String name, final Axis<?>[] axes)
+		final long[] dims, final String name, final Axis[] axes)
 	{
 		final PlanarImgFactory<T> imgFactory = new PlanarImgFactory<T>();
 		return create(imgFactory, type, dims, name, axes);
@@ -156,7 +156,7 @@ final T type,
 	@Override
 	public <T extends RealType<T>> Dataset create(
 ImgFactory<T> factory, T type,
-		long[] dims, String name, Axis<?>[] axes)
+		long[] dims, String name, Axis[] axes)
 	{
 		final Img<T> img = factory.create(dims, type);
 		final ImgPlus<T> imgPlus = new ImgPlus<T>(img, name, axes);

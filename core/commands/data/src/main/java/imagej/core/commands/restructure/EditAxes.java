@@ -109,7 +109,7 @@ public class EditAxes extends DynamicCommand {
 		if (dataset == null) {
 			log.error("EditAxes plugin error: given a null dataset as input");
 		}
-		Axis<?>[] desiredAxes = getAxes();
+		Axis[] desiredAxes = getAxes();
 		if (inputBad(desiredAxes)) {
 			// error already logged
 			return;
@@ -144,14 +144,14 @@ public class EditAxes extends DynamicCommand {
 	/**
 	 * Gets the names of the axes in the order the user specified.
 	 */
-	private Axis<?>[] getAxes() {
-		Axis<?>[] axes = new Axis<?>[dataset.getImgPlus().numDimensions()];
+	private Axis[] getAxes() {
+		Axis[] axes = new Axis[dataset.getImgPlus().numDimensions()];
 		for (int i = 0; i < axes.length; i++) {
 			AxisType axisType = getAxis(i);
 			int index = dataset.getAxisIndex(axisType);
 			double scale =
 				(index < 0) ? Double.NaN : dataset.getImgPlus().axis(index).getScale();
-			Axis<?> axis = new LinearAxis(0, scale);
+			Axis axis = new LinearAxis(0, scale);
 			axis.setLabel(axisType.getLabel());
 			axes[i] = axis;
 		}
@@ -162,7 +162,7 @@ public class EditAxes extends DynamicCommand {
 	 * Returns true if user input is invalid. Basically this is a test that the
 	 * user did not repeat any axis when specifying the axis ordering.
 	 */
-	private boolean inputBad(Axis<?>[] axes) {
+	private boolean inputBad(Axis[] axes) {
 		for (int i = 0; i < axes.length; i++) {
 			for (int j = i+1; j < axes.length; j++) {
 				if (axes[i].getType().equals(axes[j].getType())) {

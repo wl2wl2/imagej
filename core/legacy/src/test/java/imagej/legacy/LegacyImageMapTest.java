@@ -87,7 +87,7 @@ public class LegacyImageMapTest {
 
 		Dataset ds0;
 		final ImagePlus imp1, imp2;
-		final Axis<?>[] axes =
+		final Axis[] axes =
 			AxisUtils.getDefaultAxes(new AxisType[] { Axes.X, Axes.Y, Axes.CHANNEL,
 				Axes.Z, Axes.TIME });
 

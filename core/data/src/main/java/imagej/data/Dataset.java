@@ -156,5 +156,5 @@ public interface Dataset extends Data, Metadata {
 	double getBytesOfInfo();
 
 	// TODO - move into Imglib
-	void setAxes(Axis<?>[] axes);
+	void setAxes(Axis[] axes);
 }
