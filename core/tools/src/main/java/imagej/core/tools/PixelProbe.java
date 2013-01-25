@@ -56,6 +56,8 @@ import net.imglib2.meta.Axes;
 public class PixelProbe extends AbstractTool {
 
 	private final PixelRecorder recorder = new PixelRecorder(false);
+	@SuppressWarnings("synthetic-access")
+	private final Amount amount = new Amount();
 
 	// -- Tool methods --
 
@@ -79,22 +81,14 @@ public class PixelProbe extends AbstractTool {
 		final int channelIndex = disp.getAxisIndex(Axes.CHANNEL);
 		final long cx = recorder.getCX();
 		final long cy = recorder.getCY();
-		double xVal = xAxis.getCalibratedMeasure(cx);
-		double yVal = yAxis.getCalibratedMeasure(cy);
 		ChannelCollection values = recorder.getValues();
 		StringBuilder builder = new StringBuilder();
 		builder.append("x=");
-		builder.append(String.format("%.2f", xVal));
-		if (UnitUtils.filterUnit(xAxis.getUnit()) != null) {
-			builder.append(" ");
-			builder.append(xAxis.getUnit());
-		}
+		amount(disp, xAxis, cx);
+		appendAmount(builder);
 		builder.append(", y=");
-		builder.append(String.format("%.2f", yVal));
-		if (UnitUtils.filterUnit(yAxis.getUnit()) != null) {
-			builder.append(" ");
-			builder.append(yAxis.getUnit());
-		}
+		amount(disp, yAxis, cy);
+		appendAmount(builder);
 		builder.append(", value=");
 		// single channel image
 		if ((channelIndex == -1) ||
@@ -126,4 +120,42 @@ public class PixelProbe extends AbstractTool {
 		return String.format("%f", value);
 	}
 
+	private class Amount {
+		double value;
+		String unit;
+	}
+
+	private void amount(ImageDisplay display, Axis axis, double uncalibratedVal)
+	{
+		amount.value = axis.getCalibratedMeasure(uncalibratedVal);
+		amount.unit = null;
+		String axisUnit = UnitUtils.filterUnit(axis.getUnit());
+		String displayUnit = UnitUtils.filterUnit(display.getUnit(axis.getType()));
+		if (axisUnit == null) {
+			// treat output as display units with no value scaling needed
+			amount.unit = displayUnit;
+		}
+		else { // axisUnit != null
+			if (displayUnit != null) {
+				// TODO - do some unit scale conversion here on the value. This will use
+				// the unit library that supports the Units Of Measurement API (Uomo or
+				// JScience or ?).
+				amount.unit = displayUnit;
+			}
+			else {
+				amount.unit = axisUnit;
+			}
+		}
+	}
+
+	// TODO - allow number of decimal places to be specified by user. There is
+	// likely a user pref / option already for this.
+
+	private void appendAmount(StringBuilder builder) {
+		builder.append(String.format("%.2f", amount.value));
+		if (amount.unit != null) {
+			builder.append(" ");
+			builder.append(amount.unit);
+		}
+	}
 }
