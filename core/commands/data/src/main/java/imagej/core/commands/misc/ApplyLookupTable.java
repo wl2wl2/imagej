@@ -42,7 +42,6 @@ import imagej.data.display.DatasetView;
 import imagej.data.display.ImageDisplay;
 import imagej.data.display.ImageDisplayService;
 import imagej.data.lut.LutService;
-import imagej.data.utils.AxisUtils;
 import imagej.display.DisplayService;
 import imagej.log.LogService;
 import imagej.module.ItemIO;
@@ -53,6 +52,7 @@ import java.net.URL;
 
 import net.imglib2.Axis;
 import net.imglib2.RandomAccess;
+import net.imglib2.axis.AxisUtils;
 import net.imglib2.display.ColorTable;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;

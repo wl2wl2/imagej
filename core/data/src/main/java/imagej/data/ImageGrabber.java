@@ -36,9 +36,9 @@
 package imagej.data;
 
 import imagej.data.display.DatasetView;
-import imagej.data.utils.AxisUtils;
 import net.imglib2.Axis;
 import net.imglib2.RandomAccess;
+import net.imglib2.axis.AxisUtils;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Axes;

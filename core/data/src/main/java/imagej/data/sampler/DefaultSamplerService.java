@@ -42,7 +42,6 @@ import imagej.data.display.ImageDisplay;
 import imagej.data.display.ImageDisplayService;
 import imagej.data.display.OverlayService;
 import imagej.data.overlay.Overlay;
-import imagej.data.utils.AxisUtils;
 import imagej.display.DisplayService;
 import imagej.plugin.Parameter;
 import imagej.plugin.Plugin;
@@ -55,6 +54,7 @@ import java.util.List;
 
 import net.imglib2.Axis;
 import net.imglib2.RandomAccess;
+import net.imglib2.axis.AxisUtils;
 import net.imglib2.display.ColorTable;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;

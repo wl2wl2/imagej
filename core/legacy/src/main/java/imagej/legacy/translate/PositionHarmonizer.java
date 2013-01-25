@@ -37,7 +37,7 @@ package imagej.legacy.translate;
 
 import ij.ImagePlus;
 import imagej.data.display.ImageDisplay;
-import imagej.data.utils.AxisUtils;
+import net.imglib2.axis.AxisUtils;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 

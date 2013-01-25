@@ -47,7 +47,6 @@ import imagej.data.overlay.BinaryMaskOverlay;
 import imagej.data.overlay.EllipseOverlay;
 import imagej.data.overlay.PolygonOverlay;
 import imagej.data.overlay.RectangleOverlay;
-import imagej.data.utils.AxisUtils;
 
 import java.awt.Transparency;
 import java.awt.color.ColorSpace;
@@ -59,6 +58,7 @@ import java.util.Random;
 import net.imglib2.Axis;
 import net.imglib2.RandomAccess;
 import net.imglib2.RealPoint;
+import net.imglib2.axis.AxisUtils;
 import net.imglib2.img.Img;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.img.array.ArrayImg;

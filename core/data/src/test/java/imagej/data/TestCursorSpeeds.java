@@ -37,9 +37,9 @@ package imagej.data;
 
 import static org.junit.Assert.assertTrue;
 import imagej.ImageJ;
-import imagej.data.utils.AxisUtils;
 import net.imglib2.Cursor;
 import net.imglib2.RandomAccess;
+import net.imglib2.axis.AxisUtils;
 import net.imglib2.img.Img;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;

@@ -40,7 +40,6 @@ import imagej.data.ChannelCollection;
 import imagej.data.Dataset;
 import imagej.data.DatasetService;
 import imagej.data.DrawingTool;
-import imagej.data.utils.AxisUtils;
 import imagej.module.ItemIO;
 import imagej.plugin.Parameter;
 import imagej.plugin.Plugin;
@@ -51,6 +50,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.imglib2.Axis;
+import net.imglib2.axis.AxisUtils;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 

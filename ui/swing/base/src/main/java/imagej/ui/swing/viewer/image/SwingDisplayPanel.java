@@ -43,7 +43,6 @@ import imagej.data.display.ImageDisplayService;
 import imagej.data.display.event.AxisPositionEvent;
 import imagej.data.display.event.DelayedPositionEvent;
 import imagej.data.display.event.LutsChangedEvent;
-import imagej.data.utils.AxisUtils;
 import imagej.event.EventHandler;
 import imagej.event.EventService;
 import imagej.event.EventSubscriber;
@@ -73,6 +72,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
+import net.imglib2.axis.AxisUtils;
 import net.imglib2.display.ColorTable;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;

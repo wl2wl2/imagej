@@ -38,7 +38,6 @@ package imagej.ui.common.awt;
 import imagej.data.Dataset;
 import imagej.data.DatasetService;
 import imagej.data.display.ScreenCaptureService;
-import imagej.data.utils.AxisUtils;
 import imagej.plugin.Parameter;
 import imagej.plugin.Plugin;
 import imagej.service.AbstractService;
@@ -53,6 +52,7 @@ import java.awt.image.Raster;
 
 import net.imglib2.Axis;
 import net.imglib2.RandomAccess;
+import net.imglib2.axis.AxisUtils;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;
 import net.imglib2.type.numeric.RealType;

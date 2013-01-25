@@ -44,7 +44,6 @@ import imagej.data.display.ColorTables;
 import imagej.data.display.DatasetView;
 import imagej.data.display.ImageDisplay;
 import imagej.data.display.ImageDisplayService;
-import imagej.data.utils.AxisUtils;
 import imagej.display.Display;
 import imagej.display.DisplayService;
 import imagej.menu.MenuConstants;
@@ -60,6 +59,7 @@ import imagej.util.Colors;
 import java.util.List;
 
 import net.imglib2.Axis;
+import net.imglib2.axis.AxisUtils;
 import net.imglib2.display.ColorTable;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;

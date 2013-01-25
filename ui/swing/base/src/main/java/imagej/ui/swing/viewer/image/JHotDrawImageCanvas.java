@@ -48,7 +48,6 @@ import imagej.data.display.event.DataViewDeselectedEvent;
 import imagej.data.display.event.DataViewSelectedEvent;
 import imagej.data.display.event.MouseCursorEvent;
 import imagej.data.display.event.PanZoomEvent;
-import imagej.data.utils.AxisUtils;
 import imagej.display.event.DisplayDeletedEvent;
 import imagej.event.EventHandler;
 import imagej.event.EventService;
@@ -91,6 +90,7 @@ import javax.swing.JScrollPane;
 
 import net.imglib2.Axis;
 import net.imglib2.RandomAccess;
+import net.imglib2.axis.AxisUtils;
 import net.imglib2.display.ARGBScreenImage;
 import net.imglib2.meta.Axes;
 import net.imglib2.meta.AxisType;

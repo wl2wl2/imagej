@@ -41,7 +41,6 @@ import imagej.data.ChannelCollection;
 import imagej.data.Dataset;
 import imagej.data.DatasetService;
 import imagej.data.DrawingTool;
-import imagej.data.utils.AxisUtils;
 import imagej.display.Display;
 import imagej.display.DisplayService;
 import imagej.io.IOService;
@@ -70,6 +69,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.imglib2.Axis;
+import net.imglib2.axis.AxisUtils;
 import net.imglib2.exception.IncompatibleTypeException;
 import net.imglib2.io.ImgIOException;
 import net.imglib2.meta.Axes;
