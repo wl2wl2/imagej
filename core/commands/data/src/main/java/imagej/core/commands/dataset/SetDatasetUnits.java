@@ -47,7 +47,7 @@ import imagej.plugin.Plugin;
 /**
  * @author Barry DeZonia
  */
-@Plugin(menuPath = "Image>Units>Set Data Units")
+@Plugin(menuPath = "Image>Units>Set Data Units", initializer = "init")
 public class SetDatasetUnits implements Command {
 
 	// -- Parameters --
@@ -55,10 +55,10 @@ public class SetDatasetUnits implements Command {
 	@Parameter
 	private Dataset dataset;
 
-	@Parameter(label = "X Axis Unit")
+	@Parameter(label = "X Axis Unit", persist = false)
 	private String xUnit;
 
-	@Parameter(label = "Y Axis Unit")
+	@Parameter(label = "Y Axis Unit", persist = false)
 	private String yUnit;
 
 	// -- Command methods --
@@ -67,6 +67,13 @@ public class SetDatasetUnits implements Command {
 	public void run() {
 		dataset.getImgPlus().axis(0).setUnit(xUnit);
 		dataset.getImgPlus().axis(1).setUnit(yUnit);
+	}
+
+	// -- helpers --
+
+	protected void init() {
+		xUnit = dataset.getImgPlus().axis(0).getUnit();
+		yUnit = dataset.getImgPlus().axis(1).getUnit();
 	}
 
 }
