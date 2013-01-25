@@ -372,7 +372,7 @@ public class DefaultDataset extends AbstractData implements Dataset {
 		boolean changes = false;
 		for (int i = 0; i < axes.length; i++) {
 			Axis axis = axes[i];
-			if (!imgPlus.axis(i).sameAs(axis)) {
+			if (!imgPlus.axis(i).equals(axis)) {
 				changes = true;
 				imgPlus.setAxis(axis, i);
 			}
@@ -382,7 +382,7 @@ public class DefaultDataset extends AbstractData implements Dataset {
 
 	@Override
 	public void setAxis(final Axis axis, final int d) {
-		if (imgPlus.axis(d).sameAs(axis)) return;
+		if (imgPlus.axis(d).equals(axis)) return;
 		imgPlus.setAxis(axis, d);
 		update(true); // TODO : false instead of true?
 		// Maybe we need more levels of discrimination with update(bool)
