@@ -128,7 +128,7 @@ public class SetDatasetUnits extends DynamicCommand {
 			final DefaultModuleItem<Double> axisItem =
 				new DefaultModuleItem<Double>(this, scaleLabel(axis), Double.class);
 			axisItem.setLabel(scaleLabel(axis));
-			axisItem.setValue(this, axis.getOrigin());
+			axisItem.setValue(this, axis.getScale(0, 1));
 			axisItem.setPersisted(false);
 			addInput(axisItem);
 		}
