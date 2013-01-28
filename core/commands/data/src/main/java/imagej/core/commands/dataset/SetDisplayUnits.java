@@ -35,38 +35,48 @@
 
 package imagej.core.commands.dataset;
 
-import imagej.command.Command;
+import imagej.command.DynamicCommand;
 import imagej.data.display.ImageDisplay;
+import imagej.module.DefaultModuleItem;
 import imagej.plugin.Parameter;
 import imagej.plugin.Plugin;
-import net.imglib2.meta.Axes;
-
-// TODO
-//   - list all axes of the ImageDisplay dynamically rather than just X & Y
+import net.imglib2.Axis;
 
 /**
  * @author Barry DeZonia
  */
-@Plugin(menuPath = "Image>Units>Set Display Units")
-public class SetDisplayUnits implements Command {
+@Plugin(menuPath = "Image>Units>Set Display Units", initializer = "initAxes")
+public class SetDisplayUnits extends DynamicCommand {
 
 	// -- Parameters --
 
 	@Parameter
 	private ImageDisplay display;
 
-	@Parameter(label = "X Axis Display Unit")
-	private String xUnit;
+	private Axis[] axes;
 
-	@Parameter(label = "Y Axis Display Unit")
-	private String yUnit;
 
 	// -- Command methods --
 
 	@Override
 	public void run() {
-		display.setUnit(Axes.X, xUnit);
-		display.setUnit(Axes.Y, yUnit);
+		for (int i = 0; i < axes.length; i++) {
+			String unitName = (String) getInput(axes[i].getLabel());
+			axes[i].setUnit(unitName);
+		}
 	}
 
+	// -- helpers --
+
+	protected void initAxes() {
+		axes = display.getAxes();
+		for (int i = 0; i < axes.length; i++) {
+			final DefaultModuleItem<String> axisItem =
+				new DefaultModuleItem<String>(this, axes[i].getLabel(), String.class);
+			axisItem.setLabel(axes[i].getLabel());
+			axisItem.setValue(this, axes[i].getUnit());
+			axisItem.setPersisted(false);
+			addInput(axisItem);
+		}
+	}
 }

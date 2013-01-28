@@ -35,45 +35,92 @@
 
 package imagej.core.commands.dataset;
 
-import imagej.command.Command;
+import imagej.command.DynamicCommand;
 import imagej.data.Dataset;
+import imagej.module.DefaultModuleItem;
 import imagej.plugin.Parameter;
 import imagej.plugin.Plugin;
-
-// TODO
-//   - list all axes of the Dataset dynamically rather than just X & Y
-//   - allow one to specify offsets and scales too
+import net.imglib2.Axis;
 
 /**
  * @author Barry DeZonia
  */
 @Plugin(menuPath = "Image>Units>Set Data Units", initializer = "init")
-public class SetDatasetUnits implements Command {
+public class SetDatasetUnits extends DynamicCommand {
 
 	// -- Parameters --
 
 	@Parameter
 	private Dataset dataset;
 
-	@Parameter(label = "X Axis Unit", persist = false)
-	private String xUnit;
+	private Axis[] axes;
 
-	@Parameter(label = "Y Axis Unit", persist = false)
-	private String yUnit;
 
 	// -- Command methods --
 
 	@Override
 	public void run() {
-		dataset.getImgPlus().axis(0).setUnit(xUnit);
-		dataset.getImgPlus().axis(1).setUnit(yUnit);
+		for (Axis axis : axes) {
+			String unitName = (String) getInput(unitLabel(axis));
+			double offset = (Double) getInput(offsetLabel(axis));
+			double scale = (Double) getInput(scaleLabel(axis));
+			axis.setUnit(unitName);
+			axis.setOffset(offset);
+			axis.setScale(scale);
+		}
 	}
 
 	// -- helpers --
 
 	protected void init() {
-		xUnit = dataset.getImgPlus().axis(0).getUnit();
-		yUnit = dataset.getImgPlus().axis(1).getUnit();
+		axes = dataset.getAxes();
+		setupUnitItems();
+		setupOffsetItems();
+		setupScaleItems();
 	}
 
+	private void setupUnitItems() {
+		for (Axis axis : axes) {
+			final DefaultModuleItem<String> axisItem =
+				new DefaultModuleItem<String>(this, unitLabel(axis), String.class);
+			axisItem.setLabel(unitLabel(axis));
+			axisItem.setValue(this, axis.getUnit());
+			axisItem.setPersisted(false);
+			addInput(axisItem);
+		}
+	}
+
+	private void setupOffsetItems() {
+		for (Axis axis : axes) {
+			final DefaultModuleItem<Double> axisItem =
+				new DefaultModuleItem<Double>(this, offsetLabel(axis), Double.class);
+			axisItem.setLabel(offsetLabel(axis));
+			axisItem.setValue(this, axis.getOffset());
+			axisItem.setPersisted(false);
+			addInput(axisItem);
+		}
+	}
+
+	private void setupScaleItems() {
+		for (Axis axis : axes) {
+			final DefaultModuleItem<Double> axisItem =
+				new DefaultModuleItem<Double>(this, scaleLabel(axis), Double.class);
+			axisItem.setLabel(scaleLabel(axis));
+			axisItem.setValue(this, axis.getScale());
+			axisItem.setPersisted(false);
+			addInput(axisItem);
+		}
+	}
+
+	private String unitLabel(Axis axis) {
+		return axis.getLabel() + " unit";
+	}
+
+	private String offsetLabel(Axis axis) {
+		return axis.getLabel() + " offset";
+	}
+
+	private String scaleLabel(Axis axis) {
+		return axis.getLabel() + " scale";
+	}
 }
