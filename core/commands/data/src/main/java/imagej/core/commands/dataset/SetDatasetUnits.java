@@ -42,6 +42,7 @@ import imagej.module.DefaultModuleItem;
 import imagej.plugin.Parameter;
 import imagej.plugin.Plugin;
 import net.imglib2.Axis;
+import net.imglib2.axis.LinearAxis;
 
 // TODO - this dialog could be redesigned. One could choose axis type (linear,
 // log, etc.). There would be Configure buttons per axis and it would fire the
@@ -81,8 +82,11 @@ public class SetDatasetUnits extends DynamicCommand {
 			double offset = (Double) getInput(offsetLabel(axis));
 			double scale = (Double) getInput(scaleLabel(axis));
 			axis.setUnit(unitName);
-			axis.setOffset(offset);
-			axis.setScale(scale);
+			if (axis instanceof LinearAxis) {
+				LinearAxis laxis = (LinearAxis) axis;
+				laxis.setOffset(offset);
+				laxis.setScale(scale);
+			}
 		}
 	}
 
@@ -113,7 +117,7 @@ public class SetDatasetUnits extends DynamicCommand {
 			final DefaultModuleItem<Double> axisItem =
 				new DefaultModuleItem<Double>(this, offsetLabel(axis), Double.class);
 			axisItem.setLabel(offsetLabel(axis));
-			axisItem.setValue(this, axis.getOffset());
+			axisItem.setValue(this, axis.getOrigin());
 			axisItem.setPersisted(false);
 			addInput(axisItem);
 		}
@@ -124,7 +128,7 @@ public class SetDatasetUnits extends DynamicCommand {
 			final DefaultModuleItem<Double> axisItem =
 				new DefaultModuleItem<Double>(this, scaleLabel(axis), Double.class);
 			axisItem.setLabel(scaleLabel(axis));
-			axisItem.setValue(this, axis.getScale());
+			axisItem.setValue(this, axis.getOrigin());
 			axisItem.setPersisted(false);
 			addInput(axisItem);
 		}

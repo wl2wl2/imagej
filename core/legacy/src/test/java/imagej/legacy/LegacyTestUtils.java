@@ -77,11 +77,11 @@ public class LegacyTestUtils {
 		final Calibration cal = imp.getCalibration();
 
 		assertEquals(ds.getName(), imp.getTitle());
-		assertEquals(ds.axis(xIndex).getScale(), cal.pixelWidth, 0);
-		assertEquals(ds.axis(yIndex).getScale(), cal.pixelHeight, 0);
-		assertEquals(ds.axis(cIndex).getScale(), 1, 0);
-		assertEquals(ds.axis(zIndex).getScale(), cal.pixelDepth, 0);
-		assertEquals(ds.axis(tIndex).getScale(), cal.frameInterval, 0);
+		assertEquals(ds.axis(xIndex).getScale(0, 1), cal.pixelWidth, 0);
+		assertEquals(ds.axis(yIndex).getScale(0, 1), cal.pixelHeight, 0);
+		assertEquals(ds.axis(cIndex).getScale(0, 1), 1, 0);
+		assertEquals(ds.axis(zIndex).getScale(0, 1), cal.pixelDepth, 0);
+		assertEquals(ds.axis(tIndex).getScale(0, 1), cal.frameInterval, 0);
 	}
 
 	public static void testSame(final Dataset ds, final ImagePlus imp) {

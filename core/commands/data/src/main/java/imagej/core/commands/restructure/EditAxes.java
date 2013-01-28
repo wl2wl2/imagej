@@ -150,7 +150,8 @@ public class EditAxes extends DynamicCommand {
 			AxisType axisType = getAxis(i);
 			int index = dataset.getAxisIndex(axisType);
 			double scale =
-				(index < 0) ? Double.NaN : dataset.getImgPlus().axis(index).getScale();
+				(index < 0) ? Double.NaN : dataset.getImgPlus().axis(index).getScale(0,
+					1);
 			Axis axis = new LinearAxis(0, scale);
 			axis.setLabel(axisType.getLabel());
 			axes[i] = axis;

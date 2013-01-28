@@ -96,11 +96,13 @@ public class LegacyImageMapTest {
 			datasetService.create(new long[] { 1, 2, 3, 4, 5 }, "temp", axes, 16,
 				false, false);
 		fill(ds0);
+		/* TODO BDZ this was removed because it was old
 		ds0.getImgPlus().axis(0).setScale(5);
 		ds0.getImgPlus().axis(1).setScale(6);
 		ds0.getImgPlus().axis(2).setScale(1);
 		ds0.getImgPlus().axis(3).setScale(7);
 		ds0.getImgPlus().axis(4).setScale(8);
+		*/
 		// CTR FIXME - Fix comparison tests.
 //		imp1 = map.registerDataset(ds0);
 //		Utils.testSame(ds0, imp1);
@@ -116,11 +118,13 @@ public class LegacyImageMapTest {
 			datasetService.create(new long[] { 1, 2, 3, 4, 5 }, "temp", axes, 8,
 				false, false);
 		fill(ds0);
+		/* TODO BDZ this was removed because it was old
 		ds0.getImgPlus().axis(0).setScale(5);
 		ds0.getImgPlus().axis(1).setScale(6);
 		ds0.getImgPlus().axis(2).setScale(1);
 		ds0.getImgPlus().axis(3).setScale(7);
 		ds0.getImgPlus().axis(4).setScale(8);
+		*/
 		ds0.setRGBMerged(true);
 		// CTR FIXME - Fix comparison tests.
 //		imp1 = map.registerDataset(ds0);

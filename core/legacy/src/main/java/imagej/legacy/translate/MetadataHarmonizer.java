@@ -67,40 +67,45 @@ public class MetadataHarmonizer implements DataHarmonizer {
 		if (xIndex >= 0) {
 			axis = imgPlus.axis(xIndex);
 			if (axis instanceof LinearAxis) {
-				axis.setScale(cal.pixelWidth);
-				axis.setOffset(cal.xOrigin);
-				axis.setUnit(cal.getXUnit());
+				LinearAxis laxis = (LinearAxis) axis;
+				laxis.setScale(cal.pixelWidth);
+				laxis.setOffset(cal.xOrigin);
+				laxis.setUnit(cal.getXUnit());
 			}
 		}
 		if (yIndex >= 0) {
 			axis = imgPlus.axis(yIndex);
 			if (axis instanceof LinearAxis) {
-				axis.setScale(cal.pixelHeight);
-				axis.setOffset(cal.yOrigin);
-				axis.setUnit(cal.getYUnit());
+				LinearAxis laxis = (LinearAxis) axis;
+				laxis.setScale(cal.pixelHeight);
+				laxis.setOffset(cal.yOrigin);
+				laxis.setUnit(cal.getYUnit());
 			}
 		}
 		// TODO - remove this next case?
 		if (cIndex >= 0) {
 			axis = imgPlus.axis(cIndex);
 			if (axis instanceof LinearAxis) {
-				axis.setScale(1);
+				LinearAxis laxis = (LinearAxis) axis;
+				laxis.setScale(1);
 			}
 		}
 		if (zIndex >= 0) {
 			axis = imgPlus.axis(zIndex);
 			if (axis instanceof LinearAxis) {
-				axis.setScale(cal.pixelDepth);
-				axis.setOffset(cal.zOrigin);
-				axis.setUnit(cal.getZUnit());
+				LinearAxis laxis = (LinearAxis) axis;
+				laxis.setScale(cal.pixelDepth);
+				laxis.setOffset(cal.zOrigin);
+				laxis.setUnit(cal.getZUnit());
 			}
 		}
 		if (tIndex >= 0) {
 			axis = imgPlus.axis(tIndex);
 			if (axis instanceof LinearAxis) {
-				axis.setScale(cal.frameInterval);
-				axis.setOffset(0);
-				axis.setUnit(cal.getTimeUnit());
+				LinearAxis laxis = (LinearAxis) axis;
+				laxis.setScale(cal.frameInterval);
+				laxis.setOffset(0);
+				laxis.setUnit(cal.getTimeUnit());
 			}
 		}
 		// no need to ds.update() - these calls should track that themselves
@@ -121,17 +126,19 @@ public class MetadataHarmonizer implements DataHarmonizer {
 		if (xIndex >= 0) {
 			axis = ds.axis(xIndex);
 			if (axis instanceof LinearAxis) {
-				cal.pixelWidth = axis.getScale();
-				cal.xOrigin = axis.getOffset();
-				cal.setXUnit(axis.getUnit());
+				LinearAxis laxis = (LinearAxis) axis;
+				cal.pixelWidth = laxis.getScale();
+				cal.xOrigin = laxis.getOffset();
+				cal.setXUnit(laxis.getUnit());
 			}
 		}
 		if (yIndex >= 0) {
 			axis = ds.axis(yIndex);
 			if (axis instanceof LinearAxis) {
-				cal.pixelHeight = axis.getScale();
-				cal.yOrigin = axis.getOffset();
-				cal.setYUnit(axis.getUnit());
+				LinearAxis laxis = (LinearAxis) axis;
+				cal.pixelHeight = laxis.getScale();
+				cal.yOrigin = laxis.getOffset();
+				cal.setYUnit(laxis.getUnit());
 			}
 		}
 		if (cIndex >= 0) {
@@ -140,16 +147,18 @@ public class MetadataHarmonizer implements DataHarmonizer {
 		if (zIndex >= 0) {
 			axis = ds.axis(zIndex);
 			if (axis instanceof LinearAxis) {
-				cal.pixelDepth = axis.getScale();
-				cal.zOrigin = axis.getOffset();
-				cal.setZUnit(axis.getUnit());
+				LinearAxis laxis = (LinearAxis) axis;
+				cal.pixelDepth = laxis.getScale();
+				cal.zOrigin = laxis.getOffset();
+				cal.setZUnit(laxis.getUnit());
 			}
 		}
 		if (tIndex >= 0) {
 			axis = ds.axis(tIndex);
 			if (axis instanceof LinearAxis) {
-				cal.frameInterval = axis.getScale();
-				cal.setTimeUnit(axis.getUnit());
+				LinearAxis laxis = (LinearAxis) axis;
+				cal.frameInterval = laxis.getScale();
+				cal.setTimeUnit(laxis.getUnit());
 			}
 		}
 	}
