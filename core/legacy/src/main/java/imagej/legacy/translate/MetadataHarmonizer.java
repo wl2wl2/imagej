@@ -39,6 +39,7 @@ import ij.ImagePlus;
 import ij.measure.Calibration;
 import imagej.data.Dataset;
 import net.imglib2.Axis;
+import net.imglib2.axis.LinearAxis;
 import net.imglib2.img.ImgPlus;
 import net.imglib2.meta.Axes;
 
@@ -65,31 +66,42 @@ public class MetadataHarmonizer implements DataHarmonizer {
 		Axis axis;
 		if (xIndex >= 0) {
 			axis = imgPlus.axis(xIndex);
-			axis.setScale(cal.pixelWidth);
-			axis.setOffset(cal.xOrigin);
-			axis.setUnit(cal.getXUnit());
+			if (axis instanceof LinearAxis) {
+				axis.setScale(cal.pixelWidth);
+				axis.setOffset(cal.xOrigin);
+				axis.setUnit(cal.getXUnit());
+			}
 		}
 		if (yIndex >= 0) {
 			axis = imgPlus.axis(yIndex);
-			axis.setScale(cal.pixelHeight);
-			axis.setOffset(cal.yOrigin);
-			axis.setUnit(cal.getYUnit());
+			if (axis instanceof LinearAxis) {
+				axis.setScale(cal.pixelHeight);
+				axis.setOffset(cal.yOrigin);
+				axis.setUnit(cal.getYUnit());
+			}
 		}
 		// TODO - remove this next case?
 		if (cIndex >= 0) {
-			imgPlus.axis(cIndex).setScale(1);
+			axis = imgPlus.axis(cIndex);
+			if (axis instanceof LinearAxis) {
+				axis.setScale(1);
+			}
 		}
 		if (zIndex >= 0) {
 			axis = imgPlus.axis(zIndex);
-			axis.setScale(cal.pixelDepth);
-			axis.setOffset(cal.zOrigin);
-			axis.setUnit(cal.getZUnit());
+			if (axis instanceof LinearAxis) {
+				axis.setScale(cal.pixelDepth);
+				axis.setOffset(cal.zOrigin);
+				axis.setUnit(cal.getZUnit());
+			}
 		}
 		if (tIndex >= 0) {
 			axis = imgPlus.axis(tIndex);
-			axis.setScale(cal.frameInterval);
-			axis.setOffset(0);
-			axis.setUnit(cal.getTimeUnit());
+			if (axis instanceof LinearAxis) {
+				axis.setScale(cal.frameInterval);
+				axis.setOffset(0);
+				axis.setUnit(cal.getTimeUnit());
+			}
 		}
 		// no need to ds.update() - these calls should track that themselves
 	}
@@ -108,29 +120,37 @@ public class MetadataHarmonizer implements DataHarmonizer {
 		Axis axis;
 		if (xIndex >= 0) {
 			axis = ds.axis(xIndex);
-			cal.pixelWidth = axis.getScale();
-			cal.xOrigin = axis.getOffset();
-			cal.setXUnit(axis.getUnit());
+			if (axis instanceof LinearAxis) {
+				cal.pixelWidth = axis.getScale();
+				cal.xOrigin = axis.getOffset();
+				cal.setXUnit(axis.getUnit());
+			}
 		}
 		if (yIndex >= 0) {
 			axis = ds.axis(yIndex);
-			cal.pixelHeight = axis.getScale();
-			cal.yOrigin = axis.getOffset();
-			cal.setYUnit(axis.getUnit());
+			if (axis instanceof LinearAxis) {
+				cal.pixelHeight = axis.getScale();
+				cal.yOrigin = axis.getOffset();
+				cal.setYUnit(axis.getUnit());
+			}
 		}
 		if (cIndex >= 0) {
 			// nothing to set on IJ1 side
 		}
 		if (zIndex >= 0) {
 			axis = ds.axis(zIndex);
-			cal.pixelDepth = axis.getScale();
-			cal.zOrigin = axis.getOffset();
-			cal.setZUnit(axis.getUnit());
+			if (axis instanceof LinearAxis) {
+				cal.pixelDepth = axis.getScale();
+				cal.zOrigin = axis.getOffset();
+				cal.setZUnit(axis.getUnit());
+			}
 		}
 		if (tIndex >= 0) {
 			axis = ds.axis(tIndex);
-			cal.frameInterval = axis.getScale();
-			cal.setTimeUnit(axis.getUnit());
+			if (axis instanceof LinearAxis) {
+				cal.frameInterval = axis.getScale();
+				cal.setTimeUnit(axis.getUnit());
+			}
 		}
 	}
 }
