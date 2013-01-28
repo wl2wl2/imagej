@@ -69,9 +69,9 @@ public class SetDisplayUnits extends DynamicCommand {
 
 	@Override
 	public void run() {
-		for (int i = 0; i < axes.length; i++) {
-			String unitName = (String) getInput(axes[i].getLabel());
-			axes[i].setUnit(unitName);
+		for (Axis axis : axes) {
+			String unitName = (String) getInput(axis.getLabel());
+			display.setUnit(axis.getType(), unitName);
 		}
 	}
 
@@ -79,11 +79,11 @@ public class SetDisplayUnits extends DynamicCommand {
 
 	protected void init() {
 		axes = display.getAxes();
-		for (int i = 0; i < axes.length; i++) {
+		for (Axis axis : axes) {
 			final DefaultModuleItem<String> axisItem =
-				new DefaultModuleItem<String>(this, axes[i].getLabel(), String.class);
-			axisItem.setLabel(axes[i].getLabel());
-			axisItem.setValue(this, axes[i].getUnit());
+				new DefaultModuleItem<String>(this, axis.getLabel(), String.class);
+			axisItem.setLabel(axis.getLabel());
+			axisItem.setValue(this, display.getUnit(axis.getType()));
 			axisItem.setPersisted(false);
 			addInput(axisItem);
 		}
