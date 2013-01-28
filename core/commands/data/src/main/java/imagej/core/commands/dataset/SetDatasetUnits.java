@@ -37,12 +37,26 @@ package imagej.core.commands.dataset;
 
 import imagej.command.DynamicCommand;
 import imagej.data.Dataset;
+import imagej.data.display.ImageDisplay;
 import imagej.module.DefaultModuleItem;
 import imagej.plugin.Parameter;
 import imagej.plugin.Plugin;
 import net.imglib2.Axis;
 
+// TODO - this dialog could be redesigned. One could choose axis type (linear,
+// log, etc.). There would be Configure buttons per axis and it would fire the
+// correct kind of dialog for the axis type. Right now this version supports
+// linear only and is like IJ1.
+
+// TODO - Make the dialog prettier (i.e. unitname, scale, offset on one line)
+
 /**
+ * Sets the calibration for the axes of a {@link Dataset}. The units can differ
+ * from those of the containing {@link ImageDisplay}.
+ * <p>
+ * The existence of display space units and data space units facilitates later
+ * conversions. Data space units are configured in {@link SetDisplayUnits}.
+ * 
  * @author Barry DeZonia
  */
 @Plugin(menuPath = "Image>Units>Set Data Units", initializer = "init")
@@ -52,6 +66,8 @@ public class SetDatasetUnits extends DynamicCommand {
 
 	@Parameter
 	private Dataset dataset;
+
+	// -- instance variables --
 
 	private Axis[] axes;
 
@@ -70,7 +86,7 @@ public class SetDatasetUnits extends DynamicCommand {
 		}
 	}
 
-	// -- helpers --
+	// -- initializer --
 
 	protected void init() {
 		axes = dataset.getAxes();
@@ -78,6 +94,8 @@ public class SetDatasetUnits extends DynamicCommand {
 		setupOffsetItems();
 		setupScaleItems();
 	}
+
+	// -- helpers --
 
 	private void setupUnitItems() {
 		for (Axis axis : axes) {

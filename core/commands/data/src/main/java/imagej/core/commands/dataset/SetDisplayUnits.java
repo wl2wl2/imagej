@@ -36,6 +36,7 @@
 package imagej.core.commands.dataset;
 
 import imagej.command.DynamicCommand;
+import imagej.data.Dataset;
 import imagej.data.display.ImageDisplay;
 import imagej.module.DefaultModuleItem;
 import imagej.plugin.Parameter;
@@ -43,15 +44,23 @@ import imagej.plugin.Plugin;
 import net.imglib2.Axis;
 
 /**
+ * Sets the units of a {@link ImageDisplay}. The units can differ from those of
+ * the underlying {@link Dataset}s.
+ * <p>
+ * The existence of display space units and data space units facilitates later
+ * conversions. Data space units are configured in {@link SetDatasetUnits}.
+ * 
  * @author Barry DeZonia
  */
-@Plugin(menuPath = "Image>Units>Set Display Units", initializer = "initAxes")
+@Plugin(menuPath = "Image>Units>Set Display Units", initializer = "init")
 public class SetDisplayUnits extends DynamicCommand {
 
 	// -- Parameters --
 
 	@Parameter
 	private ImageDisplay display;
+
+	// -- instance variables --
 
 	private Axis[] axes;
 
@@ -66,9 +75,9 @@ public class SetDisplayUnits extends DynamicCommand {
 		}
 	}
 
-	// -- helpers --
+	// -- initializer --
 
-	protected void initAxes() {
+	protected void init() {
 		axes = display.getAxes();
 		for (int i = 0; i < axes.length; i++) {
 			final DefaultModuleItem<String> axisItem =
