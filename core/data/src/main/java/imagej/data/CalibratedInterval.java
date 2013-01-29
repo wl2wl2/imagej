@@ -68,6 +68,7 @@ public interface CalibratedInterval extends CalibratedSpace, Interval, Named {
 	 * {@link Interval} will throw {@link UnsupportedOperationException}. Either
 	 * way, the methods of {@link RealInterval} will be usable.
 	 */
+	// TODO change to "isSampled"?
 	boolean isDiscrete();
 
 	/**

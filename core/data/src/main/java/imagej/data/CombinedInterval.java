@@ -100,6 +100,11 @@ public class CombinedInterval extends ArrayList<CalibratedInterval> implements
 		for (final CalibratedInterval interval : this) {
 			for (int d = 0; d < interval.numDimensions(); d++) {
 				final AxisType axis = interval.axis(d).getType();
+				// combining based on AxisType still makes sense! But... UNKNOWN
+				// always needs to be distinct, even if multiple UNKNOWN axes.
+				// AxisType may also need to declare its base unit, so that when
+				// setting an Axis unit that is incompatible, an exception is raised
+				// early. (Otherwise we may have exceptions attempting to combine here.)
 				if (!indices.containsKey(axis)) {
 					// new axis; add to mappings
 					final DimensionMapping mapping = new DimensionMapping();
@@ -179,6 +184,8 @@ public class CombinedInterval extends ArrayList<CalibratedInterval> implements
 
 	@Override
 	public void setAxis(final Axis axis, final int d) {
+		// TODO: use this to set the display units;
+		// does not propagate down into actual constituent data objects at all.
 		throw new UnsupportedOperationException();
 	}
 
