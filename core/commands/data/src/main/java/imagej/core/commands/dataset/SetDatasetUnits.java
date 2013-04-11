@@ -56,7 +56,7 @@ import net.imglib2.axis.LinearAxis;
  * from those of the containing {@link ImageDisplay}.
  * <p>
  * The existence of display space units and data space units facilitates later
- * conversions. Data space units are configured in {@link SetDisplayUnits}.
+ * conversions. Display space units are configured in {@link SetDisplayUnits}.
  * 
  * @author Barry DeZonia
  */
