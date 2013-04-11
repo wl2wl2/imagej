@@ -57,7 +57,7 @@ public class PixelProbe extends AbstractTool {
 
 	private final PixelRecorder recorder = new PixelRecorder(false);
 	@SuppressWarnings("synthetic-access")
-	private final Amount amount = new Amount();
+	private final Amount amnt = new Amount();
 
 	// -- Tool methods --
 
@@ -84,11 +84,11 @@ public class PixelProbe extends AbstractTool {
 		ChannelCollection values = recorder.getValues();
 		StringBuilder builder = new StringBuilder();
 		builder.append("x=");
-		amount(disp, xAxis, cx);
-		appendAmount(builder);
+		fillAmount(amnt, disp, xAxis, cx);
+		append(builder, amnt);
 		builder.append(", y=");
-		amount(disp, yAxis, cy);
-		appendAmount(builder);
+		fillAmount(amnt, disp, yAxis, cy);
+		append(builder, amnt);
 		builder.append(", value=");
 		// single channel image
 		if ((channelIndex == -1) ||
@@ -125,7 +125,8 @@ public class PixelProbe extends AbstractTool {
 		String unit;
 	}
 
-	private void amount(ImageDisplay display, Axis axis, double uncalibratedVal)
+	private void fillAmount(Amount amount, ImageDisplay display, Axis axis,
+		double uncalibratedVal)
 	{
 		amount.value = axis.getCalibratedMeasure(uncalibratedVal);
 		amount.unit = null;
@@ -151,7 +152,7 @@ public class PixelProbe extends AbstractTool {
 	// TODO - allow number of decimal places to be specified by user. There is
 	// likely a user pref / option already for this.
 
-	private void appendAmount(StringBuilder builder) {
+	private void append(StringBuilder builder, Amount amount) {
 		builder.append(String.format("%.2f", amount.value));
 		if (amount.unit != null) {
 			builder.append(" ");
