@@ -136,7 +136,15 @@ public abstract class AbstractSwingUI extends AbstractUserInterface {
 
 	@Override
 	public void dispose() {
-		if (appFrame != null) appFrame.dispose();
+		if (appFrame != null) {
+			appFrame.dispose();
+			appFrame = null;
+		}
+		/*
+		if (toolBar != null) {
+			toolBar.dispose();
+		}
+		*/
 	}
 
 	// -- Internal methods --

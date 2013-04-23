@@ -407,13 +407,17 @@ public final class DefaultLegacyService extends AbstractService implements
 			}
 
 			// close any remaining (non-image) windows
-			WindowManager.closeAllWindows();
+			if (!WindowManager.closeAllWindows()) {
+				log.warn("Could not close all windows");
+			}
 
 			// quit legacy ImageJ on the same thread
+			ij.exitWhenQuitting(false);
 			ij.run();
 		}
 
 		instance = null;
+		super.dispose();
 	}
 
 	// -- Event handlers --

@@ -441,6 +441,7 @@ public final class DefaultUIService extends AbstractService implements
 		for (int i = uis.size() - 1; i >= 0; i--) {
 			uis.get(i).dispose();
 		}
+		uiMap.clear();
 	}
 
 	// -- Event handlers --
@@ -525,6 +526,8 @@ public final class DefaultUIService extends AbstractService implements
 		final List<PluginInfo<UserInterface>> infos =
 			pluginService.getPluginsOfType(UserInterface.class);
 		for (final PluginInfo<UserInterface> info : infos) {
+			// if (info.getClassName().equals("imagej.ui.swing.mdi.SwingMdiUI"))
+			// continue;
 			// instantiate user interface
 			final UserInterface ui = pluginService.createInstance(info);
 			if (ui == null) continue;

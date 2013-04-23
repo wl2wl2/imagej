@@ -150,6 +150,16 @@ public class DefaultMenuService extends AbstractService implements MenuService
 		addModules(allModules);
 	}
 
+	/*
+	@Override
+	public void dispose() {
+		for (ShadowMenu menu : rootMenus.values()) {
+			menu.clear();
+		}
+		rootMenus.clear();
+	}
+	*/
+
 	// -- Event handlers --
 
 	@EventHandler

@@ -90,6 +90,13 @@ public class SwingApplicationFrame extends JFrame implements ApplicationFrame {
 		});
 	}
 
+	@Override
+	public void dispose() {
+		setMenuBar(null);
+		setJMenuBar(null);
+		super.dispose();
+	}
+
 	// -- Helper methods --
 
 	/** Recursively listens for keyboard events on the given component. */
