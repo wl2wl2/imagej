@@ -85,12 +85,13 @@ public class QuitProgram extends ContextCommand {
 		if (statusService != null) {
 			statusService.showStatus("Quitting...");
 		}
+
 		getContext().dispose();
 
 		// CTR: FIXME: Do not kill the entire JVM!
 		// We do this only temporarily, until bugs in context disposal
 		// (specifically in DefaultUIService and friends) are solved.
-		System.exit(0);
+		// System.exit(0);
 	}
 
 	private boolean promptForQuit() {
