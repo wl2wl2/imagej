@@ -55,7 +55,7 @@ public abstract class AbstractPlanarCommand implements PlanarCommand {
   private DatasetView view;
   
   @Parameter
-  private Boolean useCurrentPlane;
+  private Boolean doWholeDataset;
 
   // -- Runnable API Methods --
   
@@ -63,7 +63,7 @@ public abstract class AbstractPlanarCommand implements PlanarCommand {
   public void run() {
     RandomAccessibleInterval<?> img = getView().getData().getImgPlus();
 
-    if (useCurrentPlane) {
+    if (isPlanar()) {
       
       // assume x,y are first
       for (int i=2; i<img.numDimensions(); i++) {
@@ -82,7 +82,7 @@ public abstract class AbstractPlanarCommand implements PlanarCommand {
   
   @Override
   public Boolean isPlanar() {
-   return useCurrentPlane; 
+   return !doWholeDataset; 
   }
   
   @Override
@@ -92,6 +92,6 @@ public abstract class AbstractPlanarCommand implements PlanarCommand {
   
   @Override
   public void setPlanar(Boolean planar) {
-    useCurrentPlane = planar;
+    doWholeDataset = !planar;
   }
 }
