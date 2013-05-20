@@ -36,9 +36,7 @@
 package imagej.data.commands;
 
 import imagej.data.display.DatasetView;
-
 import net.imglib2.RandomAccessibleInterval;
-import net.imglib2.img.ImgPlus;
 import net.imglib2.view.Views;
 
 import org.scijava.plugin.Parameter;
@@ -63,21 +61,16 @@ public abstract class AbstractPlanarCommand implements PlanarCommand {
   
   @Override
   public void run() {
-    ImgPlus<?> img = getView().getData().getImgPlus();
+    RandomAccessibleInterval<?> img = getView().getData().getImgPlus();
 
     if (useCurrentPlane) {
       
       // assume x,y are first
-      RandomAccessibleInterval<?> view = img;
-      
       for (int i=2; i<img.numDimensions(); i++) {
-        view = Views.hyperSlice(view, i, getView().getLongPosition(i));
+        img = Views.hyperSlice(img, i, getView().getLongPosition(i));
       }
-      
-      run(view);
     }
-    else
-      run(img);
+    run(img);
   }
   
   // -- PlanarCommand API methods --
