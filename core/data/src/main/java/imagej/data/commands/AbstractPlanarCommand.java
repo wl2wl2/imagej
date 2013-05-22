@@ -39,6 +39,7 @@ import imagej.data.display.DatasetView;
 import net.imglib2.RandomAccessibleInterval;
 import net.imglib2.view.Views;
 
+import org.scijava.ItemIO;
 import org.scijava.plugin.Parameter;
 
 /**
@@ -51,10 +52,10 @@ public abstract class AbstractPlanarCommand implements PlanarCommand {
   
   // -- Parameters --
   
-  @Parameter
+  @Parameter(type = ItemIO.BOTH, callback = "viewChanged")
   private DatasetView view;
   
-  @Parameter
+  @Parameter(label = "Process Dataset", persist = false)
 	private boolean doWholeDataset;
 
   // -- Runnable API Methods --
