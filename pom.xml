@@ -1,121 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<modelVersion>4.0.0</modelVersion>
 
-	<parent>
+<parent>
 		<groupId>org.scijava</groupId>
 		<artifactId>pom-scijava</artifactId>
 		<version>1.48</version>
 		<relativePath />
 	</parent>
 
-	<groupId>net.imagej</groupId>
-	<artifactId>pom-ij-base</artifactId>
-	<version>2.0.0-SNAPSHOT</version>
-	<packaging>pom</packaging>
+<groupId>net.imagej</groupId>
+<artifactId>pom-ij-base</artifactId>
+<version>2.0.0-SNAPSHOT</version>
+<packaging>pom</packaging>
 
-	<name>ImageJ Projects</name>
-	<description>ImageJ is an open source Java image processing program inspired by NIH Image for the Macintosh.</description>
-	<url>http://developer.imagej.net/</url>
-	<inceptionYear>1997</inceptionYear>
-
-	<modules>
-		<module>app</module>
-		<module>core</module>
-		<module>minimaven</module>
-		<module>plugins</module>
-		<module>ui</module>
-	</modules>
-
-	<properties>
-		<project.rootdir>${basedir}</project.rootdir>
-		<miglayout.version>3.7.3.1</miglayout.version>
-	</properties>
-
-	<build>
-		<plugins>
-			<plugin>
-				<artifactId>maven-source-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>com.googlecode.maven-java-formatter-plugin</groupId>
-				<artifactId>maven-java-formatter-plugin</artifactId>
-				<version>0.3.1</version>
-				<configuration>
-					<configFile>${project.rootdir}/config/eclipse-code-formatter-profile.xml</configFile>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>buildnumber-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-				<configuration>
-					<licenseName>imagej</licenseName>
-					<licenseResolver>file://${project.rootdir}/license</licenseResolver>
-					<inceptionYear>2009</inceptionYear>
-					<organizationName>Board of Regents of the University of
-Wisconsin-Madison, Broad Institute of MIT and Harvard, and Max Planck
-Institute of Molecular Cell Biology and Genetics.</organizationName>
-					<projectName>ImageJ software for multidimensional image processing and analysis.</projectName>
-					<addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
-					<canUpdateDescription>true</canUpdateDescription>
-					<canUpdateCopyright>true</canUpdateCopyright>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>tidy-maven-plugin</artifactId>
-				<version>1.0-beta-1-SNAPSHOT</version>
-			</plugin>
-			<plugin>
-				<groupId>org.fusesource.mvnplugins</groupId>
-				<artifactId>maven-graph-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<artifactId>maven-jar-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>test-jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<!--
-			 Sometimes, one needs to pass JVM options to the JVM
-			 running the unit tests, such as -verbose:class or
-			 -Djava.awt.headless=true.
-
-			 Unfortunately, maven-surefire does not expose a
-			 command-line interface to do so, therefore let's
-			 simulate it by re-using the property 'argLine' to
-			 specify those options.
-			 -->
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<argLine>${argLine}</argLine>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
-	<licenses>
+<name>ImageJ Projects</name>
+<description>ImageJ is an open source Java image processing program inspired by NIH Image for the Macintosh.</description>
+<url>http://developer.imagej.net/</url>
+<inceptionYear>1997</inceptionYear>
+<organization>
+		<name>ImageJDev.org</name>
+		<url>http://developer.imagej.net/</url>
+	</organization>
+<licenses>
 		<license>
 			<name>Simplified BSD License</name>
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
 
-	<organization>
-		<name>ImageJDev.org</name>
-		<url>http://developer.imagej.net/</url>
-	</organization>
-
-	<developers>
+<developers>
 		<developer>
 			<id>rasband</id>
 			<name>Wayne Rasband</name>
@@ -204,8 +118,7 @@ Institute of Molecular Cell Biology and Genetics.</organizationName>
 			<timezone>-5</timezone>
 		</developer>
 	</developers>
-
-	<contributors>
+<contributors>
 		<contributor>
 			<name>Grant Harris</name>
 			<email>gharris@mbl.edu</email>
@@ -251,17 +164,7 @@ Institute of Molecular Cell Biology and Genetics.</organizationName>
 		</contributor>
 	</contributors>
 
-	<issueManagement>
-		<system>Trac</system>
-		<url>http://trac.imagej.net/</url>
-	</issueManagement>
-
-	<ciManagement>
-		<system>Jenkins</system>
-		<url>http://jenkins.imagej.net/</url>
-	</ciManagement>
-
-	<mailingLists>
+<mailingLists>
 		<mailingList>
 			<name>ImageJ</name>
 			<subscribe>http://imagej.net/list.html</subscribe>
@@ -285,15 +188,35 @@ Institute of Molecular Cell Biology and Genetics.</organizationName>
 		</mailingList>
 	</mailingLists>
 
-	<scm>
+<modules>
+		<module>app</module>
+		<module>core</module>
+		<module>minimaven</module>
+		<module>plugins</module>
+		<module>ui</module>
+	</modules>
+
+<scm>
 		<connection>scm:git:git://github.com/imagej/imagej</connection>
 		<developerConnection>scm:git:git@github.com:imagej/imagej</developerConnection>
 		<tag>HEAD</tag>
 		<url>https://github.com/imagej/imagej</url>
 	</scm>
+<issueManagement>
+		<system>Trac</system>
+		<url>http://trac.imagej.net/</url>
+	</issueManagement>
+<ciManagement>
+		<system>Jenkins</system>
+		<url>http://jenkins.imagej.net/</url>
+	</ciManagement>
 
-	<!-- NB: for project parent -->
-	<repositories>
+<properties>
+		<project.rootdir>${basedir}</project.rootdir>
+		<miglayout.version>3.7.3.1</miglayout.version>
+	</properties>
+<!-- NB: for project parent -->
+<repositories>
 		<repository>
 			<id>imagej.releases</id>
 			<url>http://maven.imagej.net/content/repositories/releases</url>
@@ -303,8 +226,7 @@ Institute of Molecular Cell Biology and Genetics.</organizationName>
 			<url>http://maven.imagej.net/content/repositories/snapshots</url>
 		</repository>
 	</repositories>
-
-	<pluginRepositories>
+<pluginRepositories>
 		<pluginRepository>
 			<id>Codehaus Snapshots</id>
 			<url>http://nexus.codehaus.org/snapshots/</url>
@@ -316,5 +238,76 @@ Institute of Molecular Cell Biology and Genetics.</organizationName>
 			</releases>
 		</pluginRepository>
 	</pluginRepositories>
+
+<build>
+<plugins>
+			<plugin>
+				<artifactId>maven-source-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>com.googlecode.maven-java-formatter-plugin</groupId>
+				<artifactId>maven-java-formatter-plugin</artifactId>
+				<version>0.3.1</version>
+				<configuration>
+					<configFile>${project.rootdir}/config/eclipse-code-formatter-profile.xml</configFile>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>buildnumber-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<configuration>
+					<licenseName>imagej</licenseName>
+					<licenseResolver>file://${project.rootdir}/license</licenseResolver>
+					<inceptionYear>2009</inceptionYear>
+					<organizationName>Board of Regents of the University of
+Wisconsin-Madison, Broad Institute of MIT and Harvard, and Max Planck
+Institute of Molecular Cell Biology and Genetics.</organizationName>
+					<projectName>ImageJ software for multidimensional image processing and analysis.</projectName>
+					<addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+					<canUpdateDescription>true</canUpdateDescription>
+					<canUpdateCopyright>true</canUpdateCopyright>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>tidy-maven-plugin</artifactId>
+				<version>1.0-beta-1-SNAPSHOT</version>
+			</plugin>
+			<plugin>
+				<groupId>org.fusesource.mvnplugins</groupId>
+				<artifactId>maven-graph-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>test-jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!--
+			 Sometimes, one needs to pass JVM options to the JVM
+			 running the unit tests, such as -verbose:class or
+			 -Djava.awt.headless=true.
+
+			 Unfortunately, maven-surefire does not expose a
+			 command-line interface to do so, therefore let's
+			 simulate it by re-using the property 'argLine' to
+			 specify those options.
+			 -->
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<argLine>${argLine}</argLine>
+				</configuration>
+			</plugin>
+		</plugins>
+</build>
 
 </project>

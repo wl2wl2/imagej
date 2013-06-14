@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<modelVersion>4.0.0</modelVersion>
 
-	<parent>
+<parent>
 		<groupId>net.imagej</groupId>
 		<artifactId>pom-ij-base</artifactId>
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>pom-ij-plugins</artifactId>
-	<packaging>pom</packaging>
+<artifactId>pom-ij-plugins</artifactId>
+<packaging>pom</packaging>
 
-	<name>ImageJ POM: Plugins</name>
-	<description>Built-in ImageJ plugins.</description>
+<name>ImageJ POM: Plugins</name>
+<description>Built-in ImageJ plugins.</description>
 
-	<modules>
+<modules>
 		<module>commands</module>
 		<module>platforms</module>
 		<module>scripting</module>
@@ -24,12 +24,11 @@
 		<module>uploaders</module>
 	</modules>
 
-	<properties>
+<properties>
 		<project.rootdir>${basedir}/..</project.rootdir>
 	</properties>
-
-	<!-- NB: for project parent, in case of partial checkout -->
-	<repositories>
+<!-- NB: for project parent, in case of partial checkout -->
+<repositories>
 		<repository>
 			<id>imagej.releases</id>
 			<url>http://maven.imagej.net/content/repositories/releases</url>

@@ -1,19 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<modelVersion>4.0.0</modelVersion>
 
-	<parent>
+<parent>
 		<groupId>net.imagej</groupId>
 		<artifactId>pom-ij-scripting</artifactId>
 		<version>2.0.0-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>ij-scripting-java</artifactId>
+<artifactId>ij-scripting-java</artifactId>
 
-	<name>A script engine for Java</name>
-	<description>Pretends that Java is a script language and offers it via the script framework of ImageJ</description>
+<name>A script engine for Java</name>
+<description>Pretends that Java is a script language and offers it via the script framework of ImageJ</description>
 
-	<dependencies>
+<properties>
+		<project.rootdir>${basedir}/../../..</project.rootdir>
+	</properties>
+<!-- NB: for project parent, in case of partial checkout -->
+<repositories>
+		<repository>
+			<id>imagej.releases</id>
+			<url>http://maven.imagej.net/content/repositories/releases</url>
+		</repository>
+		<repository>
+			<id>imagej.snapshots</id>
+			<url>http://maven.imagej.net/content/repositories/snapshots</url>
+		</repository>
+	</repositories>
+
+<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>ij-core</artifactId>
@@ -34,12 +49,8 @@
 		</dependency>
 	</dependencies>
 
-	<properties>
-		<project.rootdir>${basedir}/../../..</project.rootdir>
-	</properties>
-
-	<build>
-		<plugins>
+<build>
+<plugins>
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
@@ -52,11 +63,10 @@
 				</configuration>
 			</plugin>
 		</plugins>
-	</build>
-
-	<!-- NB: Enable dependency on tools.jar. See:
+</build>
+<!-- NB: Enable dependency on tools.jar. See:
 	     http://maven.apache.org/general.html#tools-jar-dependency -->
-	<profiles>
+<profiles>
 		<profile>
 			<id>tools-jar</id> <!-- required for MiniMaven -->
 			<activation>
@@ -76,17 +86,4 @@
 			</dependencies>
 		</profile>
 	</profiles>
-
-	<!-- NB: for project parent, in case of partial checkout -->
-	<repositories>
-		<repository>
-			<id>imagej.releases</id>
-			<url>http://maven.imagej.net/content/repositories/releases</url>
-		</repository>
-		<repository>
-			<id>imagej.snapshots</id>
-			<url>http://maven.imagej.net/content/repositories/snapshots</url>
-		</repository>
-	</repositories>
-
 </project>
