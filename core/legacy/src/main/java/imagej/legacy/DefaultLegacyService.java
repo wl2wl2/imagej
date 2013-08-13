@@ -296,32 +296,43 @@ Timing.stop(timing);
 
 	@Override
 	public void initialize() {
+Timing timing = Timing.start(true);
 		checkInstance();
+Timing.tick(timing);
 
 		ij1Helper = new IJ1Helper(this);
+Timing.tick(timing);
 		boolean hasIJ1Instance = ij1Helper.hasInstance();
+Timing.tick(timing);
 
 		// as long as we're starting up, we're in legacy mode
 		legacyIJ1Mode = true;
 
 		imageMap = new LegacyImageMap(this);
+Timing.tick(timing);
 		optionsSynchronizer = new OptionsSynchronizer(optionsService);
+Timing.tick(timing);
 
 		synchronized (DefaultLegacyService.class) {
 			checkInstance();
 			instance = this;
 			legacyInjector.setLegacyService(this);
 		}
+Timing.tick(timing);
 
 		ij1Helper.initialize();
+Timing.tick(timing);
 
 		SwitchToModernMode.registerMenuItem();
+Timing.tick(timing);
 
 		// discover legacy plugins
 		final boolean enableBlacklist = true;
 		addLegacyCommands(enableBlacklist);
+Timing.tick(timing);
 
 		if (!hasIJ1Instance && !GraphicsEnvironment.isHeadless()) toggleLegacyMode(false, true);
+Timing.stop(timing);
 	}
 
 	// -- Disposable methods --
