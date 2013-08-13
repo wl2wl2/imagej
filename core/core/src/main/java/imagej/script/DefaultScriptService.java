@@ -174,7 +174,15 @@ public class DefaultScriptService extends AbstractService implements ScriptServi
 		{
 			final ScriptEngineFactory language = pluginService.createInstance(item);
 			if (language == null) continue;
-			scriptLanguageIndex.add(language, false);
+			try {
+				scriptLanguageIndex.add(language, false);
+			} catch (IllegalArgumentException e) {
+				if (log.isDebug()) {
+					log.debug(e);
+				} else {
+					log.warn("Skipping " + language.getEngineName() + ": " + e.getMessage());
+				}
+			}
 		}
 
 		/*

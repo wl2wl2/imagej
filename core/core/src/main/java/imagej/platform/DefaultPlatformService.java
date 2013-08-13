@@ -185,10 +185,12 @@ public final class DefaultPlatformService extends
 		final List<Platform> platforms = new ArrayList<Platform>();
 		final List<PluginInfo<Platform>> infos =
 			getPluginService().getPluginsOfType(Platform.class);
-		for (final PluginInfo<Platform> info : infos) {
+		for (final PluginInfo<Platform> info : infos) try {
 			final Platform platform = getPluginService().createInstance(info);
 			if (!platform.isTarget()) continue;
 			platforms.add(platform);
+		} catch (Throwable t) {
+			log.debug("Skipping platform " + info.getPluginClass(), t);
 		}
 		return platforms;
 	}
