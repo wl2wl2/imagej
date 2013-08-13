@@ -135,7 +135,7 @@ System.err.println("Yes");
 	 * @return The newly launched ImageJ instance.
 	 */
 	public static ImageJ launch(final String... args) {
-final Timing timing = Timing.start(true);
+final Timing timing = Timing.start(!true);
 Thread.currentThread().setContextClassLoader(Main.class.getClassLoader());
 Timing.tick(timing);
 //patch();

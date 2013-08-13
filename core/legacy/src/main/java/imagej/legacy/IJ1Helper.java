@@ -69,6 +69,7 @@ import org.scijava.Context;
 import org.scijava.event.EventHandler;
 import org.scijava.log.LogService;
 import org.scijava.plugin.Parameter;
+import org.scijava.util.Timing;
 
 /**
  * A helper class to interact with ImageJ 1.x.
@@ -99,18 +100,25 @@ public class IJ1Helper extends AbstractContextual {
 	}
 
 	public void initialize() {
+Timing timing = Timing.start(true);
 		// initialize legacy ImageJ application
 		if (IJ.getInstance() == null && !GraphicsEnvironment.isHeadless()) try {
+Timing.tick(timing);
 			new ImageJ(ImageJ.NO_SHOW);
+Timing.tick(timing);
 		}
 		catch (final Throwable t) {
 			log.warn("Failed to instantiate IJ1.", t);
+Timing.tick(timing);
 		} else {
 			final LegacyImageMap imageMap = legacyService.getImageMap();
+Timing.tick(timing);
 			for (int i = 1; i <= WindowManager.getImageCount(); i++) {
 				imageMap.registerLegacyImage(WindowManager.getImage(i));
 			}
+Timing.tick(timing);
 		}
+Timing.stop(timing);
 	}
 
 	public void dispose() {
