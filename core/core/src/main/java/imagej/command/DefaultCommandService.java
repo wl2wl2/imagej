@@ -60,6 +60,7 @@ import org.scijava.plugin.event.PluginsAddedEvent;
 import org.scijava.plugin.event.PluginsRemovedEvent;
 import org.scijava.service.Service;
 import org.scijava.util.ListUtils;
+import org.scijava.util.Timing;
 
 /**
  * Default service for working with {@link Command}s. Available commands are
@@ -226,14 +227,22 @@ public class DefaultCommandService extends AbstractPTService<Command> implements
 
 	// -- Service methods --
 
+private Timing timing;
 	@Override
 	public void initialize() {
+timing = new Timing();
+long t1 = System.nanoTime();
 		commandMap = new HashMap<PluginInfo<?>, CommandInfo>();
+timing.addTiming(System.nanoTime() - t1, "Here!");
+t1 = System.nanoTime();
 
 		// inform the module service of available commands
 		final List<PluginInfo<Command>> plugins =
 			pluginService.getPluginsOfType(Command.class);
+timing.addTiming(System.nanoTime() - t1, "Also");
 		addCommands(plugins);
+timing.report("init command service");
+timing = null;
 	}
 
 	// -- Event handlers --
@@ -288,15 +297,19 @@ public class DefaultCommandService extends AbstractPTService<Command> implements
 		// extract commands from the list of plugins
 		final List<CommandInfo> commands = new ArrayList<CommandInfo>();
 		for (final PluginInfo<Command> info : plugins) {
+long t1 = System.nanoTime();
 			final CommandInfo commandInfo = wrapAsCommand(info);
 			commands.add(commandInfo);
 
 			// record association between plugin info and derived command info
 			commandMap.put(info, commandInfo);
+if (timing != null) timing.addTiming(System.nanoTime() - t1, info.getClassName());
 		}
 
 		// add extracted commands to the module service
+if (timing != null) timing.reset();
 		moduleService.addModules(commands);
+if (timing != null) timing.addTiming("added modules");
 	}
 
 	/** Removes old commands from the module service. */

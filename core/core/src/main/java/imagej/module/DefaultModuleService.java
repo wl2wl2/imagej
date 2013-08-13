@@ -58,6 +58,7 @@ import org.scijava.service.AbstractService;
 import org.scijava.service.Service;
 import org.scijava.thread.ThreadService;
 import org.scijava.util.ClassUtils;
+import org.scijava.util.Timing;
 
 /**
  * Default service for keeping track of and executing available modules.
@@ -109,9 +110,14 @@ public class DefaultModuleService extends AbstractService implements
 
 	@Override
 	public void addModules(final Collection<? extends ModuleInfo> modules) {
+Timing timing = new Timing();
 		if (moduleIndex.addAll(modules)) {
+timing.addTiming(null);
 			eventService.publish(new ModulesAddedEvent(modules));
 		}
+timing.addTiming(null);
+timing.report("addModules");
+timing = null;
 	}
 
 	@Override
