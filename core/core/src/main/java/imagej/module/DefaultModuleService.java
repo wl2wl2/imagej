@@ -113,7 +113,9 @@ public class DefaultModuleService extends AbstractService implements
 Timing timing = new Timing();
 		if (moduleIndex.addAll(modules)) {
 timing.addTiming(null);
-			eventService.publish(new ModulesAddedEvent(modules));
+System.err.println("consumers: " + eventService.getSubscribers(ModulesAddedEvent.class));
+timing.addTiming(null);
+			eventService.publishLater(new ModulesAddedEvent(modules));
 		}
 timing.addTiming(null);
 timing.report("addModules");

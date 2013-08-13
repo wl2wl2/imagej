@@ -35,12 +35,18 @@
 
 package imagej;
 
+import java.util.List;
+
+import org.scijava.util.Timing;
+
 import fiji.PerformanceProfiler;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
 import javassist.CtBehavior;
 import javassist.CtClass;
+import javassist.CtField;
+import javassist.Modifier;
 import javassist.expr.ExprEditor;
 import javassist.expr.MethodCall;
 
@@ -91,6 +97,24 @@ System.err.println("Yes");
 			b2.insertAfter("imagej.Main.cumulative +=  " + millis);
 		}
 
+		c = cp.get("org.bushe.swing.event.ThreadSafeEventService");
+		b = c.getDeclaredMethod("publish", new CtClass[] {
+				cp.get("java.lang.Object"), cp.get("java.lang.String"), cp.get("java.lang.Object"),
+				cp.get("java.util.List"), cp.get("java.util.List"), cp.get("java.lang.StackTraceElement[]")
+		});
+		CtField f = new CtField(cp.get("org.scijava.util.Timing"), "timing", c);
+		f.setModifiers(Modifier.STATIC);
+		c.addField(f);
+		b.insertBefore("this.timing = org.scijava.util.Timing.start($1.getClass().getName().endsWith(\"ModulesAddedEvent\"));");
+		b.instrument(new ExprEditor() {
+			@Override
+			public void edit(final MethodCall call) throws CannotCompileException {
+				call.replace("org.scijava.util.Timing.tick(this.timing);"
+					+ "$_ = $proceed($$);");
+			}
+		});
+		b.insertAfter("org.scijava.util.Timing.stop(this.timing);");
+
 		c.toClass();
 	} catch (Throwable t) {
 		t.printStackTrace();
@@ -111,22 +135,26 @@ System.err.println("Yes");
 	 * @return The newly launched ImageJ instance.
 	 */
 	public static ImageJ launch(final String... args) {
+final Timing timing = Timing.start(true);
 Thread.currentThread().setContextClassLoader(Main.class.getClassLoader());
+Timing.tick(timing);
 //patch();
-long start = System.nanoTime();
+Timing.tick(timing);
 //PerformanceProfiler.setActive(true);
+Timing.tick(timing);
 		final ImageJ ij = new ImageJ();
+Timing.tick(timing);
 //PerformanceProfiler.report(System.err);
-long end = System.nanoTime();
-System.err.println("Cumulative: " + ((end - start)/1e6));
-System.err.println("Cumulative2: " + (cumulative/1e6));
+Timing.tick(timing);
 //if (true) return null;
 
 		// parse command line arguments
 		ij.console().processArgs(args);
+Timing.tick(timing);
 
 		// display the user interface
 		ij.ui().showUI();
+Timing.stop(timing);
 
 		return ij;
 	}

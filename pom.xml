@@ -32,7 +32,7 @@
 		<miglayout.version>3.7.3.1</miglayout.version>
 		<project.rootdir>${basedir}</project.rootdir>
 		<scifio.version>0.4.2-SNAPSHOT</scifio.version>
-		<scijava-common.version>1.8.2-SNAPSHOT</scijava-common.version>
+		<scijava-common.version>2.0.2-SNAPSHOT</scijava-common.version>
 	</properties>
 
 	<build>

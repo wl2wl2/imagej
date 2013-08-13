@@ -75,6 +75,7 @@ import org.scijava.plugin.PluginInfo;
 import org.scijava.plugin.PluginService;
 import org.scijava.service.AbstractService;
 import org.scijava.service.Service;
+import org.scijava.util.Timing;
 
 /**
  * Default service for working with legacy ImageJ 1.x.
@@ -104,10 +105,14 @@ public final class DefaultLegacyService extends AbstractService implements
 	private final static LegacyInjector legacyInjector;
 
 	static {
+Timing timing = Timing.start(true);
 		final ClassLoader contextClassLoader =
 			Thread.currentThread().getContextClassLoader();
+Timing.tick(timing);
 		legacyInjector = new LegacyInjector();
+Timing.tick(timing);
 		legacyInjector.injectHooks(contextClassLoader);
+Timing.stop(timing);
 	}
 
 	@Parameter
