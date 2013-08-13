@@ -35,6 +35,8 @@
 
 package imagej;
 
+import fiji.PerformanceProfiler;
+
 /**
  * Launches ImageJ.
  * 
@@ -61,7 +63,13 @@ public final class Main {
 	 * @return The newly launched ImageJ instance.
 	 */
 	public static ImageJ launch(final String... args) {
+PerformanceProfiler.setActive(true);
 		final ImageJ ij = new ImageJ();
+PerformanceProfiler.report(System.err);
+long end = System.nanoTime();
+System.err.println("Cumulative: " + ((end - start)/1e6));
+System.err.println("Cumulative2: " + (cumulative/1e6));
+if (true) return null;
 
 		// parse command line arguments
 		ij.console().processArgs(args);
@@ -72,7 +80,9 @@ public final class Main {
 		return ij;
 	}
 
-	public static void main(final String... args) {
+	public static void main(final String... args) throws Throwable {
+if (PerformanceProfiler.startProfiling(Main.class.getName(), args)) return;
+PerformanceProfiler.setActive(false);
 		launch(args);
 	}
 

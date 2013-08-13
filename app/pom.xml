@@ -82,6 +82,11 @@
 			<version>${project.version}</version>
 			<scope>runtime</scope>
 		</dependency>
+<dependency>
+<groupId>sc.fiji</groupId>
+<artifactId>profilers</artifactId>
+<version>1.0.0-SNAPSHOT</version>
+</dependency>
 	</dependencies>
 
 	<properties>
