@@ -43,14 +43,12 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.util.ArrayList;
-import java.util.List;
 
 import net.imglib2.meta.AxisType;
 import net.imglib2.meta.CalibratedAxis;
 import net.imglib2.meta.DefaultCalibratedAxis;
+import net.imglib2.meta.DefaultCalibratedSpace;
 
-import org.scijava.AbstractContextual;
 import org.scijava.Context;
 import org.scijava.event.EventService;
 import org.scijava.event.SciJavaEvent;
@@ -64,9 +62,12 @@ import org.scijava.plugin.Parameter;
  * @see Dataset
  * @see Overlay
  */
-public abstract class AbstractData extends AbstractContextual implements Data,
-	Comparable<Data>, Externalizable
+public abstract class AbstractData extends DefaultCalibratedSpace implements
+	Data, Comparable<Data>, Externalizable
 {
+
+	@Parameter
+	private Context context;
 
 	private String name;
 
@@ -74,9 +75,6 @@ public abstract class AbstractData extends AbstractContextual implements Data,
 
 	@Parameter(required = false)
 	private EventService eventService;
-
-	/** TEMP: Until AbstractData extends DefaultCalibratedSpace. */
-	private List<CalibratedAxis> axes = new ArrayList<CalibratedAxis>();
 
 	// default constructor for use by serialization code
 	//   (see AbstractOverlay::duplicate())
@@ -135,7 +133,10 @@ public abstract class AbstractData extends AbstractContextual implements Data,
 	}
 
 	// -- CalibratedInterval methods --
+
 	// TEMP: Until AbstractData extends DefaultCalibratedSpace.
+	// BDZ finds its when CalibratedInterval goes away that this is obviated but
+	// we may not make that change
 
 	@Override
 	public AxisType[] getAxes() {
@@ -159,88 +160,6 @@ public abstract class AbstractData extends AbstractContextual implements Data,
 		final long[] dims = new long[numDimensions()];
 		dimensions(dims);
 		return dims;
-	}
-
-	// -- CalibratedSpace methods --
-	// TEMP: Until AbstractData extends DefaultCalibratedSpace.
-
-	@Override
-	public void setUnit(String unit, int d) {
-		axis(d).setUnit(unit);
-	}
-
-	@Override
-	public String unit(int d) {
-		return axis(d).unit();
-	}
-
-	@Override
-	public double calibration(final int d) {
-		return axis(d).calibration();
-	}
-
-	@Override
-	public void setCalibration(final double value, final int d) {
-		axis(d).setCalibration(value);
-	}
-
-	@Override
-	public void calibration(final double[] target) {
-		for (int i = 0; i < target.length; i++)
-			target[i] = calibration(i);
-	}
-
-	@Override
-	public void calibration(float[] target) {
-		for (int i = 0; i < target.length; i++)
-			target[i] = (float) calibration(i);
-	}
-
-	@Override
-	public void setCalibration(double[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			setCalibration(cal[i], i);
-	}
-
-	@Override
-	public void setCalibration(float[] cal) {
-		for (int i = 0; i < cal.length; i++)
-			setCalibration(cal[i], i);
-	}
-
-	// -- TypedSpace methods --
-	// TEMP: Until AbstractData extends DefaultCalibratedSpace.
-
-	@Override
-	public int dimensionIndex(AxisType axisType) {
-		for (int i = 0; i < axes.size(); i++) {
-			if (axis(i).type().equals(axisType)) return i;
-		}
-		return -1;
-	}
-
-	// -- AnnotatedSpace methods --
-	// TEMP: Until AbstractData extends DefaultCalibratedSpace.
-
-	@Override
-	public CalibratedAxis axis(int d) {
-		return axes.get(d);
-	}
-
-	@Override
-	public void axes(CalibratedAxis[] destAxes) {
-		for (int i = 0; i < destAxes.length; i++) {
-			destAxes[i] = axis(i);
-		}
-	}
-
-	@Override
-	public void setAxis(CalibratedAxis axis, int d) {
-		// ensure sufficient size
-		while (axes.size() <= d) {
-			axes.add(null);
-		}
-		axes.set(d, axis);
 	}
 
 	// -- Named methods --
@@ -281,10 +200,10 @@ public abstract class AbstractData extends AbstractContextual implements Data,
 			out.writeUTF(BOGUS_NAME);
 		else
 			out.writeUTF(name);
-		int numAxes = axes.size();
+		int numAxes = numDimensions();
 		out.writeInt(numAxes);
 		for (int i = 0; i < numAxes; i++) {
-			CalibratedAxis axis = axes.get(i);
+			CalibratedAxis axis = axis(i);
 			out.writeObject(axis.type());
 			out.writeDouble(axis.calibration());
 			if (axis.unit() == null) out.writeUTF(BOGUS_NAME);
@@ -292,25 +211,13 @@ public abstract class AbstractData extends AbstractContextual implements Data,
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void readExternal(final ObjectInput in) throws IOException,
 		ClassNotFoundException
 	{
-		/* these seem like they should be handled by subclasses. so removing
-		 * on 5-31-12 BDZ
-		 *
-		final AxisType[] axes = (AxisType[]) in.readObject();
-		final double[] cal = (double[]) in.readObject();
-		for (int d = 0; d < axes.length; d++) {
-			setAxis(axes[d], d);
-			setCalibration(cal[d], d);
-		}
-		*/
 		name = in.readUTF();
 		if (name.equals(BOGUS_NAME))
 			name = null;
-		axes = new ArrayList<CalibratedAxis>();
 		int numAxes = in.readInt();
 		for (int i = 0; i < numAxes; i++) {
 			AxisType type = (AxisType) in.readObject();
@@ -320,8 +227,20 @@ public abstract class AbstractData extends AbstractContextual implements Data,
 			if (unitString.equals(BOGUS_NAME)) unit = null;
 			else unit = unitString;
 			CalibratedAxis axis = new DefaultCalibratedAxis(type, unit, cal);
-			axes.add(axis);
+			setAxis(axis, i);
 		}
+	}
+
+	// -- Contextual methods --
+
+	@Override
+	public Context getContext() {
+		return context;
+	}
+
+	@Override
+	public void setContext(final Context context) {
+		context.inject(this);
 	}
 
 	// -- Internal methods --
