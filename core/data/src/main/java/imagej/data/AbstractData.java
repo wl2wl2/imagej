@@ -187,15 +187,6 @@ public abstract class AbstractData extends DefaultCalibratedSpace implements
 	
 	@Override
 	public void writeExternal(final ObjectOutput out) throws IOException {
-		/* these seem like they should be handled by subclasses. so removing
-		 * on 5-31-12 BDZ
-		 *
-		final AxisType[] axes = getAxes();
-		final double[] cal = new double[axes.length];
-		calibration(cal);
-		out.writeObject(axes);
-		out.writeObject(cal);
-		*/
 		if (name == null)
 			out.writeUTF(BOGUS_NAME);
 		else
