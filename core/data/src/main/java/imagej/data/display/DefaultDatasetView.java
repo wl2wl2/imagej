@@ -113,7 +113,10 @@ public class DefaultDatasetView extends AbstractDataView implements DatasetView
 	@Override
 	public int getChannelCount() {
 		if (channelDimIndex < 0) return 1;
-		return (int) getData().getExtents().dimension(channelDimIndex);
+		// TODO WAS THIS BUT BDZ ELIMINATED EXTENTS.
+		// return (int) getData().getExtents().dimension(channelDimIndex);
+		// TODO NOW THIS. WHY WOULD THIS BE DIFFERENT?
+		return (int) getData().dimension(channelDimIndex);
 	}
 
 	@Override

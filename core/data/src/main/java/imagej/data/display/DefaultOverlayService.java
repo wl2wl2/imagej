@@ -200,11 +200,10 @@ public final class DefaultOverlayService extends AbstractService implements
 		for (final DataView view : display) {
 			if (!view.isSelected()) continue;
 			final Data data = view.getData();
-			final Extents e = data.getExtents();
-			final double min0 = e.realMin(0);
-			final double max0 = e.realMax(0);
-			final double min1 = e.realMin(1);
-			final double max1 = e.realMax(1);
+			final double min0 = data.realMin(0);
+			final double max0 = data.realMax(0);
+			final double min1 = data.realMin(1);
+			final double max1 = data.realMax(1);
 			if (min0 < xMin) xMin = min0;
 			if (max0 > xMax) xMax = max0;
 			if (min1 < yMin) yMin = min1;

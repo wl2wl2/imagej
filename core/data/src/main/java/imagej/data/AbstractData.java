@@ -146,7 +146,6 @@ public abstract class AbstractData extends DefaultCalibratedSpace implements
 		return typeList;
 	}
 
-	@Override
 	public Extents getExtents() {
 		final long[] min = new long[numDimensions()];
 		final long[] max = new long[numDimensions()];
