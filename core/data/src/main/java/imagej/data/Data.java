@@ -38,6 +38,7 @@ package imagej.data;
 import imagej.data.overlay.Overlay;
 import net.imglib2.meta.CalibratedAxis;
 import net.imglib2.meta.CalibratedRealInterval;
+import net.imglib2.meta.Named;
 
 import org.scijava.Contextual;
 
@@ -49,7 +50,7 @@ import org.scijava.Contextual;
  * @author Curtis Rueden
  */
 public interface Data extends CalibratedRealInterval<CalibratedAxis>,
-	Contextual
+	Contextual, Named
 {
 
 	/**
