@@ -45,6 +45,7 @@ import org.scijava.plugin.AbstractSingletonService;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 import org.scijava.service.Service;
+import org.scijava.util.Timing;
 
 /**
  * Default service for keeping track of the available options and their
@@ -73,8 +74,11 @@ public class DefaultOptionsService extends
 
 	@Override
 	public <O extends OptionsPlugin> O getOptions(final Class<O> optionsClass) {
+final Timing timing = Timing.start(true);
 		getInstances(); // NB: Force instantiation of singletons.
+Timing.tick(timing);
 		final List<O> objects = objectService.getObjects(optionsClass);
+Timing.stop(timing);
 		return objects == null || objects.isEmpty() ? null : objects.get(0);
 	}
 
