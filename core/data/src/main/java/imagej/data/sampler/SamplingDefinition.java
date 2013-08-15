@@ -209,7 +209,7 @@ public class SamplingDefinition {
 	{
 		final SamplingDefinition definition = new SamplingDefinition(display);
 		final Data data = display.getActiveView().getData();
-		final AxisType[] axes = data.getAxes();
+		final AxisType[] axes = axes(data);
 		for (final AxisType axis : axes) {
 			if ((axis == uAxis) || (axis == vAxis)) {
 				final int axisIndex = display.dimensionIndex(axis);
@@ -256,7 +256,7 @@ public class SamplingDefinition {
 		}
 		final SamplingDefinition definition = new SamplingDefinition(display);
 		final Data data = display.getActiveView().getData();
-		final AxisType[] axes = data.getAxes();
+		final AxisType[] axes = axes(data);
 		for (final AxisType axis : axes) {
 			if ((axis == uAxis) || (axis == vAxis) || (axis == Axes.CHANNEL)) {
 				final int axisIndex = display.dimensionIndex(axis);
@@ -305,4 +305,13 @@ public class SamplingDefinition {
 		return definition;
 	}
 
+	// -- private helpers --
+
+	private static AxisType[] axes(Data data) {
+		AxisType[] axes = new AxisType[data.numDimensions()];
+		for (int i = 0; i < axes.length; i++) {
+			axes[i] = data.axis(i).type();
+		}
+		return axes;
+	}
 }

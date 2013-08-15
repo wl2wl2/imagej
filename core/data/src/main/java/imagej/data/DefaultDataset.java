@@ -345,6 +345,21 @@ public class DefaultDataset extends AbstractData implements Dataset {
 		publish(new DatasetRestructuredEvent(this));
 	}
 
+	@Override
+	public AxisType[] getAxes() {
+		final AxisType[] typeList = new AxisType[numDimensions()];
+		for (int i = 0; i < typeList.length; i++)
+			typeList[i] = axis(i).type();
+		return typeList;
+	}
+
+	@Override
+	public long[] getDims() {
+		final long[] dims = new long[numDimensions()];
+		dimensions(dims);
+		return dims;
+	}
+
 	// -- CalibratedInterval methods --
 
 	@Override

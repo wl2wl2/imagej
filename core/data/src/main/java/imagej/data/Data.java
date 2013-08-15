@@ -88,4 +88,8 @@ public interface Data extends CalibratedRealInterval<CalibratedAxis>,
 	 */
 	void decrementReferences();
 
+	// TODO TEMP - to be relocated or eliminated
+
+	boolean isDiscrete();
+
 }

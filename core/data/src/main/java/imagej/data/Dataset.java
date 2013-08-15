@@ -35,6 +35,7 @@
 
 package imagej.data;
 
+import net.imglib2.meta.AxisType;
 import net.imglib2.meta.CalibratedAxis;
 import net.imglib2.meta.ImgPlus;
 import net.imglib2.meta.Metadata;
@@ -176,4 +177,7 @@ public interface Dataset extends Data, Metadata {
 	@Override
 	void rebuild();
 
+	AxisType[] getAxes();
+
+	long[] getDims();
 }

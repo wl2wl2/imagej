@@ -138,27 +138,12 @@ public abstract class AbstractData extends DefaultCalibratedSpace implements
 	// BDZ finds its when CalibratedInterval goes away that this is obviated but
 	// we may not make that change
 
-	@Override
-	public AxisType[] getAxes() {
-		final AxisType[] typeList = new AxisType[numDimensions()];
-		for (int i = 0; i < typeList.length; i++)
-			typeList[i] = axis(i).type();
-		return typeList;
-	}
-
 	public Extents getExtents() {
 		final long[] min = new long[numDimensions()];
 		final long[] max = new long[numDimensions()];
 		min(min);
 		max(max);
 		return new Extents(min, max);
-	}
-
-	@Override
-	public long[] getDims() {
-		final long[] dims = new long[numDimensions()];
-		dimensions(dims);
-		return dims;
 	}
 
 	// -- Named methods --
